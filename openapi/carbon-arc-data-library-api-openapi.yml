@@ -1,0 +1,859 @@
+openapi: 3.2.0
+info:
+  title: Carbon Arc API Documentation Data Library API
+  description: '# Introduction
+
+
+    Carbon Arc''s Insights Exchange provides a comprehensive consumption-based platform for accessing decision-making data.'
+  version: v2
+  x-logo:
+    url: /static/logo_light.png
+tags:
+- name: Data Library
+paths:
+  /v2/library/data:
+    get:
+      tags:
+      - Data Library
+      summary: Get all external data identifiers
+      operationId: get_data_identifiers_v2_library_data_get
+      requestBody:
+        content:
+          application/json:
+            schema:
+              anyOf:
+              - type: object
+              - type: 'null'
+              title: Config
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataSourcesResponse'
+        '404':
+          description: Not Found
+          detail: Not found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v2/library/data/{dataset_id}:
+    get:
+      tags:
+      - Data Library
+      summary: Get TearSheet information for a dataset identifier
+      operationId: get_data_identifier_information_v2_library_data__dataset_id__get
+      parameters:
+      - name: dataset_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Data Identifier
+          description: Data Identifier.
+        description: Data Identifier.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              anyOf:
+              - type: object
+              - type: 'null'
+              title: Config
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataSource'
+        '404':
+          detail: Not found
+          description: Not Found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v2/library/data/{dataset_id}/data-dictionary:
+    get:
+      tags:
+      - Data Library
+      summary: Get Data Dictionaries for a dataset identifier
+      operationId: get_data_dictionary_by_dataset_id_v2_library_data__dataset_id__data_dictionary_get
+      parameters:
+      - name: dataset_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Data Identifier
+          description: Data Identifier.
+        description: Data Identifier.
+      - name: entity_topic_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Entity Topic ID
+          description: Entity Topic ID.
+        description: Entity Topic ID.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              anyOf:
+              - type: object
+              - type: 'null'
+              title: Config
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DataDictionary'
+                title: Response Get Data Dictionary By Dataset Id V2 Library Data  Dataset Id  Data Dictionary Get
+        '404':
+          detail: Not found
+          description: Not Found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v2/library/data/{dataset_id}/tearsheet-pdf:
+    get:
+      tags:
+      - Data Library
+      summary: Get TearSheet PDF for a dataset identifier
+      operationId: get_tearsheet_pdf_by_dataset_id_v2_library_data__dataset_id__tearsheet_pdf_get
+      parameters:
+      - name: dataset_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Data Identifier
+          description: Data Identifier.
+        description: Data Identifier.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              anyOf:
+              - type: object
+              - type: 'null'
+              title: Config
+      responses:
+        '200':
+          description: Successful Response
+        '404':
+          detail: Not found
+          description: Not Found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v2/library/data/{dataset_id}/insights:
+    get:
+      tags:
+      - Data Library
+      summary: Get Insights for a dataset identifier
+      operationId: get_insights_by_dataset_v2_library_data__dataset_id__insights_get
+      parameters:
+      - name: dataset_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Data Identifier
+          description: Dataset identifier.
+        description: Dataset identifier.
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          description: Page number
+          default: 1
+          title: Page
+        description: Page number
+      - name: size
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 100
+          minimum: 1
+          description: Number of insights per page
+          default: 25
+          title: Size
+        description: Number of insights per page
+      - name: sort_by
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            pattern: ^(insight_label|subject_label|topic_label|insight_type_label|overview|coverage|insight_label_featured)$
+          - type: 'null'
+          description: Field to sort insights by
+          default: insight_label
+          title: Sort By
+        description: Field to sort insights by
+      - name: order
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            pattern: ^(asc|desc)$
+          - type: 'null'
+          description: Sort direction
+          default: asc
+          title: Order
+        description: Sort direction
+      requestBody:
+        content:
+          application/json:
+            schema:
+              anyOf:
+              - type: object
+              - type: 'null'
+              title: Config
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InsightResponse'
+        '404':
+          detail: Not found
+          description: Not Found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v2/library/graph:
+    get:
+      tags:
+      - Data Library
+      summary: Get all external Graph identifiers
+      operationId: get_graph_identifiers_v2_library_graph_get
+      requestBody:
+        content:
+          application/json:
+            schema:
+              anyOf:
+              - type: object
+              - type: 'null'
+              title: Config
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphSourcesResponse'
+        '404':
+          description: Not Found
+          detail: Not found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v2/library/graph/{graph_id}:
+    get:
+      tags:
+      - Data Library
+      summary: Get Data Graph Information
+      operationId: get_graph_information_v2_library_graph__graph_id__get
+      parameters:
+      - name: graph_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Graph Identifier
+          description: Data Identifier.
+        description: Data Identifier.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              anyOf:
+              - type: object
+              - type: 'null'
+              title: Config
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphSourcesResponse'
+        '404':
+          detail: Not found
+          description: Not Found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v2/library/schedule/export:
+    get:
+      tags:
+      - Data Library
+      summary: Export Cake Task Schedule
+      description: Download entire cake task schedule table as CSV.
+      operationId: export_cake_task_schedule_v2_library_schedule_export_get
+      requestBody:
+        content:
+          application/json:
+            schema:
+              anyOf:
+              - type: object
+              - type: 'null'
+              title: Config
+      responses:
+        '200':
+          description: Successful Response
+        '404':
+          description: Not Found
+          detail: Not found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v2/library/schedule/{dataset_id}:
+    get:
+      tags:
+      - Data Library
+      summary: Get Cake Task Schedule
+      description: Get cake task schedule information for a specific Dataset ID from the tracking.cake_task_schedule_enhanced table.
+      operationId: get_cake_task_schedule_v2_library_schedule__dataset_id__get
+      parameters:
+      - name: dataset_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Dataset ID
+          description: Name of the Dataset ID to query
+        description: Name of the Dataset ID to query
+      requestBody:
+        content:
+          application/json:
+            schema:
+              anyOf:
+              - type: object
+              - type: 'null'
+              title: Config
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CakeTaskScheduleResponse'
+        '404':
+          detail: Not found
+          description: Not Found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    DataDictionary:
+      properties:
+        entity_topic_id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Entity Topic Id
+        label:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Label
+        notes:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Notes
+        columns:
+          anyOf:
+          - type: object
+          - items: {}
+            type: array
+          - type: 'null'
+          title: Columns
+          default: {}
+      type: object
+      title: DataDictionary
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    GraphSourcesResponse:
+      properties:
+        page:
+          type: integer
+          title: Page
+        size:
+          type: integer
+          title: Size
+        total_pages:
+          type: integer
+          title: Total Pages
+        datasources:
+          items:
+            $ref: '#/components/schemas/GraphSource'
+          type: array
+          title: Datasources
+      type: object
+      required:
+      - page
+      - size
+      - total_pages
+      - datasources
+      title: GraphSourcesResponse
+    DataSourcesResponse:
+      properties:
+        page:
+          type: integer
+          title: Page
+        size:
+          type: integer
+          title: Size
+        total:
+          type: integer
+          title: Total
+        total_pages:
+          type: integer
+          title: Total Pages
+        datasources:
+          items:
+            $ref: '#/components/schemas/DataSource'
+          type: array
+          title: Datasources
+      type: object
+      required:
+      - page
+      - size
+      - total
+      - total_pages
+      - datasources
+      title: DataSourcesResponse
+    GraphSource:
+      properties:
+        provider_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Provider Name
+        graph_name:
+          type: string
+          title: Graph Name
+        graph_id:
+          type: integer
+          title: Graph Id
+        dataset_id:
+          items:
+            type: string
+          type: array
+          title: Dataset Id
+        dataset_name:
+          type: string
+          title: Dataset Name
+        description:
+          type: string
+          title: Description
+        blocked:
+          type: boolean
+          title: Blocked
+        last_updated_timestamp:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Updated Timestamp
+        is_current:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Is Current
+        exportformat:
+          type: string
+          title: Exportformat
+        carc_id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Carc Id
+        category:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Category
+        subcategory:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Subcategory
+        ecosystem_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ecosystem Type
+        data:
+          anyOf:
+          - type: object
+          - type: 'null'
+          title: Data
+        subject_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Subject Id
+        subject_label:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Subject Label
+        has_confidence_report:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Has Confidence Report
+        path:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Path
+        price:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Price
+      type: object
+      required:
+      - graph_name
+      - graph_id
+      - dataset_id
+      - dataset_name
+      - description
+      - blocked
+      - exportformat
+      title: GraphSource
+    InsightResponseItem:
+      properties:
+        insight_id:
+          type: integer
+          title: Insight Id
+        label:
+          type: string
+          title: Label
+        sources:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Sources
+        topic_label:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Topic Label
+        topic_key:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Topic Key
+        topic_id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Topic Id
+        subject_label:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Subject Label
+        subject_key:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Subject Key
+        subject_id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Subject Id
+        dataset_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Dataset Id
+        insight_type_label:
+          type: string
+          title: Insight Type Label
+        insight_type:
+          type: string
+          title: Insight Type
+        is_event:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Is Event
+        historic:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Historic
+        has_entity:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Has Entity
+        insight_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Insight Name
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        subject_description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Subject Description
+        topic_description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Topic Description
+        delay_status:
+          anyOf:
+          - type: object
+          - type: 'null'
+          title: Delay Status
+        last_updated_timestamp:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Updated Timestamp
+        blocked:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Blocked
+        insight_overview:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Insight Overview
+        last_reinstated_timestamp:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Reinstated Timestamp
+        reinstatement_reason:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Reinstatement Reason
+        table_max_date:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Table Max Date
+        relevance_score:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Relevance Score
+        ontology_version:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ontology Version
+      type: object
+      required:
+      - insight_id
+      - label
+      - insight_type_label
+      - insight_type
+      title: InsightResponseItem
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    CakeTaskScheduleResponse:
+      properties:
+        schedules:
+          items:
+            $ref: '#/components/schemas/CakeTaskScheduleItem'
+          type: array
+          title: Schedules
+      type: object
+      required:
+      - schedules
+      title: CakeTaskScheduleResponse
+    InsightResponse:
+      properties:
+        total:
+          type: integer
+          title: Total
+        page:
+          type: integer
+          title: Page
+        size:
+          type: integer
+          title: Size
+        pages:
+          type: integer
+          title: Pages
+        items:
+          items:
+            $ref: '#/components/schemas/InsightResponseItem'
+          type: array
+          title: Items
+      type: object
+      required:
+      - total
+      - page
+      - size
+      - pages
+      - items
+      title: InsightResponse
+    DataSource:
+      properties:
+        provider_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Provider Name
+        dataset_name:
+          type: string
+          title: Dataset Name
+        dataset_id:
+          items:
+            type: string
+          type: array
+          title: Dataset Id
+        description:
+          type: string
+          title: Description
+        blocked:
+          type: boolean
+          title: Blocked
+        last_updated_timestamp:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Updated Timestamp
+        data:
+          anyOf:
+          - type: object
+          - type: 'null'
+          title: Data
+        is_current:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Is Current
+        label:
+          type: string
+          title: Label
+          description: 'Mirror of ``dataset_name`` so the data-library response uses the
+
+            same ``label`` key Block surfaces. Derived at serialize time —
+
+            nothing to populate on the source dict.'
+          readOnly: true
+      type: object
+      required:
+      - dataset_name
+      - dataset_id
+      - description
+      - blocked
+      - label
+      title: DataSource
+    CakeTaskScheduleItem:
+      properties:
+        next_run_start:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Next Run Start
+        next_run_end:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Next Run End
+        last_update:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Update
+      type: object
+      title: CakeTaskScheduleItem

@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/carbon-arc/main/json-schema/carbon-arc-materialized-prism-schema.json",
+  "title": "MaterializedPrism",
+  "description": "One prism as a customer reads it: display copy plus the series from its\ncurrent published snapshot.\n\nExactly what the public prisms page renders, out of the same composition,\nso an API caller and the page can never show different numbers for the\nsame prism. Extra keys are allowed through on purpose: the body is the stored snapshot entry with display\nfields laid over it, and pinning the shape here would silently drop a new\nsnapshot key from the API until someone edited this class.",
+  "x-generated": "2026-10-07",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/carbon-arc-openapi.json#/components/schemas/MaterializedPrism",
+  "properties": {
+    "prism_id": {
+      "type": "string",
+      "title": "Prism Id"
+    },
+    "title": {
+      "type": "string",
+      "title": "Title"
+    },
+    "category": {
+      "type": "string",
+      "title": "Category"
+    },
+    "question": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Question",
+      "description": "Question this prism answers in the growth (index) view"
+    },
+    "question_share": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Question Share",
+      "description": "Question this prism answers in the share view"
+    },
+    "note": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Note",
+      "description": "Operator caveat shown on the public drawer; usually null"
+    },
+    "insight_id": {
+      "type": "integer",
+      "title": "Insight Id"
+    },
+    "insight_label": {
+      "type": "string",
+      "title": "Insight Label"
+    },
+    "published_at": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "date-time"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Published At",
+      "description": "When this prism first went public"
+    },
+    "data_through": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "date"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Data Through",
+      "description": "Last day of real data in the series. Lags today when upstream sources are behind, so this - not the window end - is what says how current the numbers are."
+    },
+    "window": {
+      "anyOf": [
+        {
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Window",
+      "description": "Charted span as ``{start, end}``"
+    },
+    "entities": {
+      "items": {
+        "type": "object"
+      },
+      "type": "array",
+      "title": "Entities",
+      "description": "Per-entity relative series. ``mtd_yoy`` / ``mtd_share`` by day of the latest month with data; ``hist_yoy`` / ``hist_share`` by month over the charted year. Year-over-year index levels and share-of-group percentages only, never absolute figures."
+    }
+  },
+  "type": "object",
+  "required": [
+    "prism_id",
+    "title",
+    "category",
+    "insight_id",
+    "insight_label"
+  ]
+}

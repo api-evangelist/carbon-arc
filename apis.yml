@@ -1,23 +1,386 @@
 aid: carbon-arc
 name: Carbon Arc
-description: 'Carbon Arc is a company surfaced via the API Evangelist harvest backlog (source: secondary-market)
-  and added to the network as a stub for full-pipeline profiling.'
+description: Carbon Arc provides infrastructure for the AI economy, offering tools and services that enable developers to build, deploy, and scale
+  AI applications. The platform includes APIs for model management, data pipelines, and monitoring, targeting enterprises and AI startups seeking
+  robust, production‑grade solutions.
 url: https://raw.githubusercontent.com/api-evangelist/carbon-arc/refs/heads/main/apis.yml
 x-type: company
 x-source: harvest:secondary-market
-x-tier: stub
-x-tier-reason: harvest
+x-tier: profiled
+x-tier-reason: enrichment pass 2026-10-07 (modular-v1; was harvest)
 specificationVersion: '0.20'
 created: '2026-10-06'
 modified: '2026-10-06'
 tags:
-- Company
-apis: []
+- ai
+- infrastructure
+- platform
+- mlops
+- enterprise
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: AgenticAccess
+  url: agentic-access/carbon-arc-agentic-access.yml
+- type: Spectral
+  url: rules/carbon-arc-rules.yml
+- type: JSONLD
+  url: json-ld/carbon-arc-context.jsonld
+- type: Vocabulary
+  url: vocabulary/carbon-arc-vocabulary.yml
+- type: DataModel
+  url: data-model/carbon-arc-data-model.yml
+- type: ErrorCatalog
+  url: errors/carbon-arc-problem-types.yml
+- type: Conformance
+  url: conformance/carbon-arc-conformance.yml
+- type: Hosts
+  url: hosts/carbon-arc-hosts.yml
+- type: SDKs
+  url: packages/carbon-arc-packages.yml
+- type: Packages
+  url: packages/carbon-arc-packages.yml
+- type: DomainSecurity
+  url: security/carbon-arc-domain-security.yml
 - type: Website
-  url: https://www.nasdaqprivatemarket.com/
+  url: https://www.carbonarc.co
+apis:
+- aid: carbon-arc:carbon-arc-block-api
+  name: Carbon Arc Block API
+  description: The Block API from Carbon Arc — 2 operation(s) for block.
+  humanURL: https://docs.carbonarc.ai/
+  baseURL: https://api.carbonarc.co
+  tags:
+  - Block
+  properties:
+  - type: OpenAPI
+    url: openapi/carbon-arc-block-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/carbon-arc-query-job-response-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-materialized-prism-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-admin-asset-response-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-framework-order-read-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-framework-metadata-response-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-asset-detail-response-schema.json
+- aid: carbon-arc:carbon-arc-bucket-access-api
+  name: Carbon Arc Bucket Access API
+  description: The Bucket Access API from Carbon Arc — 3 operation(s) for bucket access.
+  humanURL: https://docs.carbonarc.ai/
+  baseURL: https://api.carbonarc.co
+  tags:
+  - Bucket Access
+  properties:
+  - type: OpenAPI
+    url: openapi/carbon-arc-bucket-access-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/carbon-arc-query-job-response-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-materialized-prism-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-admin-asset-response-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-framework-order-read-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-framework-metadata-response-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-asset-detail-response-schema.json
+- aid: carbon-arc:carbon-arc-catalog-api
+  name: Carbon Arc Catalog API
+  description: The Catalog API from Carbon Arc — 11 operation(s) for catalog.
+  humanURL: https://docs.carbonarc.ai/
+  baseURL: https://api.carbonarc.co
+  tags:
+  - Catalog
+  properties:
+  - type: OpenAPI
+    url: openapi/carbon-arc-catalog-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/carbon-arc-query-job-response-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-materialized-prism-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-admin-asset-response-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-framework-order-read-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-framework-metadata-response-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-asset-detail-response-schema.json
+- aid: carbon-arc:carbon-arc-clients-api
+  name: Carbon Arc Clients API
+  description: The Clients API from Carbon Arc — 3 operation(s) for clients.
+  humanURL: https://docs.carbonarc.ai/
+  baseURL: https://api.carbonarc.co
+  tags:
+  - Clients
+  properties:
+  - type: OpenAPI
+    url: openapi/carbon-arc-clients-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/carbon-arc-query-job-response-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-materialized-prism-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-admin-asset-response-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-framework-order-read-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-framework-metadata-response-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-asset-detail-response-schema.json
+- aid: carbon-arc:carbon-arc-data-library-api
+  name: Carbon Arc Data Library API
+  description: The Data Library API from Carbon Arc — 9 operation(s) for data library.
+  humanURL: https://docs.carbonarc.ai/
+  baseURL: https://api.carbonarc.co
+  tags:
+  - Data Library
+  properties:
+  - type: OpenAPI
+    url: openapi/carbon-arc-data-library-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/carbon-arc-query-job-response-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-materialized-prism-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-admin-asset-response-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-framework-order-read-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-framework-metadata-response-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-asset-detail-response-schema.json
+- aid: carbon-arc:carbon-arc-explore-use-cases-api
+  name: Carbon Arc Explore Use Cases API
+  description: The Explore Use Cases API from Carbon Arc — 1 operation(s) for explore use cases.
+  humanURL: https://docs.carbonarc.ai/
+  baseURL: https://api.carbonarc.co
+  tags:
+  - Explore Use Cases
+  properties:
+  - type: OpenAPI
+    url: openapi/carbon-arc-explore-use-cases-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/carbon-arc-query-job-response-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-materialized-prism-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-admin-asset-response-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-framework-order-read-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-framework-metadata-response-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-asset-detail-response-schema.json
+- aid: carbon-arc:carbon-arc-framework-api
+  name: Carbon Arc Framework API
+  description: The Framework API from Carbon Arc — 14 operation(s) for framework.
+  humanURL: https://docs.carbonarc.ai/
+  baseURL: https://api.carbonarc.co
+  tags:
+  - Framework
+  properties:
+  - type: OpenAPI
+    url: openapi/carbon-arc-framework-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/carbon-arc-query-job-response-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-materialized-prism-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-admin-asset-response-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-framework-order-read-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-framework-metadata-response-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-asset-detail-response-schema.json
+- aid: carbon-arc:carbon-arc-ontology-api
+  name: Carbon Arc Ontology API
+  description: The Ontology API from Carbon Arc — 19 operation(s) for ontology.
+  humanURL: https://docs.carbonarc.ai/
+  baseURL: https://api.carbonarc.co
+  tags:
+  - Ontology
+  properties:
+  - type: OpenAPI
+    url: openapi/carbon-arc-ontology-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/carbon-arc-query-job-response-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-materialized-prism-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-admin-asset-response-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-framework-order-read-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-framework-metadata-response-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-asset-detail-response-schema.json
+- aid: carbon-arc:carbon-arc-ontology-internal-api
+  name: Carbon Arc Ontology Internal API
+  description: The Ontology Internal API from Carbon Arc — 2 operation(s) for ontology internal.
+  humanURL: https://docs.carbonarc.ai/
+  baseURL: https://api.carbonarc.co
+  tags:
+  - Ontology Internal
+  properties:
+  - type: OpenAPI
+    url: openapi/carbon-arc-ontology-internal-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/carbon-arc-query-job-response-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-materialized-prism-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-admin-asset-response-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-framework-order-read-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-framework-metadata-response-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-asset-detail-response-schema.json
+- aid: carbon-arc:carbon-arc-polaris-api
+  name: Carbon Arc Polaris API
+  description: The Polaris API from Carbon Arc — 8 operation(s) for polaris.
+  humanURL: https://docs.carbonarc.ai/
+  baseURL: https://api.carbonarc.co
+  tags:
+  - Polaris
+  properties:
+  - type: OpenAPI
+    url: openapi/carbon-arc-polaris-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/carbon-arc-query-job-response-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-materialized-prism-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-admin-asset-response-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-framework-order-read-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-framework-metadata-response-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-asset-detail-response-schema.json
+- aid: carbon-arc:carbon-arc-prisms-api
+  name: Carbon Arc Prisms API
+  description: The Prisms API from Carbon Arc — 2 operation(s) for prisms.
+  humanURL: https://docs.carbonarc.ai/
+  baseURL: https://api.carbonarc.co
+  tags:
+  - Prisms
+  properties:
+  - type: OpenAPI
+    url: openapi/carbon-arc-prisms-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/carbon-arc-query-job-response-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-materialized-prism-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-admin-asset-response-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-framework-order-read-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-framework-metadata-response-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-asset-detail-response-schema.json
+- aid: carbon-arc:carbon-arc-public-api
+  name: Carbon Arc Public API
+  description: The Public API from Carbon Arc — 3 operation(s) for public.
+  humanURL: https://docs.carbonarc.ai/
+  baseURL: https://api.carbonarc.co
+  tags:
+  - Public
+  properties:
+  - type: OpenAPI
+    url: openapi/carbon-arc-public-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/carbon-arc-query-job-response-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-materialized-prism-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-admin-asset-response-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-framework-order-read-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-framework-metadata-response-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-asset-detail-response-schema.json
+- aid: carbon-arc:carbon-arc-research-api
+  name: Carbon Arc Research API
+  description: The Research API from Carbon Arc — 1 operation(s) for research.
+  humanURL: https://docs.carbonarc.ai/
+  baseURL: https://api.carbonarc.co
+  tags:
+  - Research
+  properties:
+  - type: OpenAPI
+    url: openapi/carbon-arc-research-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/carbon-arc-query-job-response-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-materialized-prism-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-admin-asset-response-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-framework-order-read-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-framework-metadata-response-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-asset-detail-response-schema.json
+- aid: carbon-arc:carbon-arc-tracking-api
+  name: Carbon Arc Tracking API
+  description: The Tracking API from Carbon Arc — 1 operation(s) for tracking.
+  humanURL: https://docs.carbonarc.ai/
+  baseURL: https://api.carbonarc.co
+  tags:
+  - Tracking
+  properties:
+  - type: OpenAPI
+    url: openapi/carbon-arc-tracking-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/carbon-arc-query-job-response-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-materialized-prism-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-admin-asset-response-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-framework-order-read-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-framework-metadata-response-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-asset-detail-response-schema.json
+- aid: carbon-arc:carbon-arc-transcripts-api
+  name: Carbon Arc Transcripts API
+  description: The Transcripts API from Carbon Arc — 7 operation(s) for transcripts.
+  humanURL: https://docs.carbonarc.ai/
+  baseURL: https://api.carbonarc.co
+  tags:
+  - Transcripts
+  properties:
+  - type: OpenAPI
+    url: openapi/carbon-arc-transcripts-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/carbon-arc-query-job-response-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-materialized-prism-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-admin-asset-response-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-framework-order-read-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-framework-metadata-response-schema.json
+  - type: JSONSchema
+    url: json-schema/carbon-arc-asset-detail-response-schema.json
+x-enrichment:
+  date: '2026-10-07'
+  status: enriched
+  artifacts_added: 14
+  pass: modular-v1
+  engine: identity=local,contract=local,surfaces=local,docs=local,regulatory=local

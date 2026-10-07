@@ -1,0 +1,195 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/carbon-arc/main/json-schema/carbon-arc-query-job-response-schema.json",
+  "title": "QueryJobResponse",
+  "x-generated": "2026-10-07",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/carbon-arc-openapi.json#/components/schemas/QueryJobResponse",
+  "properties": {
+    "job_id": {
+      "type": "string",
+      "title": "Job Id"
+    },
+    "state": {
+      "$ref": "#/$defs/QueryJobState"
+    },
+    "position": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Position",
+      "description": "1-indexed place in the queue, while queued."
+    },
+    "eta_seconds": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Eta Seconds",
+      "description": "Estimated seconds until this job finishes, from recent completion durations. None while no completions have been recorded yet."
+    },
+    "queue_wait_ms": {
+      "type": "integer",
+      "title": "Queue Wait Ms",
+      "description": "Time spent queued. Still climbing while queued; frozen at the real wait once the job starts running.",
+      "default": 0
+    },
+    "is_heavy_query": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Is Heavy Query",
+      "description": "PRO-3635: whether the query (or, for a multi-query operation, its heaviest sub-query) scored above the 'typical query' band on pyca's structural cost estimator -- a hint that slowness is query-side, not necessarily system-side load. None if no cost estimate has been recorded for this job yet (e.g. still queued)."
+    },
+    "poll_after_ms": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Poll After Ms",
+      "description": "How long the client should wait before polling again. Absent on a terminal state, which needs no further polling."
+    },
+    "error": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Error"
+    },
+    "result": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/QueryJobResult"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "result_json": {
+      "anyOf": [
+        {},
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Result Json",
+      "description": "Non-tabular result payload, for jobs whose result doesn't fit QueryJobResult's columns/rows shape (e.g. PRO-3395's batched framework insight queries, each already normalized to plain JSON-safe records). Mutually exclusive with `result` -- a job populates exactly one of the two, based on what its task cached."
+    },
+    "max_cell_chars": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Max Cell Chars",
+      "description": "Per-cell character cap the worker applied to this result's string cells (see truncate_wide_cells), or null when nothing was shortened. Mirrors SQLQueryResponse.max_cell_chars."
+    },
+    "truncated": {
+      "type": "boolean",
+      "title": "Truncated",
+      "description": "True if `result`'s rows are a prefix of the real query result -- the worker applied the same byte-payload trim run_query's own sync path uses (see trim_rows_for_payload) before caching, because the result exceeded MAX_PAYLOAD_BYTES. Lives on this envelope rather than QueryJobResult itself: QueryJobResult documents a done job's cached result as always complete, which is no longer true for a trimmed sql_editor job (bugbot finding: 'Async SQL trim hides truncation'), and callers already check SQLQueryResponse.truncated on the sync path -- this mirrors it.",
+      "default": false
+    }
+  },
+  "type": "object",
+  "required": [
+    "job_id",
+    "state"
+  ],
+  "$defs": {
+    "QueryJobColumn": {
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "Name"
+        },
+        "type": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Type"
+        }
+      },
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "title": "QueryJobColumn"
+    },
+    "QueryJobResult": {
+      "properties": {
+        "columns": {
+          "items": {
+            "$ref": "#/$defs/QueryJobColumn"
+          },
+          "type": "array",
+          "title": "Columns"
+        },
+        "rows": {
+          "items": {
+            "items": {},
+            "type": "array"
+          },
+          "type": "array",
+          "title": "Rows"
+        },
+        "row_count": {
+          "type": "integer",
+          "title": "Row Count"
+        }
+      },
+      "type": "object",
+      "required": [
+        "columns",
+        "rows",
+        "row_count"
+      ],
+      "title": "QueryJobResult",
+      "description": "A finished job's rows, in the same column/row *structure* as\n``SQLQueryResponse`` — columns plus a row matrix — so PRO-3283's SQL editor\nmigration is a rename rather than a reshape. Note the ``type`` caveat above:\nthe structure translates, the type vocabulary does not.\n\nNo ``applied_limit``/``limit_injected`` here: those describe a caller's\nown SQL rewrite, which happens before submission, not anything the job\nknows about. ``truncated`` also isn't here -- see\n``QueryJobResponse.truncated`` instead: a done job's *cached* result can\nnow be a worker-applied byte-payload trim (not just a caller's own\nrewrite), so that flag belongs on the envelope wrapping this, not on the\nrow/column structure itself."
+    },
+    "QueryJobState": {
+      "type": "string",
+      "enum": [
+        "queued",
+        "running",
+        "done",
+        "failed",
+        "cancelled"
+      ],
+      "title": "QueryJobState",
+      "description": "Job lifecycle, mirroring pyca's ``QueryStatusTracker`` states.\n\nOne collapsed ``queued``, with no separate \"waiting for a worker\" vs\n\"waiting for the ConcurrencyGate\" state (PRO-3278 decision): the two are\nindistinguishable to the person waiting.\n\nBe aware of where the worker actually draws that line today. It calls\n``mark_running`` *before* ``async_read_query``, and the gate is acquired\ninside that call, so a job parked on the gate reports ``running`` — with no\nposition, no ETA, and a ``queue_wait_ms`` frozen at pickup — rather than\n``queued``. Under a saturated gate, which is the condition this whole system\nexists to make visible, that understates the wait by exactly the gate wait.\nMoving ``mark_running`` past gate admission is a change to the worker\n(PRO-3281), tracked separately.\n\nAn enum rather than a bare ``str`` so a state pyca adds later surfaces as\na loud, explicit failure in ``QueryJobService`` instead of flowing through\nto clients that have no branch for it."
+    }
+  }
+}

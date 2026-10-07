@@ -1,0 +1,466 @@
+openapi: 3.2.0
+info:
+  title: Carbon Arc API Documentation Bucket Access API
+  description: '# Introduction
+
+
+    Carbon Arc''s Insights Exchange provides a comprehensive consumption-based platform for accessing decision-making data.'
+  version: v2
+  x-logo:
+    url: /static/logo_light.png
+tags:
+- name: Bucket Access
+paths:
+  /v2/bucket-access/datasets/{dataset_id}/grant:
+    post:
+      tags:
+      - Bucket Access
+      summary: Grant Bucket Access
+      description: 'Grant a principal access to a dataset''s S3 bucket by SKU.
+
+
+        Resolves (dataset_id, lag, cut) → dataset_name via
+
+        admin_config.bulk_bucket_details and delegates to
+
+        BucketPolicyManager.add_principal_for_sku, which is idempotent.
+
+
+        S3-only: ``log_access=False`` keeps PyCAKE off admin_config, so this endpoint
+
+        never writes there and read-only PSQL_ADMIN is correct for it (PLA-6141).
+
+        CAMS owns the access/audit write, keyed on the ``dataset_name`` returned here.
+
+
+        Compliance gate (runs before any S3 write): the client_name (=clients.key)
+
+        must resolve to a clients.id (422 unknown_client otherwise), and the SKU
+
+        must not be blocked for that client by the live served-lag restriction
+
+        model (403 compliance_blocked otherwise).'
+      operationId: grant_bucket_access_v2_bucket_access_datasets__dataset_id__grant_post
+      parameters:
+      - name: dataset_id
+        in: path
+        required: true
+        schema:
+          type: string
+          pattern: ^CA\d+[A-Z]*$
+          title: Dataset Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GrantBucketAccessRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GrantBucketAccessResponse'
+        '404':
+          description: 'sku_not_found / bucket_not_registered: the SKU has no bucket in admin_config.bulk_bucket_details. Terminal — retrying cannot help.'
+        '400':
+          description: Malformed principal ARN, or missing required identifier.
+        '403':
+          description: 'compliance_blocked: the SKU is restricted for this client.'
+        '409':
+          description: 'policy_apply_failed / policy_write_race: the bucket-policy write did not land. Transient — the caller should retry.'
+        '413':
+          description: 'policy_size_exceeded: the bucket policy hit AWS''s 20KB limit.'
+        '422':
+          description: 'unknown_client: client_name is not in admin_config.clients.'
+  /v2/bucket-access/datasets/{dataset_id}/revoke:
+    post:
+      tags:
+      - Bucket Access
+      summary: Revoke Bucket Access
+      description: 'Revoke a principal''s S3 bucket access by SKU.
+
+
+        Either principal_arn (revoke a specific ARN) or client_name (revoke all
+
+        ARNs registered for that client+dataset) must be provided. Idempotent —
+
+        revoking a principal that isn''t currently granted returns revoked=True
+
+        with no policy change (mirrors the CLI behavior).
+
+
+        S3-only, like the grant path: ``log_access=False``, and CAMS removes the
+
+        admin_config access row and writes the ACCESS_REVOKED audit row (PLA-6141).'
+      operationId: revoke_bucket_access_v2_bucket_access_datasets__dataset_id__revoke_post
+      parameters:
+      - name: dataset_id
+        in: path
+        required: true
+        schema:
+          type: string
+          pattern: ^CA\d+[A-Z]*$
+          title: Dataset Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RevokeBucketAccessRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RevokeBucketAccessResponse'
+        '404':
+          description: 'sku_not_found / bucket_not_registered: the SKU has no bucket in admin_config.bulk_bucket_details. Terminal — retrying cannot help.'
+        '400':
+          description: Malformed principal ARN, or missing required identifier.
+        '403':
+          description: 'compliance_blocked: the SKU is restricted for this client.'
+        '409':
+          description: 'policy_apply_failed / policy_write_race: the bucket-policy write did not land. Transient — the caller should retry.'
+        '413':
+          description: 'policy_size_exceeded: the bucket policy hit AWS''s 20KB limit.'
+        '422':
+          description: 'unknown_client: client_name is not in admin_config.clients.'
+  /v2/bucket-access/datasets/{dataset_id}/verify:
+    post:
+      tags:
+      - Bucket Access
+      summary: Verify Bucket Access
+      description: 'Read which principals are CURRENTLY on a SKU''s bucket policy.
+
+
+        Read-only: never mutates the policy. One SKU maps to one bucket, so a single
+
+        call verifies every client on that SKU.
+
+
+        Callers use this to answer "does this client actually have access right now",
+
+        which no CAMS-side record can answer — the grant ledger and the sample
+
+        settings rows record what we *intended*, and a lost concurrent write makes
+
+        the two disagree.
+
+
+        Two outcomes are deliberately 200s with flags rather than HTTP errors,
+
+        because the caller must render them as "unknown" and a 4xx/5xx invites a
+
+        silent fallback to intent instead:
+
+
+        - ``bucket_found=false`` — the SKU or its bucket is not registered.
+
+        - ``read_ok=false`` — the live read failed (throttle, access-denied).
+
+        ``principal_count`` is null and ``present``/``missing`` are empty; do NOT
+
+        read this as "nobody has access".
+
+
+        Defined as sync ``def`` on purpose: BucketPolicyManager is fully blocking
+
+        (boto3 + a sync Postgres handle), so FastAPI runs this in its threadpool
+
+        rather than stalling the event loop.'
+      operationId: verify_bucket_access_v2_bucket_access_datasets__dataset_id__verify_post
+      parameters:
+      - name: dataset_id
+        in: path
+        required: true
+        schema:
+          type: string
+          pattern: ^CA\d+[A-Z]*$
+          title: Dataset Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifyBucketAccessRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerifyBucketAccessResponse'
+        '404':
+          detail: Not found
+          description: Not Found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    GrantBucketAccessResponse:
+      properties:
+        dataset_id:
+          type: string
+          title: Dataset Id
+        dataset_name:
+          type: string
+          title: Dataset Name
+        lag:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Lag
+        cut:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Cut
+        principal_arn:
+          type: string
+          title: Principal Arn
+        client_name:
+          type: string
+          title: Client Name
+        granted:
+          type: boolean
+          title: Granted
+      type: object
+      required:
+      - dataset_id
+      - dataset_name
+      - lag
+      - cut
+      - principal_arn
+      - client_name
+      - granted
+      title: GrantBucketAccessResponse
+    RevokeBucketAccessResponse:
+      properties:
+        dataset_id:
+          type: string
+          title: Dataset Id
+        dataset_name:
+          type: string
+          title: Dataset Name
+        lag:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Lag
+        cut:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Cut
+        principal_arn:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Principal Arn
+        client_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Client Name
+        revoked:
+          type: boolean
+          title: Revoked
+      type: object
+      required:
+      - dataset_id
+      - dataset_name
+      - lag
+      - cut
+      - principal_arn
+      - client_name
+      - revoked
+      title: RevokeBucketAccessResponse
+    GrantBucketAccessRequest:
+      properties:
+        principal_arn:
+          type: string
+          maxLength: 2048
+          minLength: 1
+          pattern: ^(arn:aws:iam::\d{12}:[\w+=,.@\-/]+|\d{12})$
+          title: Principal Arn
+          description: IAM principal ARN to grant access to (e.g. 'arn:aws:iam::123456789012:user/alice'), or a 12-digit AWS account id which is converted to '<id>:root'.
+        client_name:
+          type: string
+          maxLength: 128
+          minLength: 1
+          pattern: ^[a-zA-Z0-9_-]+$
+          title: Client Name
+          description: Client name; must exist in admin_config.clients.
+        lag:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Lag
+          description: Lag of the dataset SKU to grant access to. Omit (or null) for the no-lag variant — bulk_bucket_details stores no-lag rows with lag=null.
+        cut:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Cut
+          description: Cut of the dataset SKU to grant access to. Omit (or null) for the no-cut variant — bulk_bucket_details stores no-cut rows with cut=null.
+      type: object
+      required:
+      - principal_arn
+      - client_name
+      title: GrantBucketAccessRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    VerifyBucketAccessResponse:
+      properties:
+        dataset_id:
+          type: string
+          title: Dataset Id
+        lag:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Lag
+        cut:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Cut
+        bucket_found:
+          type: boolean
+          title: Bucket Found
+        read_ok:
+          type: boolean
+          title: Read Ok
+        principal_count:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Principal Count
+          description: Total client-access principals on the live policy. Null when the read failed — NOT zero, which would read as 'nobody has access'.
+        present:
+          items:
+            type: string
+          type: array
+          title: Present
+        missing:
+          items:
+            type: string
+          type: array
+          title: Missing
+        read_error:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Read Error
+          description: 'Why the read failed, when read_ok is false: invalid_credentials | no_credentials | access_denied | throttled | bucket_missing | unknown. A fixed vocabulary, never raw AWS text, since the caller renders it and AWS messages can carry bucket names and ARNs.'
+        checked_at:
+          type: string
+          format: date-time
+          title: Checked At
+      type: object
+      required:
+      - dataset_id
+      - lag
+      - cut
+      - bucket_found
+      - read_ok
+      - present
+      - missing
+      - checked_at
+      title: VerifyBucketAccessResponse
+    VerifyBucketAccessRequest:
+      properties:
+        lag:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Lag
+          description: Lag of the dataset SKU. Null for the no-lag variant.
+        cut:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Cut
+          description: Cut of the dataset SKU. Null for the no-cut variant.
+        principal_arns:
+          items:
+            type: string
+          type: array
+          maxItems: 500
+          title: Principal Arns
+          description: ARNs to check for. Each is reported in `present` or `missing`. Pass an empty list to get only `principal_count`.
+      type: object
+      title: VerifyBucketAccessRequest
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    RevokeBucketAccessRequest:
+      properties:
+        principal_arn:
+          anyOf:
+          - type: string
+            maxLength: 2048
+            pattern: ^(arn:aws:iam::\d{12}:[\w+=,.@\-/]+|\d{12})$
+          - type: 'null'
+          title: Principal Arn
+          description: IAM principal ARN to revoke. Either principal_arn or client_name must be provided.
+        client_name:
+          anyOf:
+          - type: string
+            maxLength: 128
+            minLength: 1
+            pattern: ^[a-zA-Z0-9_-]+$
+          - type: 'null'
+          title: Client Name
+          description: Client name to revoke all ARNs for. Either principal_arn or client_name must be provided.
+        lag:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Lag
+          description: Lag of the dataset SKU. Null for the no-lag variant.
+        cut:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Cut
+          description: Cut of the dataset SKU. Null for the no-cut variant.
+      type: object
+      title: RevokeBucketAccessRequest

@@ -1,0 +1,429 @@
+generated: '2026-10-07'
+method: derived
+generator: derive-vocabulary.py
+source: openapi/carbon-arc-openapi.json
+vocabulary:
+  name: Carbon Arc Domain Vocabulary
+  description: 'Terms declared by Carbon Arc''s own API contract: its resource groups, objects and enumerations, with the contract''s definitions.
+    Derived, not authored.'
+  version: '2026-10-07'
+  terms:
+  - term: AccessRequestCreate
+    definition: 'Object declared by the contract with fields: request_type, notes.'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/AccessRequestCreate
+  - term: AccessRequestResponse
+    definition: 'Object declared by the contract with fields: id, asset_id, client_id, user_id, request_type, status, routed_to.'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/AccessRequestResponse
+  - term: AdminAssetResponse
+    definition: Asset response with additional admin fields (external_id, timestamps, vote_count).
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/AdminAssetResponse
+  - term: AdminListAssetsResponse
+    definition: 'Object declared by the contract with fields: assets, total.'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/AdminListAssetsResponse
+  - term: AssetDetailResponse
+    definition: Full asset detail — extends AssetResponse with samples and data dictionary.
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/AssetDetailResponse
+  - term: AssetMetadataResponse
+    definition: 'Object declared by the contract with fields: overview, description, data_category, data_type, frequency, geography, coverage,
+      panel_size, history, lag, bias, granularity. (6 more)'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/AssetMetadataResponse
+  - term: AssetResponse
+    definition: Core asset fields plus optional metadata. Built from ORM instances via model_validate.
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/AssetResponse
+  - term: BlockAccessType
+    definition: 'Enumeration declared by the contract with values: Forward Feed, Historic.'
+    tags:
+    - Enumeration
+    source: openapi/carbon-arc-openapi.json#/components/schemas/BlockAccessType
+  - term: BlockDatasetCut
+    definition: 'Object declared by the contract with fields: cut, lags, annual_price, bulk_row_status, request_statuses.'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/BlockDatasetCut
+  - term: BlockDatasetCutsEntry
+    definition: Lag chips shown in the CAMS pricing card under the cut selector and in the power-ui request modal's lag dropdown.
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/BlockDatasetCutsEntry
+  - term: BlockDatasetCutsResponse
+    definition: 'Object declared by the contract with fields: dataset_id, cuts.'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/BlockDatasetCutsResponse
+  - term: BlockDatasetEntry
+    definition: 'Object declared by the contract with fields: dataset_id, label, vendor, offered_access_type, cuts, description, frequency, history,
+      lag, use_cases, ecosystem, status. (3 more)'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/BlockDatasetEntry
+  - term: BlockDatasetsResponse
+    definition: 'Object declared by the contract with fields: datasets.'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/BlockDatasetsResponse
+  - term: BlockRequestStatus
+    definition: 'Enumeration declared by the contract with values: NONE, PENDING, APPROVED, TRIAL_ACTIVE, CONTRACTED, DENIED.'
+    tags:
+    - Enumeration
+    source: openapi/carbon-arc-openapi.json#/components/schemas/BlockRequestStatus
+  - term: Body_collection_framework_metadata_v2_framework_metadata_post
+    definition: 'Object declared by the contract with fields: frameworks, config.'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/Body_collection_framework_metadata_v2_framework_metadata_post
+  - term: Body_create_framework_order_v2_framework_buy_post
+    definition: 'Object declared by the contract with fields: order, framework_id, source, config.'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/Body_create_framework_order_v2_framework_buy_post
+  - term: Body_framework_filter_options_v2_framework_filters__filter_key__options_post
+    definition: 'Object declared by the contract with fields: framework, config.'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/Body_framework_filter_options_v2_framework_filters__filter_key__options_post
+  - term: Body_framework_filters_batch_v2_framework_filters_batch_post
+    definition: 'Object declared by the contract with fields: frameworks, timeout_seconds, config.'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/Body_framework_filters_batch_v2_framework_filters_batch_post
+  - term: Body_framework_filters_v2_framework_filters_post
+    definition: 'Object declared by the contract with fields: framework, config.'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/Body_framework_filters_v2_framework_filters_post
+  - term: Body_get_insights_list_batch_v2_ontology_insights_batch_post
+    definition: 'Object declared by the contract with fields: payload, config.'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/Body_get_insights_list_batch_v2_ontology_insights_batch_post
+  - term: Body_preview_framework_code_v2_framework_code_preview_post
+    definition: 'Object declared by the contract with fields: framework, config.'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/Body_preview_framework_code_v2_framework_code_preview_post
+  - term: Body_update_framework_name_v2_framework__framework_id__name_patch
+    definition: 'Object declared by the contract with fields: name, config.'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/Body_update_framework_name_v2_framework__framework_id__name_patch
+  - term: Body_update_user_order_display_name_v2_clients_me_orders__order_id__patch
+    definition: 'Object declared by the contract with fields: display_name, config.'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/Body_update_user_order_display_name_v2_clients_me_orders__order_id__patch
+  - term: BrowseRoleResult
+    definition: 'Object declared by the contract with fields: role, assigned.'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/BrowseRoleResult
+  - term: BuilderResponse
+    definition: 'Object declared by the contract with fields: sections.'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/BuilderResponse
+  - term: BuilderSection
+    definition: One section of the builder's first paint. ``data`` and ``error`` are exclusive. A section that fails carries the exception's type
+      name and leaves ``data`` null, so one bad section costs the caller that panel rather than the page.
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/BuilderSection
+  - term: BulkBrowseResponse
+    definition: 'Object declared by the contract with fields: principal_name, roles.'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/BulkBrowseResponse
+  - term: CakeTaskScheduleItem
+    definition: 'Object declared by the contract with fields: next_run_start, next_run_end, last_update.'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/CakeTaskScheduleItem
+  - term: CakeTaskScheduleResponse
+    definition: 'Object declared by the contract with fields: schedules.'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/CakeTaskScheduleResponse
+  - term: CatalogAssetAdminUpdate
+    definition: Partial update for admin-controlled catalog asset fields.
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/CatalogAssetAdminUpdate
+  - term: CatalogClientAuditLogResponse
+    definition: 'Object declared by the contract with fields: id, client_id, changed_by_email, changed_at, field_changed, old_value, new_value.'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/CatalogClientAuditLogResponse
+  - term: CatalogClientCreate
+    definition: 'Object declared by the contract with fields: id, name, plan_type.'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/CatalogClientCreate
+  - term: CatalogClientResponse
+    definition: 'Object declared by the contract with fields: id, name, plan_type, created_at, updated_at.'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/CatalogClientResponse
+  - term: CatalogClientUpdate
+    definition: 'Object declared by the contract with fields: name, plan_type.'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/CatalogClientUpdate
+  - term: Category
+    definition: 'Object declared by the contract with fields: category_id, category_label, category_count.'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/Category
+  - term: CategoryResponse
+    definition: 'Object declared by the contract with fields: items.'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/CategoryResponse
+  - term: ClientBalanceResponse
+    definition: 'Object declared by the contract with fields: total_balance, promotional_balance, purchased_balance, expiry_schedule.'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/ClientBalanceResponse
+  - term: CodeResponse
+    definition: 'Object declared by the contract with fields: code.'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/CodeResponse
+  - term: DataDictionary
+    definition: 'Object declared by the contract with fields: entity_topic_id, label, notes, columns.'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/DataDictionary
+  - term: DataFrameResponse
+    definition: 'Object declared by the contract with fields: type, total, page, size, pages, insight_column, data, message, metadata_info.'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/DataFrameResponse
+  - term: DataLibrarySource
+    definition: 'Object declared by the contract with fields: carc_id, category, subcategory, ecosystem_type, tearsheet_category, provider_name,
+      dataset_name, dataset_id, description, data, topic_data_dictionary, blocked. (9 more)'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/DataLibrarySource
+  - term: DataLibrarySourcesResponse
+    definition: 'Object declared by the contract with fields: page, size, total, total_pages, datasources.'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/DataLibrarySourcesResponse
+  - term: DataSource
+    definition: 'Object declared by the contract with fields: provider_name, dataset_name, dataset_id, description, blocked, last_updated_timestamp,
+      data, is_current, label.'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/DataSource
+  - term: DataSourcesResponse
+    definition: 'Object declared by the contract with fields: page, size, total, total_pages, datasources.'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/DataSourcesResponse
+  - term: DatasetMatch
+    definition: A matched data asset with relevance score.
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/DatasetMatch
+  - term: EntityCategoryDetail
+    definition: 'Object declared by the contract with fields: entity_id, label, entity, entity_domain, entity_representation_name, entity_representation_label.'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/EntityCategoryDetail
+  - term: EntityCategoryResponse
+    definition: 'Object declared by the contract with fields: items.'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/EntityCategoryResponse
+  - term: EntityCategoryResponseItem
+    definition: 'Object declared by the contract with fields: category_label, representations.'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/EntityCategoryResponseItem
+  - term: EntityDetailsResponse
+    definition: 'Object declared by the contract with fields: carc_id, carc_name, entity_label, entity_representation_name, entity_representation_label,
+      entity_domain, entity.'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/EntityDetailsResponse
+  - term: EntityInsightsResponse
+    definition: 'Object declared by the contract with fields: entities.'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/EntityInsightsResponse
+  - term: EntityMapResponseItem
+    definition: 'Object declared by the contract with fields: entity, domain, representation.'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/EntityMapResponseItem
+  - term: EntityResponse
+    definition: 'Object declared by the contract with fields: total, page, size, pages, entities.'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/EntityResponse
+  - term: EntityResponseItem
+    definition: 'Object declared by the contract with fields: entity, entity_domain, entity_domain_label, entity_representation, entity_representation_label,
+      label, entity_id, entity_id_key, figi_code, metadata, relevance_score, carc_id. (1 more)'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/EntityResponseItem
+  - term: ExampleTableResponse
+    definition: 'Object declared by the contract with fields: namespace, table.'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/ExampleTableResponse
+  - term: ExpiryScheduleItem
+    definition: 'Object declared by the contract with fields: amount, expires_at, token_type.'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/ExpiryScheduleItem
+  - term: FilterOptionValue
+    definition: 'Object declared by the contract with fields: key, label.'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/FilterOptionValue
+  - term: FrameworkCollectionResponse
+    definition: 'Object declared by the contract with fields: total_price, number_of_frameworks, frameworks.'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/FrameworkCollectionResponse
+  - term: FrameworkDataStatus
+    definition: 'Object declared by the contract with fields: framework_id, refresh_available, reinstatement_available, framework_refresh_timestamp,
+      framework_reinstatement_timestamp, insight_refresh_timestamp, insight_reinstatement_timestamp, last_reinstatement_reason, message.'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/FrameworkDataStatus
+  - term: FrameworkEntityRequest
+    definition: 'Object declared by the contract with fields: carc_id, representation, entity_name.'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/FrameworkEntityRequest
+  - term: FrameworkEventRequest
+    definition: 'Minimal event primitive for framework compositions. Wire-layer validator: rejects bad combinations before the request ever reaches
+      the framework service, so failures surface as a clean 422 instead of bubbling up as a ``PipelineError`` from inside gateau. The canonical
+      rule sources live in :mod:`gateau.framework.constants`: - ``EVENT_REPRESENTATION_TYPES`` — the full set of allowed event reps. - ``'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/FrameworkEventRequest
+  - term: FrameworkFilter
+    definition: 'Object declared by the contract with fields: key, label, depends_on, select_type, filter_group, db_column, default_value, option_values,
+      table_earliest_date, table_latest_date.'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/FrameworkFilter
+  - term: FrameworkFiltersBatchItem
+    definition: 'One framework''s outcome, positional so the caller can rejoin its input. ``filters`` and ``error`` are mutually exclusive: an
+      item that could not be answered inside the batch deadline carries a reason instead of a result, and the caller falls back to the single-framework
+      route for that pair.'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/FrameworkFiltersBatchItem
+  - term: FrameworkFiltersBatchResponse
+    definition: 'Object declared by the contract with fields: results.'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/FrameworkFiltersBatchResponse
+  - term: FrameworkFiltersResponse
+    definition: 'Object declared by the contract with fields: filters, aggregate_options.'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/FrameworkFiltersResponse
+  - term: FrameworkInsightRequest
+    definition: 'Object declared by the contract with fields: insight_id, insight_name.'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/FrameworkInsightRequest
+  - term: FrameworkMetadataResponse
+    definition: 'Object declared by the contract with fields: id, name, payload, refreshed_date, reinstated_date, reinstatement_reason, ontology_version,
+      price, table_max_date, columns, data_type, message. (2 more)'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/FrameworkMetadataResponse
+  - term: FrameworkOrderCreate
+    definition: 'Object declared by the contract with fields: frameworks.'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/FrameworkOrderCreate
+  - term: FrameworkOrderRead
+    definition: 'Object declared by the contract with fields: id, order_id, name, display_name, type, user_email, total_records_count, total_price,
+      created_at, updated_at, order_type, source. (4 more)'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/FrameworkOrderRead
+  - term: FrameworkRequest
+    definition: 'Object declared by the contract with fields: entities, insight, filters, aggregate, events.'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/FrameworkRequest
+  - term: GrantBucketAccessRequest
+    definition: 'Object declared by the contract with fields: principal_arn, client_name, lag, cut.'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/GrantBucketAccessRequest
+  - term: GrantBucketAccessResponse
+    definition: 'Object declared by the contract with fields: dataset_id, dataset_name, lag, cut, principal_arn, client_name, granted.'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/GrantBucketAccessResponse
+  - term: GrantDatasetRequest
+    definition: 'Object declared by the contract with fields: principal_name, catalog, lag, cut.'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/GrantDatasetRequest
+  - term: GrantDatasetResponse
+    definition: 'Object declared by the contract with fields: dataset_id, principal_name, principal_role, catalog_role, catalog, tables_granted,
+      tables_skipped, skipped_catalogs.'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/GrantDatasetResponse
+  - term: GraphSource
+    definition: 'Object declared by the contract with fields: provider_name, graph_name, graph_id, dataset_id, dataset_name, description, blocked,
+      last_updated_timestamp, is_current, exportformat, carc_id, category. (8 more)'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/GraphSource
+  - term: GraphSourcesResponse
+    definition: 'Object declared by the contract with fields: page, size, total_pages, datasources.'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/GraphSourcesResponse
+  - term: HTTPValidationError
+    definition: 'Object declared by the contract with fields: detail.'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/HTTPValidationError
+  - term: Insight
+    definition: 'Object declared by the contract with fields: insight_id, insight_name, topic_id, topic_name, is_event.'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/Insight
+  - term: InsightDetailsResponse
+    definition: 'Object declared by the contract with fields: ontology_version.'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/InsightDetailsResponse
+  - term: InsightLinkedResponse
+    definition: 'Insight ids linked to the requested entity / event scope. Adjacency only — the client already holds the store and intersects
+      locally, so scoping a browse costs an id list, not a listing. ``incompatible_entities`` answers the picker''s other question in the same
+      round trip: of the candidate entities on screen, which ones share nothing with the scope, so their cards must be disabled rather than allow'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/InsightLinkedResponse
+  - term: InsightListResponse
+    definition: 'Object declared by the contract with fields: insights, source_count, subject_count.'
+    tags:
+    - Object
+    source: openapi/carbon-arc-openapi.json#/components/schemas/InsightListResponse

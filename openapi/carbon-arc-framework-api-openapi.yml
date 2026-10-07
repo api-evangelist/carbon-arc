@@ -1,0 +1,1714 @@
+openapi: 3.2.0
+info:
+  title: Carbon Arc API Documentation Framework API
+  description: '# Introduction
+
+
+    Carbon Arc''s Insights Exchange provides a comprehensive consumption-based platform for accessing decision-making data.'
+  version: v2
+  x-logo:
+    url: /static/logo_light.png
+tags:
+- name: Framework
+paths:
+  /v2/framework/filters:
+    post:
+      tags:
+      - Framework
+      summary: Framework Filters
+      description: 'The filter set for a framework.
+
+
+        The job-polling contract is gone from this route for the common case
+
+        (PRO-3586): the filter_options precompute artifact answers most
+
+        requests, so it runs to completion synchronously under
+
+        settings.framework_filters_timeout_seconds and returns 504 if it
+
+        exceeds that -- no envelope, no added latency.
+
+
+        PRO-3722: ``poll``/``job_id`` restore the envelope specifically for the
+
+        live-fetch fallback that runs on a precompute coverage miss (a real,
+
+        occasionally very slow path -- see get_framework_filters'' own
+
+        docstring). The precompute/cache-hit path is untouched either way.'
+      operationId: framework_filters_v2_framework_filters_post
+      parameters:
+      - name: poll
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: 'Opt into the job-polling contract (PRO-3420): if the operation hasn''t finished within its short submission wait, respond with a QueryJobResponse envelope instead of blocking until it''s done. Callers that don''t pass this keep the original always-blocking behavior unchanged.'
+          default: false
+          title: Poll
+        description: 'Opt into the job-polling contract (PRO-3420): if the operation hasn''t finished within its short submission wait, respond with a QueryJobResponse envelope instead of blocking until it''s done. Callers that don''t pass this keep the original always-blocking behavior unchanged.'
+      - name: job_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Finalize a job an earlier poll=true call already submitted, once GET /v2/query-jobs/{job_id} reports it terminal, instead of submitting a new one. The normal response shaping still runs on the result.
+          title: Job Id
+        description: Finalize a job an earlier poll=true call already submitted, once GET /v2/query-jobs/{job_id} reports it terminal, instead of submitting a new one. The normal response shaping still runs on the result.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Body_framework_filters_v2_framework_filters_post'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/FrameworkFiltersResponse'
+                - $ref: '#/components/schemas/QueryJobResponse'
+                title: Response Framework Filters V2 Framework Filters Post
+        '404':
+          detail: Not found
+          description: Not Found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v2/framework/filters/batch:
+    post:
+      tags:
+      - Framework
+      summary: Framework Filters Batch
+      description: 'Filter sets for many frameworks in one request.
+
+
+        For callers warming a page of pairs ahead of the configure step. The
+
+        per-item bound is short and failures are reported positionally, so this
+
+        answers with whatever it could get rather than making the caller wait on
+
+        its slowest member -- see ``FrameworkService.get_framework_filters_batch``.
+
+
+        Always 200 when the request itself is well-formed; per-framework failures
+
+        live in ``results[].error``.'
+      operationId: framework_filters_batch_v2_framework_filters_batch_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Body_framework_filters_batch_v2_framework_filters_batch_post'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FrameworkFiltersBatchResponse'
+        '404':
+          description: Not Found
+          detail: Not found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v2/framework/filters/{filter_key}/options:
+    post:
+      tags:
+      - Framework
+      summary: Framework Filter Options
+      description: 'The selectable values for one filter. Same contract as ``/filters``:
+
+        synchronous, one response type, bounded by
+
+        settings.framework_filters_timeout_seconds (PRO-3586).'
+      operationId: framework_filter_options_v2_framework_filters__filter_key__options_post
+      parameters:
+      - name: filter_key
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Filter Key
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Body_framework_filter_options_v2_framework_filters__filter_key__options_post'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '404':
+          detail: Not found
+          description: Not Found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v2/framework/metadata:
+    post:
+      tags:
+      - Framework
+      summary: Collection Framework Metadata
+      operationId: collection_framework_metadata_v2_framework_metadata_post
+      parameters:
+      - name: poll
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: 'Opt into the job-polling contract (PRO-3420): if the operation hasn''t finished within its short submission wait, respond with a QueryJobResponse envelope instead of blocking until it''s done. Callers that don''t pass this keep the original always-blocking behavior unchanged.'
+          default: false
+          title: Poll
+        description: 'Opt into the job-polling contract (PRO-3420): if the operation hasn''t finished within its short submission wait, respond with a QueryJobResponse envelope instead of blocking until it''s done. Callers that don''t pass this keep the original always-blocking behavior unchanged.'
+      - name: job_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Finalize a job an earlier poll=true call already submitted, once GET /v2/query-jobs/{job_id} reports it terminal, instead of submitting a new one.
+          title: Job Id
+        description: Finalize a job an earlier poll=true call already submitted, once GET /v2/query-jobs/{job_id} reports it terminal, instead of submitting a new one.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Body_collection_framework_metadata_v2_framework_metadata_post'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/FrameworkCollectionResponse'
+                - $ref: '#/components/schemas/QueryJobResponse'
+                title: Response Collection Framework Metadata V2 Framework Metadata Post
+        '404':
+          detail: Not found
+          description: Not Found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v2/framework/buy:
+    post:
+      tags:
+      - Framework
+      summary: Create Framework Order
+      operationId: create_framework_order_v2_framework_buy_post
+      parameters:
+      - name: repurchase_reason
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - enum:
+            - refresh
+            - reinstate
+            type: string
+          - type: 'null'
+          title: Repurchase Reason
+      - name: poll
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: 'Opt into the job-polling contract (PRO-3420): if the operation hasn''t finished within its short submission wait, respond with a QueryJobResponse envelope instead of blocking until it''s done. Callers that don''t pass this keep the original always-blocking behavior unchanged.'
+          default: false
+          title: Poll
+        description: 'Opt into the job-polling contract (PRO-3420): if the operation hasn''t finished within its short submission wait, respond with a QueryJobResponse envelope instead of blocking until it''s done. Callers that don''t pass this keep the original always-blocking behavior unchanged.'
+      - name: job_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Finalize a job an earlier poll=true call already submitted, once GET /v2/query-jobs/{job_id} reports it terminal, instead of submitting a new one.
+          title: Job Id
+        description: Finalize a job an earlier poll=true call already submitted, once GET /v2/query-jobs/{job_id} reports it terminal, instead of submitting a new one.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Body_create_framework_order_v2_framework_buy_post'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '404':
+          detail: Not found
+          description: Not Found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v2/framework/{framework_id}/metadata:
+    get:
+      tags:
+      - Framework
+      summary: Get Framework Metadata By Id
+      operationId: get_framework_metadata_by_id_v2_framework__framework_id__metadata_get
+      parameters:
+      - name: framework_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Framework Id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              anyOf:
+              - type: object
+              - type: 'null'
+              title: Config
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FrameworkMetadataResponse'
+        '404':
+          detail: Not found
+          description: Not Found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v2/framework/{framework_id}/data:
+    get:
+      tags:
+      - Framework
+      summary: Get Framework Data
+      operationId: get_framework_data_v2_framework__framework_id__data_get
+      parameters:
+      - name: framework_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Framework Id
+      - name: data_type
+        in: query
+        required: false
+        schema:
+          type: string
+          pattern: ^(dataframe|timeseries)$
+          description: Data type
+          default: dataframe
+          title: Data Type
+        description: Data type
+      - name: page
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Page
+      - name: size
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Size
+      - name: fetch_all
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: Fetch all data
+          default: true
+          title: Fetch All
+        description: Fetch all data
+      - name: poll
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: 'Opt into the job-polling contract (PRO-3420): if the query hasn''t finished within its short submission wait, respond with a QueryJobResponse envelope instead of blocking until it''s done. Callers that don''t pass this keep the original always-blocking behavior unchanged.'
+          default: false
+          title: Poll
+        description: 'Opt into the job-polling contract (PRO-3420): if the query hasn''t finished within its short submission wait, respond with a QueryJobResponse envelope instead of blocking until it''s done. Callers that don''t pass this keep the original always-blocking behavior unchanged.'
+      - name: job_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Finalize a job an earlier poll=true call already submitted, once GET /v2/query-jobs/{job_id} reports it terminal, instead of submitting a new one. The normal response shaping/pagination still runs on the result.
+          title: Job Id
+        description: Finalize a job an earlier poll=true call already submitted, once GET /v2/query-jobs/{job_id} reports it terminal, instead of submitting a new one. The normal response shaping/pagination still runs on the result.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              anyOf:
+              - type: object
+              - type: 'null'
+              title: Config
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/TimeSeriesResponse'
+                - $ref: '#/components/schemas/DataFrameResponse'
+                - $ref: '#/components/schemas/QueryJobResponse'
+                title: Response Get Framework Data V2 Framework  Framework Id  Data Get
+        '404':
+          detail: Not found
+          description: Not Found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v2/framework/{framework_id}/export:
+    get:
+      tags:
+      - Framework
+      summary: Export Framework Data
+      operationId: export_framework_data_v2_framework__framework_id__export_get
+      parameters:
+      - name: framework_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Framework Id
+      - name: data_type
+        in: query
+        required: false
+        schema:
+          type: string
+          pattern: ^(dataframe|timeseries)$
+          description: Data type
+          default: dataframe
+          title: Data Type
+        description: Data type
+      requestBody:
+        content:
+          application/json:
+            schema:
+              anyOf:
+              - type: object
+              - type: 'null'
+              title: Config
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '404':
+          detail: Not found
+          description: Not Found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v2/framework/code/preview:
+    post:
+      tags:
+      - Framework
+      summary: Preview Framework Code
+      description: Preview the API code for a framework configuration before purchase.
+      operationId: preview_framework_code_v2_framework_code_preview_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Body_preview_framework_code_v2_framework_code_preview_post'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodeResponse'
+        '404':
+          description: Not Found
+          detail: Not found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v2/framework/{framework_id}/code:
+    get:
+      tags:
+      - Framework
+      summary: Get Framework Code
+      operationId: get_framework_code_v2_framework__framework_id__code_get
+      parameters:
+      - name: framework_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Framework Id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              anyOf:
+              - type: object
+              - type: 'null'
+              title: Config
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodeResponse'
+        '404':
+          detail: Not found
+          description: Not Found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v2/framework/{framework_id}/panel-debias:
+    get:
+      tags:
+      - Framework
+      summary: Get Panel Debias Framework Data
+      operationId: get_panel_debias_framework_data_v2_framework__framework_id__panel_debias_get
+      parameters:
+      - name: framework_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Framework Id
+      - name: data_type
+        in: query
+        required: false
+        schema:
+          type: string
+          pattern: ^(dataframe|timeseries)$
+          description: Data type
+          default: dataframe
+          title: Data Type
+        description: Data type
+      - name: insight_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          description: Insight ID
+          title: Insight Id
+        description: Insight ID
+      - name: page
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Page
+      - name: size
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Size
+      - name: fetch_all
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: Fetch all data
+          default: true
+          title: Fetch All
+        description: Fetch all data
+      - name: sma
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: Use Simple Moving Average
+          default: false
+          title: Sma
+        description: Use Simple Moving Average
+      - name: window
+        in: query
+        required: false
+        schema:
+          type: integer
+          description: Simple Moving Average Window
+          default: 7
+          title: Window
+        description: Simple Moving Average Window
+      - name: method
+        in: query
+        required: false
+        schema:
+          enum:
+          - reference_bias_correction
+          - ratio_bias_correction
+          - reference_mle
+          - ratio_mle
+          - ratio
+          - simple_ratio
+          type: string
+          description: Method for Panel Debiasing
+          default: reference_bias_correction
+          title: Method
+        description: Method for Panel Debiasing
+      requestBody:
+        content:
+          application/json:
+            schema:
+              anyOf:
+              - type: object
+              - type: 'null'
+              title: Config
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/TimeSeriesResponse'
+                - $ref: '#/components/schemas/DataFrameResponse'
+                title: Response Get Panel Debias Framework Data V2 Framework  Framework Id  Panel Debias Get
+        '404':
+          detail: Not found
+          description: Not Found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v2/framework/{framework_id}/panel-debias-info:
+    get:
+      tags:
+      - Framework
+      summary: Get Panel Debias Info
+      operationId: get_panel_debias_info_v2_framework__framework_id__panel_debias_info_get
+      parameters:
+      - name: framework_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Framework Id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              anyOf:
+              - type: object
+              - type: 'null'
+              title: Config
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PanelDebiasingInfo'
+                title: Response Get Panel Debias Info V2 Framework  Framework Id  Panel Debias Info Get
+        '404':
+          detail: Not found
+          description: Not Found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v2/framework/framework-status:
+    get:
+      tags:
+      - Framework
+      summary: Get Framework Data Status
+      operationId: get_framework_data_status_v2_framework_framework_status_get
+      parameters:
+      - name: framework_id
+        in: query
+        required: true
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: array
+            items:
+              type: string
+              format: uuid
+          description: Single framework ID or list of framework IDs
+          title: Framework Id
+        description: Single framework ID or list of framework IDs
+      requestBody:
+        content:
+          application/json:
+            schema:
+              anyOf:
+              - type: object
+              - type: 'null'
+              title: Config
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FrameworkDataStatus'
+                title: Response Get Framework Data Status V2 Framework Framework Status Get
+        '404':
+          detail: Not found
+          description: Not Found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v2/framework/{framework_id}/name:
+    patch:
+      tags:
+      - Framework
+      summary: Update Framework Name
+      description: Update the name of a framework.
+      operationId: update_framework_name_v2_framework__framework_id__name_patch
+      parameters:
+      - name: framework_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Framework Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Body_update_framework_name_v2_framework__framework_id__name_patch'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FrameworkMetadataResponse'
+        '404':
+          detail: Not found
+          description: Not Found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    FrameworkEventRequest:
+      properties:
+        event_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Event Id
+        representation:
+          type: string
+          title: Representation
+        event_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Event Name
+        event_category_id:
+          anyOf:
+          - type: integer
+          - type: string
+          - type: 'null'
+          title: Event Category Id
+      type: object
+      required:
+      - representation
+      title: FrameworkEventRequest
+      description: "Minimal event primitive for framework compositions.\n\nWire-layer validator: rejects bad combinations before the request ever\nreaches the framework service, so failures surface as a clean 422 instead\nof bubbling up as a ``PipelineError`` from inside gateau. The canonical\nrule sources live in :mod:`gateau.framework.constants`:\n\n- ``EVENT_REPRESENTATION_TYPES`` — the full set of allowed event reps.\n- ``PARENT_EVENT_REPRESENTATION_TYPES`` — the subset valid when an\n  ``event_id`` is supplied (since ``event_id`` is the parent event id,\n  mapped to fact-table ``parent_event_id``)."
+    Body_collection_framework_metadata_v2_framework_metadata_post:
+      properties:
+        frameworks:
+          items:
+            $ref: '#/components/schemas/FrameworkRequest'
+          type: array
+          title: Frameworks
+        config:
+          anyOf:
+          - type: object
+          - type: 'null'
+          title: Config
+      type: object
+      required:
+      - frameworks
+      title: Body_collection_framework_metadata_v2_framework_metadata_post
+    DataFrameResponse:
+      properties:
+        type:
+          type: string
+          const: dataframe
+          title: Type
+        total:
+          type: integer
+          title: Total
+        page:
+          type: integer
+          title: Page
+        size:
+          type: integer
+          title: Size
+        pages:
+          type: integer
+          title: Pages
+        insight_column:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Insight Column
+        data:
+          items:
+            type: object
+          type: array
+          title: Data
+        message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Message
+        metadata_info:
+          anyOf:
+          - type: object
+          - type: 'null'
+          title: Metadata Info
+      type: object
+      required:
+      - type
+      - total
+      - page
+      - size
+      - pages
+      - data
+      title: DataFrameResponse
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    FrameworkInsightRequest:
+      properties:
+        insight_id:
+          type: integer
+          title: Insight Id
+        insight_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Insight Name
+      type: object
+      required:
+      - insight_id
+      title: FrameworkInsightRequest
+    QueryJobResult:
+      properties:
+        columns:
+          items:
+            $ref: '#/components/schemas/QueryJobColumn'
+          type: array
+          title: Columns
+        rows:
+          items:
+            items: {}
+            type: array
+          type: array
+          title: Rows
+        row_count:
+          type: integer
+          title: Row Count
+      type: object
+      required:
+      - columns
+      - rows
+      - row_count
+      title: QueryJobResult
+      description: 'A finished job''s rows, in the same column/row *structure* as
+
+        ``SQLQueryResponse`` — columns plus a row matrix — so PRO-3283''s SQL editor
+
+        migration is a rename rather than a reshape. Note the ``type`` caveat above:
+
+        the structure translates, the type vocabulary does not.
+
+
+        No ``applied_limit``/``limit_injected`` here: those describe a caller''s
+
+        own SQL rewrite, which happens before submission, not anything the job
+
+        knows about. ``truncated`` also isn''t here -- see
+
+        ``QueryJobResponse.truncated`` instead: a done job''s *cached* result can
+
+        now be a worker-applied byte-payload trim (not just a caller''s own
+
+        rewrite), so that flag belongs on the envelope wrapping this, not on the
+
+        row/column structure itself.'
+    FrameworkEntityRequest:
+      properties:
+        carc_id:
+          type: integer
+          title: Carc Id
+        representation:
+          type: string
+          title: Representation
+        entity_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Entity Name
+      type: object
+      required:
+      - carc_id
+      - representation
+      title: FrameworkEntityRequest
+    Body_framework_filters_v2_framework_filters_post:
+      properties:
+        framework:
+          $ref: '#/components/schemas/FrameworkRequest'
+        config:
+          anyOf:
+          - type: object
+          - type: 'null'
+          title: Config
+      type: object
+      required:
+      - framework
+      title: Body_framework_filters_v2_framework_filters_post
+    FrameworkOrderCreate:
+      properties:
+        frameworks:
+          items:
+            $ref: '#/components/schemas/FrameworkRequest'
+          type: array
+          title: Frameworks
+      additionalProperties: false
+      type: object
+      required:
+      - frameworks
+      title: FrameworkOrderCreate
+    FrameworkCollectionResponse:
+      properties:
+        total_price:
+          type: number
+          title: Total Price
+        number_of_frameworks:
+          type: integer
+          title: Number Of Frameworks
+        frameworks:
+          items:
+            $ref: '#/components/schemas/FrameworkMetadataResponse'
+          type: array
+          title: Frameworks
+      type: object
+      required:
+      - total_price
+      - number_of_frameworks
+      - frameworks
+      title: FrameworkCollectionResponse
+    CodeResponse:
+      properties:
+        code:
+          type: string
+          title: Code
+      type: object
+      required:
+      - code
+      title: CodeResponse
+    WildCardEntityRequest:
+      properties:
+        carc_name:
+          type: string
+          title: Carc Name
+          default: '*'
+        representation:
+          type: string
+          title: Representation
+      type: object
+      required:
+      - representation
+      title: WildCardEntityRequest
+    FrameworkFiltersBatchResponse:
+      properties:
+        results:
+          items:
+            $ref: '#/components/schemas/FrameworkFiltersBatchItem'
+          type: array
+          title: Results
+      type: object
+      required:
+      - results
+      title: FrameworkFiltersBatchResponse
+    FilterOptionValue:
+      properties:
+        key:
+          type: string
+          title: Key
+        label:
+          type: string
+          title: Label
+      type: object
+      required:
+      - key
+      - label
+      title: FilterOptionValue
+    Body_preview_framework_code_v2_framework_code_preview_post:
+      properties:
+        framework:
+          $ref: '#/components/schemas/FrameworkRequest'
+        config:
+          anyOf:
+          - type: object
+          - type: 'null'
+          title: Config
+      type: object
+      required:
+      - framework
+      title: Body_preview_framework_code_v2_framework_code_preview_post
+    FrameworkRequest:
+      properties:
+        entities:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/FrameworkEntityRequest'
+            type: array
+          - $ref: '#/components/schemas/WildCardEntityRequest'
+          title: Entities
+        insight:
+          $ref: '#/components/schemas/FrameworkInsightRequest'
+        filters:
+          type: object
+          title: Filters
+        aggregate:
+          anyOf:
+          - type: string
+            enum:
+            - sum
+            - mean
+            - count_distinct
+            - max
+            - latest
+          - type: 'null'
+          title: Aggregate
+        events:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/FrameworkEventRequest'
+            type: array
+          - type: 'null'
+          title: Events
+      type: object
+      required:
+      - entities
+      - insight
+      - filters
+      title: FrameworkRequest
+    FrameworkDataStatus:
+      properties:
+        framework_id:
+          type: string
+          format: uuid
+          title: Framework Id
+        refresh_available:
+          type: boolean
+          title: Refresh Available
+        reinstatement_available:
+          type: boolean
+          title: Reinstatement Available
+        framework_refresh_timestamp:
+          type: string
+          format: date-time
+          title: Framework Refresh Timestamp
+        framework_reinstatement_timestamp:
+          type: string
+          format: date-time
+          title: Framework Reinstatement Timestamp
+        insight_refresh_timestamp:
+          type: string
+          format: date-time
+          title: Insight Refresh Timestamp
+        insight_reinstatement_timestamp:
+          type: string
+          format: date-time
+          title: Insight Reinstatement Timestamp
+        last_reinstatement_reason:
+          anyOf:
+          - type: string
+            enum:
+            - Ontology Change
+            - Full Refresh
+            - Vendor Reinstatement
+            - Vendor Backfill
+            - Logic Enhancement
+          - type: 'null'
+          title: Last Reinstatement Reason
+        message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Message
+      type: object
+      required:
+      - framework_id
+      - refresh_available
+      - reinstatement_available
+      - framework_refresh_timestamp
+      - framework_reinstatement_timestamp
+      - insight_refresh_timestamp
+      - insight_reinstatement_timestamp
+      title: FrameworkDataStatus
+    FrameworkFiltersResponse:
+      properties:
+        filters:
+          items:
+            $ref: '#/components/schemas/FrameworkFilter'
+          type: array
+          title: Filters
+        aggregate_options:
+          anyOf:
+          - items:
+              type: string
+              enum:
+              - sum
+              - mean
+              - count_distinct
+              - max
+              - latest
+            type: array
+          - type: 'null'
+          title: Aggregate Options
+      type: object
+      required:
+      - filters
+      - aggregate_options
+      title: FrameworkFiltersResponse
+    Body_framework_filter_options_v2_framework_filters__filter_key__options_post:
+      properties:
+        framework:
+          $ref: '#/components/schemas/FrameworkRequest'
+        config:
+          anyOf:
+          - type: object
+          - type: 'null'
+          title: Config
+      type: object
+      required:
+      - framework
+      title: Body_framework_filter_options_v2_framework_filters__filter_key__options_post
+    SchemaColumn:
+      properties:
+        col_name:
+          type: string
+          title: Col Name
+        data_type:
+          type: string
+          title: Data Type
+      type: object
+      required:
+      - col_name
+      - data_type
+      title: SchemaColumn
+    Body_create_framework_order_v2_framework_buy_post:
+      properties:
+        order:
+          anyOf:
+          - $ref: '#/components/schemas/FrameworkOrderCreate'
+          - type: 'null'
+        framework_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - items:
+              type: string
+              format: uuid
+            type: array
+          - type: 'null'
+          title: Framework Id
+        source:
+          anyOf:
+          - type: string
+            enum:
+            - tribes
+            - riastrad
+            - prisms
+          - type: 'null'
+          title: Source
+        config:
+          anyOf:
+          - type: object
+          - type: 'null'
+          title: Config
+      type: object
+      title: Body_create_framework_order_v2_framework_buy_post
+    TimeSeriesEntry:
+      properties:
+        entity_representation:
+          type: string
+          title: Entity Representation
+        entity_id:
+          type: integer
+          title: Entity Id
+        entity_name:
+          type: string
+          title: Entity Name
+        filters:
+          type: object
+          title: Filters
+        insight:
+          type: string
+          title: Insight
+        series_name:
+          type: string
+          title: Series Name
+        series:
+          items:
+            $ref: '#/components/schemas/TimeSeriesPoint'
+          type: array
+          title: Series
+      type: object
+      required:
+      - entity_representation
+      - entity_id
+      - entity_name
+      - filters
+      - insight
+      - series_name
+      - series
+      title: TimeSeriesEntry
+    Body_framework_filters_batch_v2_framework_filters_batch_post:
+      properties:
+        frameworks:
+          items:
+            $ref: '#/components/schemas/FrameworkRequest'
+          type: array
+          minItems: 1
+          title: Frameworks
+        timeout_seconds:
+          anyOf:
+          - type: number
+            exclusiveMinimum: 0.0
+          - type: 'null'
+          title: Timeout Seconds
+          description: Per-framework wall-clock ceiling. Clamped to the server's own batch ceiling. A caller warming a cache wants a bound far below the single-framework route's, because an item it cannot get cheaply is one it should skip rather than wait for.
+        config:
+          anyOf:
+          - type: object
+          - type: 'null'
+          title: Config
+      type: object
+      required:
+      - frameworks
+      title: Body_framework_filters_batch_v2_framework_filters_batch_post
+    Body_update_framework_name_v2_framework__framework_id__name_patch:
+      properties:
+        name:
+          type: string
+          title: Name
+        config:
+          anyOf:
+          - type: object
+          - type: 'null'
+          title: Config
+      type: object
+      required:
+      - name
+      title: Body_update_framework_name_v2_framework__framework_id__name_patch
+    FrameworkFilter:
+      properties:
+        key:
+          type: string
+          title: Key
+          description: location
+        label:
+          type: string
+          title: Label
+          description: State Name
+        depends_on:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Depends On
+          description: location_resolution
+        select_type:
+          type: string
+          title: Select Type
+          description: multi-selection
+        filter_group:
+          type: string
+          title: Filter Group
+          description: categorical
+        db_column:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Db Column
+        default_value:
+          anyOf:
+          - type: string
+          - items: {}
+            type: array
+          - type: object
+          - type: 'null'
+          title: Default Value
+        option_values:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/FilterOptionValue'
+            type: array
+          - type: 'null'
+          title: Option Values
+        table_earliest_date:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Table Earliest Date
+        table_latest_date:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Table Latest Date
+      type: object
+      required:
+      - key
+      - label
+      - select_type
+      - filter_group
+      title: FrameworkFilter
+    TimeSeriesPoint:
+      properties:
+        date:
+          type: string
+          title: Date
+        value:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Value
+      type: object
+      required:
+      - date
+      - value
+      title: TimeSeriesPoint
+    TimeSeriesResponse:
+      properties:
+        type:
+          type: string
+          const: timeseries
+          title: Type
+        total:
+          type: integer
+          title: Total
+        page:
+          type: integer
+          title: Page
+        size:
+          type: integer
+          title: Size
+        pages:
+          type: integer
+          title: Pages
+        insight_column:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Insight Column
+        data:
+          items:
+            $ref: '#/components/schemas/TimeSeriesEntry'
+          type: array
+          title: Data
+        message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Message
+        metadata_info:
+          anyOf:
+          - type: object
+          - type: 'null'
+          title: Metadata Info
+      type: object
+      required:
+      - type
+      - total
+      - page
+      - size
+      - pages
+      - data
+      title: TimeSeriesResponse
+    QueryJobColumn:
+      properties:
+        name:
+          type: string
+          title: Name
+        type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Type
+      type: object
+      required:
+      - name
+      title: QueryJobColumn
+    QueryJobState:
+      type: string
+      enum:
+      - queued
+      - running
+      - done
+      - failed
+      - cancelled
+      title: QueryJobState
+      description: 'Job lifecycle, mirroring pyca''s ``QueryStatusTracker`` states.
+
+
+        One collapsed ``queued``, with no separate "waiting for a worker" vs
+
+        "waiting for the ConcurrencyGate" state (PRO-3278 decision): the two are
+
+        indistinguishable to the person waiting.
+
+
+        Be aware of where the worker actually draws that line today. It calls
+
+        ``mark_running`` *before* ``async_read_query``, and the gate is acquired
+
+        inside that call, so a job parked on the gate reports ``running`` — with no
+
+        position, no ETA, and a ``queue_wait_ms`` frozen at pickup — rather than
+
+        ``queued``. Under a saturated gate, which is the condition this whole system
+
+        exists to make visible, that understates the wait by exactly the gate wait.
+
+        Moving ``mark_running`` past gate admission is a change to the worker
+
+        (PRO-3281), tracked separately.
+
+
+        An enum rather than a bare ``str`` so a state pyca adds later surfaces as
+
+        a loud, explicit failure in ``QueryJobService`` instead of flowing through
+
+        to clients that have no branch for it.'
+    QueryJobResponse:
+      properties:
+        job_id:
+          type: string
+          title: Job Id
+        state:
+          $ref: '#/components/schemas/QueryJobState'
+        position:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Position
+          description: 1-indexed place in the queue, while queued.
+        eta_seconds:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Eta Seconds
+          description: Estimated seconds until this job finishes, from recent completion durations. None while no completions have been recorded yet.
+        queue_wait_ms:
+          type: integer
+          title: Queue Wait Ms
+          description: Time spent queued. Still climbing while queued; frozen at the real wait once the job starts running.
+          default: 0
+        is_heavy_query:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Is Heavy Query
+          description: 'PRO-3635: whether the query (or, for a multi-query operation, its heaviest sub-query) scored above the ''typical query'' band on pyca''s structural cost estimator -- a hint that slowness is query-side, not necessarily system-side load. None if no cost estimate has been recorded for this job yet (e.g. still queued).'
+        poll_after_ms:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Poll After Ms
+          description: How long the client should wait before polling again. Absent on a terminal state, which needs no further polling.
+        error:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error
+        result:
+          anyOf:
+          - $ref: '#/components/schemas/QueryJobResult'
+          - type: 'null'
+        result_json:
+          anyOf:
+          - {}
+          - type: 'null'
+          title: Result Json
+          description: Non-tabular result payload, for jobs whose result doesn't fit QueryJobResult's columns/rows shape (e.g. PRO-3395's batched framework insight queries, each already normalized to plain JSON-safe records). Mutually exclusive with `result` -- a job populates exactly one of the two, based on what its task cached.
+        max_cell_chars:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Max Cell Chars
+          description: Per-cell character cap the worker applied to this result's string cells (see truncate_wide_cells), or null when nothing was shortened. Mirrors SQLQueryResponse.max_cell_chars.
+        truncated:
+          type: boolean
+          title: Truncated
+          description: 'True if `result`''s rows are a prefix of the real query result -- the worker applied the same byte-payload trim run_query''s own sync path uses (see trim_rows_for_payload) before caching, because the result exceeded MAX_PAYLOAD_BYTES. Lives on this envelope rather than QueryJobResult itself: QueryJobResult documents a done job''s cached result as always complete, which is no longer true for a trimmed sql_editor job (bugbot finding: ''Async SQL trim hides truncation''), and callers already check SQLQueryResponse.truncated on the sync path -- this mirrors it.'
+          default: false
+      type: object
+      required:
+      - job_id
+      - state
+      title: QueryJobResponse
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    FrameworkMetadataResponse:
+      properties:
+        id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Id
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+        payload:
+          $ref: '#/components/schemas/FrameworkRequest'
+        refreshed_date:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Refreshed Date
+        reinstated_date:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Reinstated Date
+        reinstatement_reason:
+          type: string
+          enum:
+          - Ontology Change
+          - Full Refresh
+          - Vendor Reinstatement
+          - Vendor Backfill
+          - Logic Enhancement
+          title: Reinstatement Reason
+        ontology_version:
+          type: string
+          title: Ontology Version
+        price:
+          type: number
+          title: Price
+        table_max_date:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Table Max Date
+        columns:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/SchemaColumn'
+            type: array
+          - type: 'null'
+          title: Columns
+        data_type:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Data Type
+        message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Message
+        latest_framework_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Latest Framework Id
+        is_superseded:
+          type: boolean
+          title: Is Superseded
+          default: false
+      type: object
+      required:
+      - payload
+      - refreshed_date
+      - reinstated_date
+      - reinstatement_reason
+      - ontology_version
+      - price
+      - table_max_date
+      title: FrameworkMetadataResponse
+    PanelDebiasingInfo:
+      properties:
+        insight_id:
+          type: integer
+          title: Insight Id
+        insight_label:
+          type: string
+          title: Insight Label
+        insight_type:
+          type: string
+          title: Insight Type
+      type: object
+      required:
+      - insight_id
+      - insight_label
+      - insight_type
+      title: PanelDebiasingInfo
+    FrameworkFiltersBatchItem:
+      properties:
+        index:
+          type: integer
+          title: Index
+        filters:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/FrameworkFilter'
+            type: array
+          - type: 'null'
+          title: Filters
+        aggregate_options:
+          anyOf:
+          - items:
+              type: string
+              enum:
+              - sum
+              - mean
+              - count_distinct
+              - max
+              - latest
+            type: array
+          - type: 'null'
+          title: Aggregate Options
+        error:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error
+      type: object
+      required:
+      - index
+      title: FrameworkFiltersBatchItem
+      description: 'One framework''s outcome, positional so the caller can rejoin its input.
+
+
+        ``filters`` and ``error`` are mutually exclusive: an item that could not be
+
+        answered inside the batch deadline carries a reason instead of a result,
+
+        and the caller falls back to the single-framework route for that pair.'

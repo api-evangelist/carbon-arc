@@ -1,0 +1,189 @@
+openapi: 3.2.0
+info:
+  title: Carbon Arc API Documentation Explore Use Cases API
+  description: '# Introduction
+
+
+    Carbon Arc''s Insights Exchange provides a comprehensive consumption-based platform for accessing decision-making data.'
+  version: v2
+  x-logo:
+    url: /static/logo_light.png
+tags:
+- name: Explore Use Cases
+paths:
+  /v2/explore-use-cases/match:
+    post:
+      tags:
+      - Explore Use Cases
+      summary: Match Datasets
+      description: 'Match data assets to a user''s persona using AI.
+
+
+        This public endpoint allows potential customers to describe their business
+
+        needs and receive AI-powered recommendations for relevant CarbonArc data assets.
+
+
+        Uses AWS Bedrock with Claude 3.5 Sonnet for inference.
+
+
+        **Rate Limited**: 5 requests per minute per IP address.'
+      operationId: match_datasets_v2_explore_use_cases_match_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PersonaInput'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MatchResult'
+        '404':
+          description: Not Found
+          detail: Not found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    DatasetMatch:
+      properties:
+        dataset_id:
+          items:
+            type: string
+          type: array
+          title: Dataset Id
+          description: Dataset ID(s)
+        dataset_name:
+          type: string
+          title: Dataset Name
+          description: Name of the data asset
+        description:
+          type: string
+          title: Description
+          description: Data asset description
+        category:
+          type: string
+          title: Category
+          description: Data asset category (demand/supply/reference)
+        provider_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Provider Name
+          description: Data provider name
+        match_score:
+          type: integer
+          maximum: 100.0
+          minimum: 0.0
+          title: Match Score
+          description: Relevance score 0-100
+        use_cases:
+          items:
+            type: string
+          type: array
+          title: Use Cases
+          description: Example use cases for this data asset
+          default: []
+      type: object
+      required:
+      - dataset_id
+      - dataset_name
+      - description
+      - category
+      - match_score
+      title: DatasetMatch
+      description: A matched data asset with relevance score.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    MatchResult:
+      properties:
+        persona:
+          $ref: '#/components/schemas/PersonaInput'
+          description: The input persona
+        matches:
+          items:
+            $ref: '#/components/schemas/DatasetMatch'
+          type: array
+          title: Matches
+          description: Ranked list of matching data assets
+        total_datasets_evaluated:
+          type: integer
+          title: Total Datasets Evaluated
+          description: Total number of data assets considered
+      type: object
+      required:
+      - persona
+      - matches
+      - total_datasets_evaluated
+      title: MatchResult
+      description: Result of the AI-powered data asset matching.
+    PersonaInput:
+      properties:
+        industry:
+          type: string
+          title: Industry
+          description: User's industry (e.g., 'Financial Services')
+        company_type:
+          type: string
+          title: Company Type
+          description: Type of company (e.g., 'Hedge Fund', 'Retailer')
+        use_cases:
+          items:
+            type: string
+          type: array
+          title: Use Cases
+          description: Selected use cases of interest
+          default: []
+        description:
+          type: string
+          title: Description
+          description: Free-text description of data needs
+      additionalProperties: false
+      type: object
+      required:
+      - industry
+      - company_type
+      - description
+      title: PersonaInput
+      description: Input describing the user's persona and data needs.

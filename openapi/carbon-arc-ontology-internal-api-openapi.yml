@@ -1,0 +1,391 @@
+openapi: 3.2.0
+info:
+  title: Carbon Arc API Documentation Ontology Internal API
+  description: '# Introduction
+
+
+    Carbon Arc''s Insights Exchange provides a comprehensive consumption-based platform for accessing decision-making data.'
+  version: v2
+  x-logo:
+    url: /static/logo_light.png
+tags:
+- name: Ontology Internal
+paths:
+  /v2/ontology/internal/entities:
+    get:
+      tags:
+      - Ontology Internal
+      summary: Search Entities
+      description: 'Entity typeahead over the whole entity store, matched on id and name.
+
+
+        No ``insight_id``: featured entities are pinned independently of any insight.
+
+        Served from process memory, with no vector index and no graph on the path --
+
+        see ``search_entities_from_store``.'
+      operationId: search_entities_v2_ontology_internal_entities_get
+      parameters:
+      - name: search
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Entity id or name fragment; empty browses the listing
+          title: Search
+        description: Entity id or name fragment; empty browses the listing
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+          title: Page
+      - name: size
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 100
+          minimum: 1
+          default: 25
+          title: Size
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EntityResponse'
+        '404':
+          detail: Not found
+          description: Not Found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v2/ontology/internal/all-insights:
+    get:
+      tags:
+      - Ontology Internal
+      summary: All Insights
+      description: 'The whole insight corpus in one shot, unfiltered.
+
+
+        The picker fetches once and searches in memory instead of round-tripping per
+
+        keystroke, so this is unpaginated on purpose. ``version`` is also the ETag: a
+
+        caller holding the current one revalidates into a 304 with no body.
+
+
+        Served from the published store; when nothing is published for the current
+
+        ontology version the corpus is built live -- but only for the response that
+
+        actually needs the rows. A conditional request and an already-rendered body
+
+        are both settled by the version alone, which a single node read resolves,
+
+        and a live build made to reach either would be discarded whole. Unlike the
+
+        entity typeahead a live build here is affordable: it is one bulk corpus read
+
+        per version, not a graph query per keystroke.'
+      operationId: all_insights_v2_ontology_internal_all_insights_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InsightStoreResponse'
+        '404':
+          description: Not Found
+          detail: Not found
+components:
+  schemas:
+    EntityResponseItem:
+      properties:
+        entity:
+          type: string
+          title: Entity
+        entity_domain:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Entity Domain
+          default: ''
+        entity_domain_label:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Entity Domain Label
+          default: ''
+        entity_representation:
+          type: string
+          title: Entity Representation
+        entity_representation_label:
+          type: string
+          title: Entity Representation Label
+        label:
+          type: string
+          title: Label
+        entity_id:
+          type: integer
+          title: Entity Id
+        entity_id_key:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Entity Id Key
+        figi_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Figi Code
+        metadata:
+          anyOf:
+          - type: object
+          - type: 'null'
+          title: Metadata
+        relevance_score:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Relevance Score
+        carc_id:
+          type: integer
+          title: Carc Id
+          description: Alias for entity_id for backward compatibility.
+          readOnly: true
+        representation:
+          type: string
+          title: Representation
+          description: Alias for entity_representation for backward compatibility.
+          readOnly: true
+      type: object
+      required:
+      - entity
+      - entity_representation
+      - entity_representation_label
+      - label
+      - entity_id
+      - carc_id
+      - representation
+      title: EntityResponseItem
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    InsightStoreResponse:
+      properties:
+        version:
+          type: string
+          title: Version
+        total:
+          type: integer
+          title: Total
+        items:
+          items:
+            $ref: '#/components/schemas/InsightStoreItem'
+          type: array
+          title: Items
+      type: object
+      required:
+      - version
+      - total
+      - items
+      title: InsightStoreResponse
+      description: 'Whole insight corpus, served in one shot for client-side search.
+
+
+        Unpaginated by design — the corpus is ~1.2k rows and the builder filters
+
+        it in memory. ``version`` is the graph version stamp and doubles as the
+
+        ETag, so a client holding it revalidates into a 304.'
+    EntityResponse:
+      properties:
+        total:
+          type: integer
+          title: Total
+        page:
+          type: integer
+          title: Page
+        size:
+          type: integer
+          title: Size
+        pages:
+          type: integer
+          title: Pages
+        entities:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/EntityResponseItem'
+            type: array
+          - type: 'null'
+          title: Entities
+      type: object
+      required:
+      - total
+      - page
+      - size
+      - pages
+      title: EntityResponse
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    InsightStoreItem:
+      properties:
+        insight_id:
+          type: integer
+          title: Insight Id
+        label:
+          type: string
+          title: Label
+        insight_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Insight Name
+        sources:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Sources
+        topic_id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Topic Id
+        topic_key:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Topic Key
+        topic_label:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Topic Label
+        topic_description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Topic Description
+        subject_id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Subject Id
+        subject_key:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Subject Key
+        subject_label:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Subject Label
+        dataset_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Dataset Id
+        insight_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Insight Type
+        insight_type_label:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Insight Type Label
+        is_event:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Is Event
+        historic:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Historic
+        has_entity:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Has Entity
+        blocked:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Blocked
+        insight_overview:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Insight Overview
+        last_updated_timestamp:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Updated Timestamp
+      type: object
+      required:
+      - insight_id
+      - label
+      title: InsightStoreItem
+      description: 'Slim insight row for the whole-corpus store.
+
+
+        Only what the prism and builder pickers render. The per-insight
+
+        ``description``, ``subject_description``, and the ``delay_status`` dict are
+
+        omitted deliberately — they are the bulk of the payload and neither picker
+
+        reads them. ``topic_description`` and ``last_updated_timestamp`` are kept
+
+        because the browse panel renders the topic summary line and each dataset''s
+
+        "last updated" stamp.'

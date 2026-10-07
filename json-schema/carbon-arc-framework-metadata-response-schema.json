@@ -1,0 +1,360 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/carbon-arc/main/json-schema/carbon-arc-framework-metadata-response-schema.json",
+  "title": "FrameworkMetadataResponse",
+  "x-generated": "2026-10-07",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/carbon-arc-openapi.json#/components/schemas/FrameworkMetadataResponse",
+  "properties": {
+    "id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "uuid"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Id"
+    },
+    "name": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Name"
+    },
+    "payload": {
+      "$ref": "#/$defs/FrameworkRequest"
+    },
+    "refreshed_date": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Refreshed Date"
+    },
+    "reinstated_date": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Reinstated Date"
+    },
+    "reinstatement_reason": {
+      "type": "string",
+      "enum": [
+        "Ontology Change",
+        "Full Refresh",
+        "Vendor Reinstatement",
+        "Vendor Backfill",
+        "Logic Enhancement"
+      ],
+      "title": "Reinstatement Reason"
+    },
+    "ontology_version": {
+      "type": "string",
+      "title": "Ontology Version"
+    },
+    "price": {
+      "type": "number",
+      "title": "Price"
+    },
+    "table_max_date": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Table Max Date"
+    },
+    "columns": {
+      "anyOf": [
+        {
+          "items": {
+            "$ref": "#/$defs/SchemaColumn"
+          },
+          "type": "array"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Columns"
+    },
+    "data_type": {
+      "anyOf": [
+        {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Data Type"
+    },
+    "message": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Message"
+    },
+    "latest_framework_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "uuid"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Latest Framework Id"
+    },
+    "is_superseded": {
+      "type": "boolean",
+      "title": "Is Superseded",
+      "default": false
+    }
+  },
+  "type": "object",
+  "required": [
+    "payload",
+    "refreshed_date",
+    "reinstated_date",
+    "reinstatement_reason",
+    "ontology_version",
+    "price",
+    "table_max_date"
+  ],
+  "$defs": {
+    "FrameworkEntityRequest": {
+      "properties": {
+        "carc_id": {
+          "type": "integer",
+          "title": "Carc Id"
+        },
+        "representation": {
+          "type": "string",
+          "title": "Representation"
+        },
+        "entity_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Entity Name"
+        }
+      },
+      "type": "object",
+      "required": [
+        "carc_id",
+        "representation"
+      ],
+      "title": "FrameworkEntityRequest"
+    },
+    "FrameworkEventRequest": {
+      "properties": {
+        "event_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Event Id"
+        },
+        "representation": {
+          "type": "string",
+          "title": "Representation"
+        },
+        "event_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Event Name"
+        },
+        "event_category_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Event Category Id"
+        }
+      },
+      "type": "object",
+      "required": [
+        "representation"
+      ],
+      "title": "FrameworkEventRequest",
+      "description": "Minimal event primitive for framework compositions.\n\nWire-layer validator: rejects bad combinations before the request ever\nreaches the framework service, so failures surface as a clean 422 instead\nof bubbling up as a ``PipelineError`` from inside gateau. The canonical\nrule sources live in :mod:`gateau.framework.constants`:\n\n- ``EVENT_REPRESENTATION_TYPES`` — the full set of allowed event reps.\n- ``PARENT_EVENT_REPRESENTATION_TYPES`` — the subset valid when an\n  ``event_id`` is supplied (since ``event_id`` is the parent event id,\n  mapped to fact-table ``parent_event_id``)."
+    },
+    "FrameworkInsightRequest": {
+      "properties": {
+        "insight_id": {
+          "type": "integer",
+          "title": "Insight Id"
+        },
+        "insight_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Insight Name"
+        }
+      },
+      "type": "object",
+      "required": [
+        "insight_id"
+      ],
+      "title": "FrameworkInsightRequest"
+    },
+    "FrameworkRequest": {
+      "properties": {
+        "entities": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/FrameworkEntityRequest"
+              },
+              "type": "array"
+            },
+            {
+              "$ref": "#/$defs/WildCardEntityRequest"
+            }
+          ],
+          "title": "Entities"
+        },
+        "insight": {
+          "$ref": "#/$defs/FrameworkInsightRequest"
+        },
+        "filters": {
+          "type": "object",
+          "title": "Filters"
+        },
+        "aggregate": {
+          "anyOf": [
+            {
+              "type": "string",
+              "enum": [
+                "sum",
+                "mean",
+                "count_distinct",
+                "max",
+                "latest"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Aggregate"
+        },
+        "events": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/FrameworkEventRequest"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Events"
+        }
+      },
+      "type": "object",
+      "required": [
+        "entities",
+        "insight",
+        "filters"
+      ],
+      "title": "FrameworkRequest"
+    },
+    "SchemaColumn": {
+      "properties": {
+        "col_name": {
+          "type": "string",
+          "title": "Col Name"
+        },
+        "data_type": {
+          "type": "string",
+          "title": "Data Type"
+        }
+      },
+      "type": "object",
+      "required": [
+        "col_name",
+        "data_type"
+      ],
+      "title": "SchemaColumn"
+    },
+    "WildCardEntityRequest": {
+      "properties": {
+        "carc_name": {
+          "type": "string",
+          "title": "Carc Name",
+          "default": "*"
+        },
+        "representation": {
+          "type": "string",
+          "title": "Representation"
+        }
+      },
+      "type": "object",
+      "required": [
+        "representation"
+      ],
+      "title": "WildCardEntityRequest"
+    }
+  }
+}

@@ -1,0 +1,271 @@
+openapi: 3.2.0
+info:
+  title: Carbon Arc API Documentation Block API
+  description: '# Introduction
+
+
+    Carbon Arc''s Insights Exchange provides a comprehensive consumption-based platform for accessing decision-making data.'
+  version: v2
+  x-logo:
+    url: /static/logo_light.png
+tags:
+- name: Block
+paths:
+  /v2/block/datasets:
+    get:
+      tags:
+      - Block
+      summary: One row per Block dataset_id with per-cut pricing, lag list, and per-client…
+      operationId: list_block_datasets_v2_block_datasets_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BlockDatasetsResponse'
+        '404':
+          description: Not Found
+          detail: Not found
+  /v2/block/datasets/{dataset_id}/cuts:
+    get:
+      tags:
+      - Block
+      summary: Available cuts for a dataset_id, each with the list of vended lags
+      operationId: list_dataset_cuts_v2_block_datasets__dataset_id__cuts_get
+      parameters:
+      - name: dataset_id
+        in: path
+        required: true
+        schema:
+          type: string
+          pattern: ^CA\d+[A-Z]*$
+          title: Dataset Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BlockDatasetCutsResponse'
+        '404':
+          detail: Not found
+          description: Not Found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    BlockDatasetsResponse:
+      properties:
+        datasets:
+          items:
+            $ref: '#/components/schemas/BlockDatasetEntry'
+          type: array
+          title: Datasets
+      type: object
+      required:
+      - datasets
+      title: BlockDatasetsResponse
+    BlockDatasetCutsResponse:
+      properties:
+        dataset_id:
+          type: string
+          title: Dataset Id
+        cuts:
+          items:
+            $ref: '#/components/schemas/BlockDatasetCutsEntry'
+          type: array
+          title: Cuts
+      type: object
+      required:
+      - dataset_id
+      - cuts
+      title: BlockDatasetCutsResponse
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    BlockRequestStatus:
+      type: string
+      enum:
+      - NONE
+      - PENDING
+      - APPROVED
+      - TRIAL_ACTIVE
+      - CONTRACTED
+      - DENIED
+      title: BlockRequestStatus
+    BlockDatasetEntry:
+      properties:
+        dataset_id:
+          type: string
+          title: Dataset Id
+        label:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Label
+        vendor:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Vendor
+        offered_access_type:
+          anyOf:
+          - $ref: '#/components/schemas/BlockAccessType'
+          - type: 'null'
+        cuts:
+          items:
+            $ref: '#/components/schemas/BlockDatasetCut'
+          type: array
+          title: Cuts
+          default: []
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        frequency:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Frequency
+        history:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: History
+        lag:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Lag
+        use_cases:
+          items:
+            type: string
+          type: array
+          title: Use Cases
+          default: []
+        ecosystem:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ecosystem
+        status:
+          type: string
+          title: Status
+          default: ready
+        terms_of_use_html:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Terms Of Use Html
+        terms_of_use_version_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Terms Of Use Version Id
+        platform_access_blocked:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Platform Access Blocked
+      type: object
+      required:
+      - dataset_id
+      title: BlockDatasetEntry
+    BlockAccessType:
+      type: string
+      enum:
+      - Forward Feed
+      - Historic
+      title: BlockAccessType
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    BlockDatasetCutsEntry:
+      properties:
+        cut:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Cut
+        lags:
+          items:
+            type: string
+          type: array
+          title: Lags
+          default: []
+      type: object
+      required:
+      - cut
+      title: BlockDatasetCutsEntry
+      description: 'Lag chips shown in the CAMS pricing card under the cut selector
+
+        and in the power-ui request modal''s lag dropdown.'
+    BlockDatasetCut:
+      properties:
+        cut:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Cut
+        lags:
+          items:
+            type: string
+          type: array
+          title: Lags
+          default: []
+        annual_price:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Annual Price
+        bulk_row_status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Bulk Row Status
+        request_statuses:
+          additionalProperties:
+            $ref: '#/components/schemas/BlockRequestStatus'
+          type: object
+          title: Request Statuses
+          default: {}
+      type: object
+      required:
+      - cut
+      title: BlockDatasetCut

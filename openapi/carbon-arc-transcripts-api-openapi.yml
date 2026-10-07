@@ -1,0 +1,585 @@
+openapi: 3.2.0
+info:
+  title: Carbon Arc API Documentation Transcripts API
+  description: '# Introduction
+
+
+    Carbon Arc''s Insights Exchange provides a comprehensive consumption-based platform for accessing decision-making data.'
+  version: v2
+  x-logo:
+    url: /static/logo_light.png
+tags:
+- name: Transcripts
+paths:
+  /v2/transcripts:
+    get:
+      tags:
+      - Transcripts
+      summary: List available transcripts
+      operationId: list_transcripts_v2_transcripts_get
+      parameters:
+      - name: ticker
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Filter by ticker symbol (entity label)
+          title: Ticker
+        description: Filter by ticker symbol (entity label)
+      - name: entity
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: array
+            items:
+              type: string
+          - type: 'null'
+          description: Filter by entity id (repeatable)
+          title: Entity
+        description: Filter by entity id (repeatable)
+      - name: region
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: array
+            items:
+              type: string
+          - type: 'null'
+          description: Filter by region id (repeatable, exact match)
+          title: Region
+        description: Filter by region id (repeatable, exact match)
+      - name: transcript_type
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Filter by transcript type
+          title: Transcript Type
+        description: Filter by transcript type
+      - name: search
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Search in title and description
+          title: Search
+        description: Search in title and description
+      - name: interview_date_from
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          description: Interview date lower bound (inclusive)
+          title: Interview Date From
+        description: Interview date lower bound (inclusive)
+      - name: interview_date_to
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          description: Interview date upper bound (inclusive)
+          title: Interview Date To
+        description: Interview date upper bound (inclusive)
+      - name: is_purchased
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          description: Filter by purchase status
+          title: Is Purchased
+        description: Filter by purchase status
+      - name: sort_by
+        in: query
+        required: false
+        schema:
+          type: string
+          pattern: ^(title|interview_date|published_at)$
+          default: published_at
+          title: Sort By
+      - name: order
+        in: query
+        required: false
+        schema:
+          type: string
+          pattern: ^(asc|desc)$
+          default: desc
+          title: Order
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+          title: Page
+      - name: size
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 100
+          minimum: 1
+          default: 20
+          title: Size
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TranscriptListResponse'
+        '404':
+          detail: Not found
+          description: Not Found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v2/transcripts/all:
+    get:
+      tags:
+      - Transcripts
+      summary: The whole listable transcript catalog in one request
+      description: Everything the Transcripts page needs to filter, sort, page and search entirely in the browser. ETagged, so a warm client revalidates into a 304.
+      operationId: all_transcripts_v2_transcripts_all_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: Not Found
+          detail: Not found
+  /v2/transcripts/entities:
+    get:
+      tags:
+      - Transcripts
+      summary: List all entity facets for published transcripts
+      operationId: list_transcript_entities_v2_transcripts_entities_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/TranscriptEntityCount'
+                type: array
+                title: Response List Transcript Entities V2 Transcripts Entities Get
+        '404':
+          description: Not Found
+          detail: Not found
+  /v2/transcripts/regions:
+    get:
+      tags:
+      - Transcripts
+      summary: List all region facets for published transcripts
+      operationId: list_transcript_regions_v2_transcripts_regions_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/TranscriptRegionCount'
+                type: array
+                title: Response List Transcript Regions V2 Transcripts Regions Get
+        '404':
+          description: Not Found
+          detail: Not found
+  /v2/transcripts/{transcript_id}:
+    get:
+      tags:
+      - Transcripts
+      summary: Get a transcript
+      operationId: get_transcript_v2_transcripts__transcript_id__get
+      parameters:
+      - name: transcript_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Transcript Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TranscriptDetailItem'
+        '404':
+          detail: Not found
+          description: Not Found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v2/transcripts/{transcript_id}/purchase:
+    post:
+      tags:
+      - Transcripts
+      summary: Purchase a transcript
+      operationId: purchase_transcript_v2_transcripts__transcript_id__purchase_post
+      parameters:
+      - name: transcript_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Transcript Id
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TranscriptPurchaseResponse'
+        '404':
+          detail: Not found
+          description: Not Found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v2/transcripts/{transcript_id}/download:
+    get:
+      tags:
+      - Transcripts
+      summary: Download a purchased transcript
+      description: Streams a watermarked TXT or PDF built from the canonical text. The response is file bytes, never a presigned URL to the unmarked original.
+      operationId: download_transcript_v2_transcripts__transcript_id__download_get
+      parameters:
+      - name: transcript_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Transcript Id
+      - name: fmt
+        in: query
+        required: false
+        schema:
+          type: string
+          pattern: ^(txt|pdf)$
+          description: 'File format: txt or pdf'
+          default: txt
+          title: Fmt
+        description: 'File format: txt or pdf'
+      responses:
+        '200':
+          description: Successful Response
+        '404':
+          detail: Not found
+          description: Not Found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    TranscriptPurchaseResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        transcript_id:
+          type: string
+          format: uuid
+          title: Transcript Id
+        price:
+          type: number
+          title: Price
+        status:
+          type: string
+          title: Status
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+      type: object
+      required:
+      - id
+      - transcript_id
+      - price
+      - status
+      - created_at
+      title: TranscriptPurchaseResponse
+    TranscriptListResponse:
+      properties:
+        transcripts:
+          items:
+            $ref: '#/components/schemas/TranscriptListItem'
+          type: array
+          title: Transcripts
+        total:
+          type: integer
+          title: Total
+        page:
+          type: integer
+          title: Page
+        size:
+          type: integer
+          title: Size
+      type: object
+      required:
+      - transcripts
+      - total
+      - page
+      - size
+      title: TranscriptListResponse
+    TranscriptEntity:
+      properties:
+        id:
+          type: string
+          title: Id
+        label:
+          type: string
+          title: Label
+        entity_representation:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Entity Representation
+        entity_representation_label:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Entity Representation Label
+      type: object
+      required:
+      - id
+      - label
+      title: TranscriptEntity
+      description: 'Ontology entity tag from the upload UI — identifier + display label.
+
+
+        ``entity_representation``/``entity_representation_label`` (naming matches
+
+        ``EntityResponseItem`` in ``schemas/ontology.py``) are populated from the
+
+        stored entity when present, otherwise read from the resident ``entity_store``
+
+        snapshot — no per-request Neo4j call. Null when neither source provides the
+
+        representation (store unavailable, id not found) (PRO-3002).'
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    TranscriptListItem:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        title:
+          type: string
+          title: Title
+        interview_date:
+          type: string
+          format: date
+          title: Interview Date
+        duration_minutes:
+          type: integer
+          title: Duration Minutes
+        transcript_type:
+          type: string
+          title: Transcript Type
+        region:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Region
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        published_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Published At
+        entities:
+          items:
+            $ref: '#/components/schemas/TranscriptEntity'
+          type: array
+          title: Entities
+        is_purchased:
+          type: boolean
+          title: Is Purchased
+        price:
+          type: number
+          title: Price
+        expert_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Expert Id
+      type: object
+      required:
+      - id
+      - title
+      - interview_date
+      - duration_minutes
+      - transcript_type
+      - is_purchased
+      - price
+      title: TranscriptListItem
+    TranscriptDetailItem:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        title:
+          type: string
+          title: Title
+        interview_date:
+          type: string
+          format: date
+          title: Interview Date
+        duration_minutes:
+          type: integer
+          title: Duration Minutes
+        transcript_type:
+          type: string
+          title: Transcript Type
+        language:
+          type: string
+          title: Language
+        region:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Region
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        published_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Published At
+        entities:
+          items:
+            $ref: '#/components/schemas/TranscriptEntity'
+          type: array
+          title: Entities
+        is_purchased:
+          type: boolean
+          title: Is Purchased
+        price:
+          type: number
+          title: Price
+        expert_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Expert Id
+      type: object
+      required:
+      - id
+      - title
+      - interview_date
+      - duration_minutes
+      - transcript_type
+      - language
+      - is_purchased
+      - price
+      title: TranscriptDetailItem
+    TranscriptRegionCount:
+      properties:
+        region:
+          type: string
+          title: Region
+        count:
+          type: integer
+          title: Count
+      type: object
+      required:
+      - region
+      - count
+      title: TranscriptRegionCount
+    TranscriptEntityCount:
+      properties:
+        id:
+          type: string
+          title: Id
+        label:
+          type: string
+          title: Label
+        count:
+          type: integer
+          title: Count
+      type: object
+      required:
+      - id
+      - label
+      - count
+      title: TranscriptEntityCount

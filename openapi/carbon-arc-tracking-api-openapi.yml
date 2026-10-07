@@ -1,0 +1,166 @@
+openapi: 3.2.0
+info:
+  title: Carbon Arc API Documentation Tracking API
+  description: '# Introduction
+
+
+    Carbon Arc''s Insights Exchange provides a comprehensive consumption-based platform for accessing decision-making data.'
+  version: v2
+  x-logo:
+    url: /static/logo_light.png
+tags:
+- name: Tracking
+paths:
+  /v2/tracking/events:
+    post:
+      tags:
+      - Tracking
+      summary: Track Capi Event
+      description: 'Accept a browser tracking event and forward it to Meta CAPI.
+
+
+        Intentionally public: mounted on `public_router` with no auth dependency.
+
+        Every caller (`app/power-ui/src/utils/metaPixel.ts`, reached from Cookiebot
+
+        consent, the marketing pages, and signup) fires before the user has a
+
+        token, so requiring a Bearer would silently break conversion tracking.
+
+
+        Abuse controls, in place of auth:
+
+        - `event_name` is checked against `ALLOWED_EVENT_NAMES`
+
+        - `@limiter.limit("30/minute")` per client IP
+
+        - `TrackingEventRequest` caps every field''s length and `custom_data` size
+
+        - `email` / `phone` are SHA-256 hashed before leaving this process
+
+        - nothing is persisted in power-api; the response echoes no input
+
+        - the only outbound sink is `https://graph.facebook.com/v19.0/{pixel_id}/events`,
+
+        built from settings — `event_source_url` reaches the JSON body only
+
+
+        CMP consent is enforced by the caller, not here: `hasMarketingConsent()` in
+
+        `app/power-ui/src/utils/marketingConsent.ts` gates `sendCapiEvent`, so a
+
+        visitor who declined marketing never reaches this endpoint. A server-side
+
+        check is not possible — the Cookiebot decision lives in the browser and any
+
+        flag on this unauthenticated request would be client-asserted anyway (PRO-3255).
+
+
+        Ref: PLA-5052 (Shannon audit hash 05faedc8aeb9), reviewed 2026-07. The
+
+        public posture is by design; do not "fix" it by adding an auth dependency.'
+      operationId: track_capi_event_v2_tracking_events_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TrackingEventRequest'
+        required: true
+      responses:
+        '202':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Response Track Capi Event V2 Tracking Events Post
+        '404':
+          description: Not Found
+          detail: Not found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    TrackingEventRequest:
+      properties:
+        event_name:
+          type: string
+          maxLength: 64
+          title: Event Name
+        event_source_url:
+          type: string
+          maxLength: 2048
+          title: Event Source Url
+        fbc:
+          anyOf:
+          - type: string
+            maxLength: 512
+          - type: 'null'
+          title: Fbc
+        fbp:
+          anyOf:
+          - type: string
+            maxLength: 512
+          - type: 'null'
+          title: Fbp
+        email:
+          anyOf:
+          - type: string
+            maxLength: 320
+          - type: 'null'
+          title: Email
+        phone:
+          anyOf:
+          - type: string
+            maxLength: 64
+          - type: 'null'
+          title: Phone
+        custom_data:
+          anyOf:
+          - type: object
+          - type: 'null'
+          title: Custom Data
+      type: object
+      required:
+      - event_name
+      - event_source_url
+      title: TrackingEventRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError

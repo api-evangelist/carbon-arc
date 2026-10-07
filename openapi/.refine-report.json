@@ -1,0 +1,48 @@
+{
+  "provider": "carbon-arc",
+  "sources": [
+    "carbon-arc-openapi.json"
+  ],
+  "outputs": [
+    "carbon-arc-block-api-openapi.yml",
+    "carbon-arc-bucket-access-api-openapi.yml",
+    "carbon-arc-catalog-api-openapi.yml",
+    "carbon-arc-clients-api-openapi.yml",
+    "carbon-arc-data-library-api-openapi.yml",
+    "carbon-arc-explore-use-cases-api-openapi.yml",
+    "carbon-arc-framework-api-openapi.yml",
+    "carbon-arc-ontology-api-openapi.yml",
+    "carbon-arc-ontology-internal-api-openapi.yml",
+    "carbon-arc-polaris-api-openapi.yml",
+    "carbon-arc-prisms-api-openapi.yml",
+    "carbon-arc-public-api-openapi.yml",
+    "carbon-arc-research-api-openapi.yml",
+    "carbon-arc-tracking-api-openapi.yml",
+    "carbon-arc-transcripts-api-openapi.yml"
+  ],
+  "archived": [
+    "archived openapi/carbon-arc-openapi.json"
+  ],
+  "errors": [],
+  "warnings": [],
+  "notes": [
+    "carbon-arc-openapi.json: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "carbon-arc-openapi.json: declared missing tag: Block",
+    "carbon-arc-openapi.json: declared missing tag: Bucket Access",
+    "carbon-arc-openapi.json: declared missing tag: Catalog",
+    "carbon-arc-openapi.json: declared missing tag: Clients",
+    "carbon-arc-openapi.json: declared missing tag: Data Library",
+    "carbon-arc-openapi.json: declared missing tag: Explore Use Cases",
+    "carbon-arc-openapi.json: declared missing tag: Framework",
+    "carbon-arc-openapi.json: declared missing tag: Ontology",
+    "carbon-arc-openapi.json: declared missing tag: Ontology Internal",
+    "carbon-arc-openapi.json: declared missing tag: Polaris",
+    "carbon-arc-openapi.json: declared missing tag: Prisms",
+    "carbon-arc-openapi.json: declared missing tag: Public",
+    "carbon-arc-openapi.json: declared missing tag: Research",
+    "carbon-arc-openapi.json: declared missing tag: Tracking",
+    "carbon-arc-openapi.json: declared missing tag: Transcripts",
+    "apis.yml register: written (+15 apis, 15 total)"
+  ],
+  "skipped": []
+}

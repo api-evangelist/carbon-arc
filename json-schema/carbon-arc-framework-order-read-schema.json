@@ -1,0 +1,142 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/carbon-arc/main/json-schema/carbon-arc-framework-order-read-schema.json",
+  "title": "FrameworkOrderRead",
+  "x-generated": "2026-10-07",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/carbon-arc-openapi.json#/components/schemas/FrameworkOrderRead",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "title": "Id"
+    },
+    "order_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Order Id",
+      "default": ""
+    },
+    "name": {
+      "type": "string",
+      "title": "Name"
+    },
+    "display_name": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Display Name"
+    },
+    "type": {
+      "type": "string",
+      "title": "Type"
+    },
+    "user_email": {
+      "type": "string",
+      "title": "User Email"
+    },
+    "total_records_count": {
+      "type": "integer",
+      "title": "Total Records Count"
+    },
+    "total_price": {
+      "type": "number",
+      "title": "Total Price"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "title": "Created At"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time",
+      "title": "Updated At"
+    },
+    "order_type": {
+      "type": "string",
+      "enum": [
+        "new_purchase",
+        "refresh_purchase",
+        "reinstatement_purchase",
+        "repurchase"
+      ],
+      "title": "Order Type"
+    },
+    "source": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Source"
+    },
+    "transcript_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "uuid"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Transcript Id"
+    },
+    "framework_ids": {
+      "items": {
+        "type": "string",
+        "format": "uuid"
+      },
+      "type": "array",
+      "title": "Framework Ids"
+    },
+    "framework_details": {
+      "items": {
+        "type": "object"
+      },
+      "type": "array",
+      "title": "Framework Details"
+    },
+    "framework_id_remap": {
+      "additionalProperties": {
+        "type": "string",
+        "format": "uuid"
+      },
+      "propertyNames": {
+        "format": "uuid"
+      },
+      "type": "object",
+      "title": "Framework Id Remap"
+    }
+  },
+  "type": "object",
+  "required": [
+    "id",
+    "name",
+    "type",
+    "user_email",
+    "total_records_count",
+    "total_price",
+    "created_at",
+    "updated_at",
+    "order_type",
+    "framework_ids",
+    "framework_details"
+  ]
+}

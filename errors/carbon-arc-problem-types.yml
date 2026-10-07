@@ -1,0 +1,57 @@
+generated: '2026-10-07'
+method: derived
+generator: derive-problem-types.py
+source:
+- openapi/carbon-arc-openapi.json
+format: custom
+envelope:
+  media_type: application/json
+  schema: HTTPValidationError
+coverage:
+  operations: 92
+  statuses_declared: 7
+problems:
+- status: 400
+  title: Bad Request
+  description: Malformed principal ARN, or missing required identifier.
+  operations: 2
+  media_types: []
+  schema: null
+- status: 401
+  title: Unauthorized
+  description: Missing or invalid authentication credentials.
+  operations: 9
+  media_types: []
+  schema: null
+- status: 403
+  title: Forbidden
+  description: Admin access required.
+  operations: 11
+  media_types: []
+  schema: null
+- status: 404
+  title: Not Found
+  description: Not Found
+  operations: 92
+  media_types: []
+  schema: null
+- status: 409
+  title: Conflict
+  description: 'policy_apply_failed / policy_write_race: the bucket-policy write did not land. Transient — the caller
+    should retry.'
+  operations: 2
+  media_types: []
+  schema: null
+- status: 413
+  title: Content Too Large
+  description: 'policy_size_exceeded: the bucket policy hit AWS''s 20KB limit.'
+  operations: 2
+  media_types: []
+  schema: null
+- status: 422
+  title: Unprocessable Content
+  description: Validation Error
+  operations: 80
+  media_types:
+  - application/json
+  schema: HTTPValidationError

@@ -1,0 +1,485 @@
+openapi: 3.2.0
+info:
+  title: Carbon Arc API Documentation Public API
+  description: '# Introduction
+
+
+    Carbon Arc''s Insights Exchange provides a comprehensive consumption-based platform for accessing decision-making data.'
+  version: v2
+  x-logo:
+    url: /static/logo_light.png
+tags:
+- name: Public
+paths:
+  /v2/public-library/data-library:
+    get:
+      tags:
+      - Public
+      summary: Get public data identifiers (landing page)
+      operationId: get_public_datalibrary_identifiers_v2_public_library_data_library_get
+      requestBody:
+        content:
+          application/json:
+            schema:
+              anyOf:
+              - type: object
+              - type: 'null'
+              title: Config
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataLibrarySourcesResponse'
+        '404':
+          description: Not Found
+          detail: Not found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v2/public-library/explore-data:
+    get:
+      tags:
+      - Public
+      summary: Get public explore data assets (landing page)
+      operationId: get_public_explore_data_v2_public_library_explore_data_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListAssetsResponse'
+        '404':
+          description: Not Found
+          detail: Not found
+  /v2/public-prisms:
+    get:
+      tags:
+      - Public
+      summary: Get Prisms Page
+      description: 'The public /prisms page payload. No auth, no per-user data, relative
+
+        values only. Proxied from CAMS''s serving cache (CAMS owns prism state);
+
+        serves the last-good copy if CAMS is briefly unreachable.
+
+
+        Conditional. The page polls this so a recompute reaches a browser that is
+
+        already open, and the payload is megabytes of series — so it carries an
+
+        ETag over its own content and answers an unchanged poll with a 304.
+
+        ``no-cache`` rather than a max-age: every request revalidates (nothing is
+
+        ever served stale), but an unchanged one costs a round trip and no body.'
+      operationId: get_prisms_page_v2_public_prisms_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicPrismsResponse'
+        '404':
+          description: Not Found
+          detail: Not found
+components:
+  schemas:
+    ListAssetsResponse:
+      properties:
+        assets:
+          items:
+            $ref: '#/components/schemas/AssetResponse'
+          type: array
+          title: Assets
+        total:
+          type: integer
+          title: Total
+      type: object
+      required:
+      - assets
+      - total
+      title: ListAssetsResponse
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    DataLibrarySource:
+      properties:
+        carc_id:
+          type: integer
+          title: Carc Id
+        category:
+          type: string
+          title: Category
+        subcategory:
+          type: string
+          title: Subcategory
+        ecosystem_type:
+          type: string
+          title: Ecosystem Type
+        tearsheet_category:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Tearsheet Category
+        provider_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Provider Name
+        dataset_name:
+          type: string
+          title: Dataset Name
+        dataset_id:
+          items:
+            type: string
+          type: array
+          title: Dataset Id
+        description:
+          type: string
+          title: Description
+        data:
+          type: object
+          title: Data
+        topic_data_dictionary:
+          anyOf:
+          - items:
+              type: object
+            type: array
+          - type: 'null'
+          title: Topic Data Dictionary
+        blocked:
+          type: boolean
+          title: Blocked
+        blocked_api:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Blocked Api
+        blocked_mcp:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Blocked Mcp
+        public:
+          type: boolean
+          title: Public
+        last_updated_timestamp:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Updated Timestamp
+        is_current:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Is Current
+        ontime_status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ontime Status
+        subject_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Subject Id
+        subject_label:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Subject Label
+        has_confidence_report:
+          type: boolean
+          title: Has Confidence Report
+      type: object
+      required:
+      - carc_id
+      - category
+      - subcategory
+      - ecosystem_type
+      - dataset_name
+      - dataset_id
+      - description
+      - data
+      - blocked
+      - public
+      - has_confidence_report
+      title: DataLibrarySource
+    PublicPrismsResponse:
+      properties:
+        tou:
+          anyOf:
+          - type: object
+          - type: 'null'
+          title: Tou
+        prisms:
+          items:
+            type: object
+          type: array
+          title: Prisms
+        arrays:
+          items:
+            type: object
+          type: array
+          title: Arrays
+          default: []
+        indexes:
+          items:
+            type: object
+          type: array
+          title: Indexes
+          default: []
+      type: object
+      required:
+      - prisms
+      title: PublicPrismsResponse
+      description: 'The precomputed snapshot the public marketing page renders. Only
+
+        relative values (YoY index levels, share-of-group percentages) — never
+
+        absolute dollars/visits/downloads.'
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    DataLibrarySourcesResponse:
+      properties:
+        page:
+          type: integer
+          title: Page
+        size:
+          type: integer
+          title: Size
+        total:
+          type: integer
+          title: Total
+        total_pages:
+          type: integer
+          title: Total Pages
+        datasources:
+          items:
+            $ref: '#/components/schemas/DataLibrarySource'
+          type: array
+          title: Datasources
+      type: object
+      required:
+      - page
+      - size
+      - total
+      - total_pages
+      - datasources
+      title: DataLibrarySourcesResponse
+    AssetMetadataResponse:
+      properties:
+        overview:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Overview
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        data_category:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Data Category
+        data_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Data Type
+        frequency:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Frequency
+        geography:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Geography
+        coverage:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Coverage
+        panel_size:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Panel Size
+        history:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: History
+        lag:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Lag
+        bias:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Bias
+        granularity:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Granularity
+        key_metrics:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Key Metrics
+        example_use_cases:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Example Use Cases
+        other_highlights:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Other Highlights
+        tags:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Tags
+        linkedin_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Linkedin Url
+        x_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X Url
+      type: object
+      title: AssetMetadataResponse
+    AssetResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        source_id:
+          type: string
+          format: uuid
+          title: Source Id
+        provider_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Provider Id
+        title:
+          type: string
+          title: Title
+        status:
+          type: string
+          title: Status
+        tier:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Tier
+        is_new:
+          type: boolean
+          title: Is New
+        is_premium:
+          type: boolean
+          title: Is Premium
+          default: false
+        publish_date:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Publish Date
+        last_validated_date:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Validated Date
+        metadata:
+          anyOf:
+          - $ref: '#/components/schemas/AssetMetadataResponse'
+          - type: 'null'
+        provider_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Provider Name
+        gated:
+          type: boolean
+          title: Gated
+          default: false
+        cta:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Cta
+      type: object
+      required:
+      - id
+      - source_id
+      - title
+      - status
+      - is_new
+      title: AssetResponse
+      description: Core asset fields plus optional metadata. Built from ORM instances via model_validate.

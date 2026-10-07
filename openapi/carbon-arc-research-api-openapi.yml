@@ -1,0 +1,28 @@
+openapi: 3.2.0
+info:
+  title: Carbon Arc API Documentation Research API
+  description: '# Introduction
+
+
+    Carbon Arc''s Insights Exchange provides a comprehensive consumption-based platform for accessing decision-making data.'
+  version: v2
+  x-logo:
+    url: /static/logo_light.png
+tags:
+- name: Research
+paths:
+  /v2/research/case-studies:
+    get:
+      tags:
+      - Research
+      summary: Get Case Studies
+      operationId: get_case_studies_v2_research_case_studies_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: Not Found
+          detail: Not found

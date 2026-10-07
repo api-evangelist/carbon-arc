@@ -1,0 +1,377 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/carbon-arc/main/json-schema/carbon-arc-admin-asset-response-schema.json",
+  "title": "AdminAssetResponse",
+  "description": "Asset response with additional admin fields (external_id, timestamps, vote_count).",
+  "x-generated": "2026-10-07",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/carbon-arc-openapi.json#/components/schemas/AdminAssetResponse",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "title": "Id"
+    },
+    "source_id": {
+      "type": "string",
+      "format": "uuid",
+      "title": "Source Id"
+    },
+    "provider_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "uuid"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Provider Id"
+    },
+    "title": {
+      "type": "string",
+      "title": "Title"
+    },
+    "status": {
+      "type": "string",
+      "title": "Status"
+    },
+    "tier": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Tier"
+    },
+    "is_new": {
+      "type": "boolean",
+      "title": "Is New"
+    },
+    "is_premium": {
+      "type": "boolean",
+      "title": "Is Premium",
+      "default": false
+    },
+    "publish_date": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "date-time"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Publish Date"
+    },
+    "last_validated_date": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "date-time"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Last Validated Date"
+    },
+    "metadata": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/AssetMetadataResponse"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "provider_name": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Provider Name"
+    },
+    "gated": {
+      "type": "boolean",
+      "title": "Gated",
+      "default": false
+    },
+    "cta": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Cta"
+    },
+    "external_id": {
+      "type": "string",
+      "title": "External Id"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "title": "Created At"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time",
+      "title": "Updated At"
+    },
+    "vote_count": {
+      "type": "integer",
+      "title": "Vote Count",
+      "default": 0
+    }
+  },
+  "type": "object",
+  "required": [
+    "id",
+    "source_id",
+    "title",
+    "status",
+    "is_new",
+    "external_id",
+    "created_at",
+    "updated_at"
+  ],
+  "$defs": {
+    "AssetMetadataResponse": {
+      "properties": {
+        "overview": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Overview"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Description"
+        },
+        "data_category": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Data Category"
+        },
+        "data_type": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Data Type"
+        },
+        "frequency": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Frequency"
+        },
+        "geography": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Geography"
+        },
+        "coverage": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Coverage"
+        },
+        "panel_size": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Panel Size"
+        },
+        "history": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "History"
+        },
+        "lag": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Lag"
+        },
+        "bias": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Bias"
+        },
+        "granularity": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Granularity"
+        },
+        "key_metrics": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Key Metrics"
+        },
+        "example_use_cases": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Example Use Cases"
+        },
+        "other_highlights": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Other Highlights"
+        },
+        "tags": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Tags"
+        },
+        "linkedin_url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Linkedin Url"
+        },
+        "x_url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "X Url"
+        }
+      },
+      "type": "object",
+      "title": "AssetMetadataResponse"
+    }
+  }
+}

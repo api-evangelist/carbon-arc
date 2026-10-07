@@ -1,0 +1,757 @@
+openapi: 3.2.0
+info:
+  title: Carbon Arc API Documentation Polaris API
+  description: '# Introduction
+
+
+    Carbon Arc''s Insights Exchange provides a comprehensive consumption-based platform for accessing decision-making data.'
+  version: v2
+  x-logo:
+    url: /static/logo_light.png
+tags:
+- name: Polaris
+paths:
+  /v2/polaris/datasets/{dataset_id}/example-table:
+    get:
+      tags:
+      - Polaris
+      summary: Get Example Table
+      description: 'Resolve the animal-name namespace and a representative table for a dataset.
+
+
+        Pre-filled context (cut/lag provided): uses the entitled SKU.
+
+        Dropdown context (cut/lag omitted): returns any table from the graph.
+
+
+        ``catalog`` selects which polaris catalog to source the example from. The
+
+        SQL editor''s "Connect your query engine" entry passes ``sample`` so the
+
+        example reflects the lagged tables actually populated in the sample
+
+        warehouse the user just queried; everything else defaults to ``bulk``.
+
+
+        Auth + per-client entitlement are enforced by the parent ``router`` in
+
+        ``api.py`` (bearer token via ``get_authenticated_user`` plus
+
+        ``_require_example_table_access``, which 404s datasets denied to the caller
+
+        or globally disabled); no redundant per-endpoint dep needed here.'
+      operationId: get_example_table_v2_polaris_datasets__dataset_id__example_table_get
+      parameters:
+      - name: dataset_id
+        in: path
+        required: true
+        schema:
+          type: string
+          pattern: ^CA\d+[A-Z]*$
+          title: Dataset Id
+      - name: cut
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Cut
+      - name: lag
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Lag
+      - name: catalog
+        in: query
+        required: false
+        schema:
+          type: string
+          pattern: ^(bulk|sample)$
+          default: bulk
+          title: Catalog
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExampleTableResponse'
+        '404':
+          detail: Not found
+          description: Not Found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v2/polaris/onboard:
+    post:
+      tags:
+      - Polaris
+      summary: Onboard Client
+      operationId: onboard_client_v2_polaris_onboard_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OnboardRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OnboardResponse'
+        '404':
+          description: Not Found
+          detail: Not found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v2/polaris/principals/{principal_name}:
+    delete:
+      tags:
+      - Polaris
+      summary: Offboard Client
+      description: Delete a Polaris principal and their per-client principal role (offboarding).
+      operationId: offboard_client_v2_polaris_principals__principal_name__delete
+      parameters:
+      - name: principal_name
+        in: path
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 128
+          pattern: ^[a-zA-Z0-9_-]+$
+          title: Principal Name
+      responses:
+        '204':
+          description: Successful Response
+        '404':
+          detail: Not found
+          description: Not Found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v2/polaris/reset-credentials:
+    post:
+      tags:
+      - Polaris
+      summary: Reset Credentials
+      description: 'Reset a principal''s credentials.
+
+
+        WARNING: new credentials are returned in the response body. Callers must
+
+        store them in a secrets manager immediately and not log the response.
+
+        TODO: migrate to writing directly to Vault/Secrets Manager and returning
+
+        only a reference ID to eliminate credential exposure over HTTP.'
+      operationId: reset_credentials_v2_polaris_reset_credentials_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResetCredentialsRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResetCredentialsResponse'
+        '404':
+          description: Not Found
+          detail: Not found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v2/polaris/datasets/{dataset_id}/grant:
+    post:
+      tags:
+      - Polaris
+      summary: Grant Dataset Access
+      description: 'Grant a principal read access to every table under a dataset SKU.
+
+
+        Idempotent. The catalog is taken from the request — it scopes table
+
+        resolution and the catalog-role name.'
+      operationId: grant_dataset_access_v2_polaris_datasets__dataset_id__grant_post
+      parameters:
+      - name: dataset_id
+        in: path
+        required: true
+        schema:
+          type: string
+          pattern: ^CA\d+[A-Z]*$
+          title: Dataset Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GrantDatasetRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GrantDatasetResponse'
+        '404':
+          description: 'sku_not_found: no tables are mapped to this SKU in the requested catalog. Terminal — CAMS abandons the DLQ row rather than re-driving it, so the slug must stay in the detail.'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v2/polaris/datasets/{dataset_id}/revoke:
+    post:
+      tags:
+      - Polaris
+      summary: Revoke Dataset Access
+      description: 'Detach a dataset''s catalog role from a principal''s per-client role.
+
+
+        The SKU — including its ``catalog`` — comes entirely from the request; the
+
+        graph is never consulted. Idempotent: detaching a role that isn''t attached
+
+        returns ``revoked=False``. The catalog role itself is preserved (other
+
+        principals may share it); orphaned roles are the reconciler''s job.'
+      operationId: revoke_dataset_access_v2_polaris_datasets__dataset_id__revoke_post
+      parameters:
+      - name: dataset_id
+        in: path
+        required: true
+        schema:
+          type: string
+          pattern: ^CA\d+[A-Z]*$
+          title: Dataset Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RevokeDatasetRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RevokeDatasetResponse'
+        '404':
+          detail: Not found
+          description: Not Found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v2/polaris/datasets/{dataset_id}/verify:
+    post:
+      tags:
+      - Polaris
+      summary: Verify Dataset Access
+      description: 'Read which principals CURRENTLY hold a dataset''s catalog role.
+
+
+        The read-back counterpart to grant/revoke. Polaris is one of the two ways a
+
+        client actually reads data (the customer''s own query engine talks to it
+
+        directly with vended credentials), so a status view that only verifies S3
+
+        describes half the access surface.
+
+
+        The SKU comes entirely from the request and the catalog role name is derived
+
+        here via the same ``_dataset_catalog_role`` the grant path uses, so callers
+
+        never need to know the naming convention, and can''t drift from it.
+
+
+        Unlike the S3 bucket policy, where one read covers every client, Polaris
+
+        exposes attachment per principal role, so this is one call per principal.
+
+        They run SEQUENTIALLY on purpose: PolarisClient lazily caches its OAuth token
+
+        in mutable instance state with a check-then-set, so fanning out concurrently
+
+        would race on token refresh. Correctness matters more than latency in a
+
+        feature whose whole job is to be trustworthy; the cap on principal_names
+
+        bounds the cost.
+
+
+        ``read_ok=False`` is a 200 with empty lists, not an error, for the same
+
+        reason as the bucket-access verify: the caller must render it as "unknown"
+
+        rather than falling back to what it intended.'
+      operationId: verify_dataset_access_v2_polaris_datasets__dataset_id__verify_post
+      parameters:
+      - name: dataset_id
+        in: path
+        required: true
+        schema:
+          type: string
+          pattern: ^CA\d+[A-Z]*$
+          title: Dataset Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifyDatasetAccessRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerifyDatasetAccessResponse'
+        '404':
+          detail: Not found
+          description: Not Found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v2/polaris/principals/{principal_name}/bulk-browse:
+    post:
+      tags:
+      - Polaris
+      summary: Assign Bulk Browse
+      description: 'Assign the catalog browse/list roles (``sample_ro_list_role`` and
+
+        ``bulk_ro_list_role``) to the principal.
+
+
+        Called by CAMS at block-enable. Tolerant per role: if a role isn''t seeded in
+
+        this environment, logs a warning and reports ``assigned=False`` for it
+
+        (HTTP 200). These are list-only roles — they grant catalog browsing, never
+
+        data read (which stays per-SKU default-deny).'
+      operationId: assign_bulk_browse_v2_polaris_principals__principal_name__bulk_browse_post
+      parameters:
+      - name: principal_name
+        in: path
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 128
+          pattern: ^[a-zA-Z0-9_-]+$
+          title: Principal Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkBrowseResponse'
+        '404':
+          detail: Not found
+          description: Not Found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    BulkBrowseResponse:
+      properties:
+        principal_name:
+          type: string
+          title: Principal Name
+        roles:
+          items:
+            $ref: '#/components/schemas/BrowseRoleResult'
+          type: array
+          title: Roles
+      type: object
+      required:
+      - principal_name
+      - roles
+      title: BulkBrowseResponse
+    VerifyDatasetAccessRequest:
+      properties:
+        catalog:
+          type: string
+          maxLength: 128
+          minLength: 1
+          title: Catalog
+        lag:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Lag
+        cut:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Cut
+        principal_names:
+          items:
+            type: string
+          type: array
+          maxItems: 200
+          title: Principal Names
+          description: Principal names to check. Each is reported in present or missing.
+      type: object
+      required:
+      - catalog
+      title: VerifyDatasetAccessRequest
+    ExampleTableResponse:
+      properties:
+        namespace:
+          type: string
+          title: Namespace
+        table:
+          type: string
+          title: Table
+      type: object
+      required:
+      - namespace
+      - table
+      title: ExampleTableResponse
+    RevokeDatasetResponse:
+      properties:
+        dataset_id:
+          type: string
+          title: Dataset Id
+        principal_name:
+          type: string
+          title: Principal Name
+        principal_role:
+          type: string
+          title: Principal Role
+        catalog_role:
+          type: string
+          title: Catalog Role
+        catalog:
+          type: string
+          title: Catalog
+        revoked:
+          type: boolean
+          title: Revoked
+      type: object
+      required:
+      - dataset_id
+      - principal_name
+      - principal_role
+      - catalog_role
+      - catalog
+      - revoked
+      title: RevokeDatasetResponse
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    VerifyDatasetAccessResponse:
+      properties:
+        dataset_id:
+          type: string
+          title: Dataset Id
+        catalog:
+          type: string
+          title: Catalog
+        lag:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Lag
+        cut:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Cut
+        catalog_role:
+          type: string
+          title: Catalog Role
+        read_ok:
+          type: boolean
+          title: Read Ok
+          description: False when the Polaris read itself failed. present/missing are then empty, so do NOT read that as 'nobody has access'.
+        present:
+          items:
+            type: string
+          type: array
+          title: Present
+        missing:
+          items:
+            type: string
+          type: array
+          title: Missing
+        checked_at:
+          type: string
+          format: date-time
+          title: Checked At
+      type: object
+      required:
+      - dataset_id
+      - catalog
+      - lag
+      - cut
+      - catalog_role
+      - read_ok
+      - present
+      - missing
+      - checked_at
+      title: VerifyDatasetAccessResponse
+    GrantDatasetRequest:
+      properties:
+        principal_name:
+          type: string
+          maxLength: 128
+          minLength: 1
+          pattern: ^[a-zA-Z0-9_-]+$
+          title: Principal Name
+        catalog:
+          type: string
+          maxLength: 64
+          minLength: 1
+          pattern: ^[a-z0-9_]+$
+          title: Catalog
+          description: Catalog the SKU belongs to (e.g. 'sample', 'bulk'). Scopes table resolution and the catalog-role name; no longer inferred from rows.
+        lag:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Lag
+          description: Lag of the dataset to grant access to. Omit (or null) for the no-lag variant — graph stores no-lag rows with lag=null.
+        cut:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Cut
+          description: Cut of the dataset to grant access to. Omit (or null) for the no-cut variant — graph stores no-cut rows with cut=null.
+      type: object
+      required:
+      - principal_name
+      - catalog
+      title: GrantDatasetRequest
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    GrantDatasetResponse:
+      properties:
+        dataset_id:
+          type: string
+          title: Dataset Id
+        principal_name:
+          type: string
+          title: Principal Name
+        principal_role:
+          type: string
+          title: Principal Role
+        catalog_role:
+          type: string
+          title: Catalog Role
+        catalog:
+          type: string
+          title: Catalog
+        tables_granted:
+          type: integer
+          title: Tables Granted
+        tables_skipped:
+          type: integer
+          title: Tables Skipped
+        skipped_catalogs:
+          items:
+            type: string
+          type: array
+          title: Skipped Catalogs
+      type: object
+      required:
+      - dataset_id
+      - principal_name
+      - principal_role
+      - catalog_role
+      - catalog
+      - tables_granted
+      - tables_skipped
+      - skipped_catalogs
+      title: GrantDatasetResponse
+    BrowseRoleResult:
+      properties:
+        role:
+          type: string
+          title: Role
+        assigned:
+          type: boolean
+          title: Assigned
+      type: object
+      required:
+      - role
+      - assigned
+      title: BrowseRoleResult
+    ResetCredentialsResponse:
+      properties:
+        principal_name:
+          type: string
+          title: Principal Name
+        client_id:
+          type: string
+          title: Client Id
+        client_secret:
+          type: string
+          title: Client Secret
+      type: object
+      required:
+      - principal_name
+      - client_id
+      - client_secret
+      title: ResetCredentialsResponse
+    OnboardResponse:
+      properties:
+        principal_name:
+          type: string
+          title: Principal Name
+        polaris_client_id:
+          type: string
+          title: Polaris Client Id
+        polaris_client_secret:
+          type: string
+          title: Polaris Client Secret
+      type: object
+      required:
+      - principal_name
+      - polaris_client_id
+      - polaris_client_secret
+      title: OnboardResponse
+    RevokeDatasetRequest:
+      properties:
+        principal_name:
+          type: string
+          maxLength: 128
+          minLength: 1
+          pattern: ^[a-zA-Z0-9_-]+$
+          title: Principal Name
+        catalog:
+          type: string
+          maxLength: 64
+          minLength: 1
+          pattern: ^[a-z0-9_]+$
+          title: Catalog
+          description: Catalog of the SKU to revoke (e.g. 'sample', 'bulk'). Required — the exact SKU comes from the caller; power-api never infers it.
+        lag:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Lag
+        cut:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Cut
+      type: object
+      required:
+      - principal_name
+      - catalog
+      title: RevokeDatasetRequest
+    OnboardRequest:
+      properties:
+        client_name:
+          type: string
+          maxLength: 128
+          minLength: 1
+          pattern: ^[a-zA-Z0-9_-]+$
+          title: Client Name
+        properties:
+          anyOf:
+          - additionalProperties:
+              type: string
+            type: object
+          - type: 'null'
+          title: Properties
+          description: Optional principal properties (string->string), forwarded to Polaris.
+      type: object
+      required:
+      - client_name
+      title: OnboardRequest
+    ResetCredentialsRequest:
+      properties:
+        principal_name:
+          type: string
+          maxLength: 128
+          minLength: 1
+          pattern: ^[a-zA-Z0-9_-]+$
+          title: Principal Name
+        client_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Client Id
+          description: Optional; if set, client_secret must also be set (Polaris reset body).
+        client_secret:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Client Secret
+          description: Optional; if set, client_id must also be set (Polaris reset body).
+      type: object
+      required:
+      - principal_name
+      title: ResetCredentialsRequest

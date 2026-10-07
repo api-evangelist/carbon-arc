@@ -1,0 +1,290 @@
+openapi: 3.2.0
+info:
+  title: Carbon Arc API Documentation Prisms API
+  description: '# Introduction
+
+
+    Carbon Arc''s Insights Exchange provides a comprehensive consumption-based platform for accessing decision-making data.'
+  version: v2
+  x-logo:
+    url: /static/logo_light.png
+tags:
+- name: Prisms
+paths:
+  /v2/prisms:
+    get:
+      tags:
+      - Prisms
+      summary: List Prisms
+      description: 'Live prisms matching a filter, each at its current published snapshot.
+
+
+        Pass ``insight_id``, or ``entity_id`` (optionally with
+
+        ``entity_representation``), or both to intersect them. At least one is
+
+        required: unfiltered, this is every live prism, which is what the
+
+        unauthenticated ``GET /v2/public-prisms`` already serves.
+
+
+        **Several results is the normal case**, not an edge. One insight is usually
+
+        cut across more than one entity group, and one entity appears in prisms for
+
+        several insights. Callers should expect an array of any length including
+
+        zero, never exactly one.
+
+
+        Matching runs against what each prism is *configured* to compute, not
+
+        against the series it last rendered. The two differ when the warehouse
+
+        returned no rows for an entity: that entity is dropped from the chart while
+
+        the prism is still, in every meaningful sense, about it.'
+      operationId: list_prisms_v2_prisms_get
+      parameters:
+      - name: insight_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          description: Prisms computing this metric insight
+          title: Insight Id
+        description: Prisms computing this metric insight
+      - name: entity_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          description: Prisms computing over this entity (carc_id)
+          title: Entity Id
+        description: Prisms computing over this entity (carc_id)
+      - name: entity_representation
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Qualifies ``entity_id``. An entity is (carc_id, representation) and a carc_id alone is ambiguous across representations, so omit this only when you mean the id in any of them.
+          title: Entity Representation
+        description: Qualifies ``entity_id``. An entity is (carc_id, representation) and a carc_id alone is ambiguous across representations, so omit this only when you mean the id in any of them.
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MaterializedPrismsResponse'
+        '404':
+          detail: Not found
+          description: Not Found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v2/prisms/{prism_id}:
+    get:
+      tags:
+      - Prisms
+      summary: Get Prism
+      description: 'One prism at its current published snapshot.
+
+
+        The same numbers the public prisms page is showing for it right now, out
+
+        of the same composition, so the two can never disagree about a prism''s
+
+        values. They can disagree about whether a prism appears at all, either
+
+        way, and only through a stale cache: a first publish whose write failed is
+
+        missing from the page but found here, and an unpublish whose delete was
+
+        swallowed is still on the page but 404s here. Both lean the safe way -
+
+        serve a live prism, hide an unpublished one. Prism ids come from
+
+        ``GET /v2/public-prisms`` or from the filtered list above.
+
+
+        ``data_through``, not the window end, is what says how current the numbers
+
+        are: it is the last day of real data in the series and it lags when
+
+        upstream sources are behind.
+
+
+        404 covers three states deliberately: no such prism, a draft or archived
+
+        one, and a live one that has never published. Only the first is really "not
+
+        found", but separating them would confirm that unpublished operator work
+
+        exists.'
+      operationId: get_prism_v2_prisms__prism_id__get
+      parameters:
+      - name: prism_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Prism Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MaterializedPrism'
+        '404':
+          detail: Not found
+          description: Not Found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    MaterializedPrism:
+      properties:
+        prism_id:
+          type: string
+          title: Prism Id
+        title:
+          type: string
+          title: Title
+        category:
+          type: string
+          title: Category
+        question:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Question
+          description: Question this prism answers in the growth (index) view
+        question_share:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Question Share
+          description: Question this prism answers in the share view
+        note:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Note
+          description: Operator caveat shown on the public drawer; usually null
+        insight_id:
+          type: integer
+          title: Insight Id
+        insight_label:
+          type: string
+          title: Insight Label
+        published_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Published At
+          description: When this prism first went public
+        data_through:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Data Through
+          description: Last day of real data in the series. Lags today when upstream sources are behind, so this - not the window end - is what says how current the numbers are.
+        window:
+          anyOf:
+          - type: object
+          - type: 'null'
+          title: Window
+          description: Charted span as ``{start, end}``
+        entities:
+          items:
+            type: object
+          type: array
+          title: Entities
+          description: Per-entity relative series. ``mtd_yoy`` / ``mtd_share`` by day of the latest month with data; ``hist_yoy`` / ``hist_share`` by month over the charted year. Year-over-year index levels and share-of-group percentages only, never absolute figures.
+      type: object
+      required:
+      - prism_id
+      - title
+      - category
+      - insight_id
+      - insight_label
+      title: MaterializedPrism
+      description: 'One prism as a customer reads it: display copy plus the series from its
+
+        current published snapshot.
+
+
+        Exactly what the public prisms page renders, out of the same composition,
+
+        so an API caller and the page can never show different numbers for the
+
+        same prism. Extra keys are allowed through on purpose: the body is the stored snapshot entry with display
+
+        fields laid over it, and pinning the shape here would silently drop a new
+
+        snapshot key from the API until someone edited this class.'
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    MaterializedPrismsResponse:
+      properties:
+        prisms:
+          items:
+            $ref: '#/components/schemas/MaterializedPrism'
+          type: array
+          title: Prisms
+      type: object
+      required:
+      - prisms
+      title: MaterializedPrismsResponse
+      description: Prisms matching a filter, each at its current published snapshot.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError

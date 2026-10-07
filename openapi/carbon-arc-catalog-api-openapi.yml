@@ -1,0 +1,1265 @@
+openapi: 3.2.0
+info:
+  title: Carbon Arc API Documentation Catalog API
+  description: '# Introduction
+
+
+    Carbon Arc''s Insights Exchange provides a comprehensive consumption-based platform for accessing decision-making data.'
+  version: v2
+  x-logo:
+    url: /static/logo_light.png
+tags:
+- name: Catalog
+paths:
+  /v2/catalog/access:
+    get:
+      tags:
+      - Catalog
+      summary: Check catalog access
+      description: Returns whether the current user has the CATALOG_BUILD feature flag.
+      operationId: check_catalog_access_v2_catalog_access_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Response Check Catalog Access V2 Catalog Access Get
+        '404':
+          description: Not Found
+          detail: Not found
+  /v2/catalog/subscriptions:
+    get:
+      tags:
+      - Catalog
+      summary: Get catalog subscriptions
+      description: Returns published catalog assets for the IDO source, gated by the CATALOG_FEED feature flag.
+      operationId: get_subscriptions_v2_catalog_subscriptions_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListAssetsResponse'
+        '404':
+          description: Not Found
+          detail: Not found
+  /v2/catalog/assets:
+    get:
+      tags:
+      - Catalog
+      summary: List catalog assets
+      description: List approved IDO assets. Results are gated by the caller's plan_type.
+      operationId: list_assets_v2_catalog_assets_get
+      parameters:
+      - name: tier
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: integer
+            maximum: 3
+            minimum: 1
+          - type: 'null'
+          description: Filter by asset tier (1, 2, or 3)
+          title: Tier
+        description: Filter by asset tier (1, 2, or 3)
+      - name: provider_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          description: Filter by provider UUID
+          title: Provider Id
+        description: Filter by provider UUID
+      - name: category
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Filter by data category
+          title: Category
+        description: Filter by data category
+      - name: search
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            minLength: 1
+            maxLength: 200
+          - type: 'null'
+          description: Search by title (case-insensitive)
+          title: Search
+        description: Search by title (case-insensitive)
+      - name: data_type
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Filter by data type
+          title: Data Type
+        description: Filter by data type
+      - name: geography
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Filter by geography (exact match within array)
+          title: Geography
+        description: Filter by geography (exact match within array)
+      - name: frequency
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Filter by data frequency
+          title: Frequency
+        description: Filter by data frequency
+      - name: sort
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            pattern: ^(popularity|newest)$
+          - type: 'null'
+          description: 'Sort order: ''popularity'' or ''newest'''
+          title: Sort
+        description: 'Sort order: ''popularity'' or ''newest'''
+      - name: liked_only
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: Return only assets liked by the current user
+          default: false
+          title: Liked Only
+        description: Return only assets liked by the current user
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListAssetsResponse'
+        '404':
+          detail: Not found
+          description: Not Found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v2/catalog/assets/admin:
+    get:
+      tags:
+      - Catalog
+      summary: List all catalog assets (admin)
+      description: Super Admin or Client Admin only. Returns ALL assets regardless of status.
+      operationId: admin_list_assets_v2_catalog_assets_admin_get
+      parameters:
+      - name: search
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            minLength: 1
+            maxLength: 200
+          - type: 'null'
+          title: Search
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminListAssetsResponse'
+        '404':
+          detail: Not found
+          description: Not Found
+        '401':
+          description: Missing or invalid authentication credentials.
+        '403':
+          description: Admin access required.
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v2/catalog/assets/admin/{asset_id}:
+    get:
+      tags:
+      - Catalog
+      summary: Get catalog asset (admin)
+      description: Super Admin or Client Admin only. Returns a single asset regardless of status.
+      operationId: admin_get_asset_v2_catalog_assets_admin__asset_id__get
+      parameters:
+      - name: asset_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Asset Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminAssetResponse'
+        '404':
+          detail: Not found
+          description: Not Found
+        '401':
+          description: Missing or invalid authentication credentials.
+        '403':
+          description: Admin access required.
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v2/catalog/assets/{asset_id}:
+    patch:
+      tags:
+      - Catalog
+      summary: Update catalog asset (admin)
+      description: Super Admin or Client Admin only. Mutates publishing and curation fields (status, visibility, tier, flags, published_at). Not gated on catalog_build.
+      operationId: admin_update_asset_v2_catalog_assets__asset_id__patch
+      parameters:
+      - name: asset_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Asset Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CatalogAssetAdminUpdate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminAssetResponse'
+        '404':
+          detail: Not found
+          description: Not Found
+        '401':
+          description: Missing or invalid authentication credentials.
+        '403':
+          description: Admin access required.
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    get:
+      tags:
+      - Catalog
+      summary: Get catalog asset detail
+      description: Full metadata, samples, and data dictionary for a single asset.
+      operationId: get_asset_v2_catalog_assets__asset_id__get
+      parameters:
+      - name: asset_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Asset Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssetDetailResponse'
+        '404':
+          detail: Not found
+          description: Not Found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v2/catalog/assets/{asset_id}/vote:
+    post:
+      tags:
+      - Catalog
+      summary: Toggle vote on a catalog asset
+      description: Adds an upvote if the user hasn't voted; removes it if they have (YouTube-style toggle).
+      operationId: toggle_vote_v2_catalog_assets__asset_id__vote_post
+      parameters:
+      - name: asset_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Asset Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VoteResponse'
+        '404':
+          detail: Not found
+          description: Not Found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    get:
+      tags:
+      - Catalog
+      summary: Get vote status for a catalog asset
+      description: Returns whether the current user has voted and the total vote count.
+      operationId: get_vote_status_v2_catalog_assets__asset_id__vote_get
+      parameters:
+      - name: asset_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Asset Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VoteResponse'
+        '404':
+          detail: Not found
+          description: Not Found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v2/catalog/assets/{asset_id}/request-access:
+    post:
+      tags:
+      - Catalog
+      summary: Request access to a catalog asset
+      description: Logs an access request for a gated/locked asset. Multiple submissions per user and asset are allowed (e.g. follow-ups). Routing is currently stubbed to CarbonArc.
+      operationId: request_access_v2_catalog_assets__asset_id__request_access_post
+      parameters:
+      - name: asset_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Asset Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccessRequestCreate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessRequestResponse'
+        '404':
+          detail: Not found
+          description: Not Found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v2/catalog/clients:
+    get:
+      tags:
+      - Catalog
+      summary: List catalog clients (admin)
+      description: Super Admin or Client Admin only. Lists all catalog clients.
+      operationId: list_clients_v2_catalog_clients_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/CatalogClientResponse'
+                type: array
+                title: Response List Clients V2 Catalog Clients Get
+        '404':
+          description: Not Found
+          detail: Not found
+        '401':
+          description: Missing or invalid authentication credentials.
+        '403':
+          description: Admin access required.
+    post:
+      tags:
+      - Catalog
+      summary: Create catalog client (admin)
+      description: Super Admin or Client Admin only. Creates a new catalog client.
+      operationId: create_client_v2_catalog_clients_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CatalogClientCreate'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CatalogClientResponse'
+        '404':
+          description: Not Found
+          detail: Not found
+        '401':
+          description: Missing or invalid authentication credentials.
+        '403':
+          description: Admin access required.
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v2/catalog/clients/{client_id}:
+    get:
+      tags:
+      - Catalog
+      summary: Get catalog client (admin)
+      description: Super Admin or Client Admin only.
+      operationId: get_client_v2_catalog_clients__client_id__get
+      parameters:
+      - name: client_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Client Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CatalogClientResponse'
+        '404':
+          detail: Not found
+          description: Not Found
+        '401':
+          description: Missing or invalid authentication credentials.
+        '403':
+          description: Admin access required.
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    patch:
+      tags:
+      - Catalog
+      summary: Update catalog client (admin)
+      description: Super Admin or Client Admin only. Partial update of name or plan_type.
+      operationId: update_client_v2_catalog_clients__client_id__patch
+      parameters:
+      - name: client_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Client Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CatalogClientUpdate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CatalogClientResponse'
+        '404':
+          detail: Not found
+          description: Not Found
+        '401':
+          description: Missing or invalid authentication credentials.
+        '403':
+          description: Admin access required.
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - Catalog
+      summary: Delete catalog client (admin)
+      description: Super Admin or Client Admin only.
+      operationId: delete_client_v2_catalog_clients__client_id__delete
+      parameters:
+      - name: client_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Client Id
+      responses:
+        '204':
+          description: Successful Response
+        '404':
+          detail: Not found
+          description: Not Found
+        '401':
+          description: Missing or invalid authentication credentials.
+        '403':
+          description: Admin access required.
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v2/catalog/clients/{client_id}/audit-log:
+    get:
+      tags:
+      - Catalog
+      summary: Get audit log for a catalog client (admin)
+      description: Super Admin or Client Admin only. Returns all field changes for the client, newest first.
+      operationId: get_client_audit_log_v2_catalog_clients__client_id__audit_log_get
+      parameters:
+      - name: client_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Client Id
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 500
+          minimum: 1
+          description: Max number of entries to return (newest first)
+          default: 50
+          title: Limit
+        description: Max number of entries to return (newest first)
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CatalogClientAuditLogResponse'
+                title: Response Get Client Audit Log V2 Catalog Clients  Client Id  Audit Log Get
+        '404':
+          detail: Not found
+          description: Not Found
+        '401':
+          description: Missing or invalid authentication credentials.
+        '403':
+          description: Admin access required.
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    CatalogClientResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        name:
+          type: string
+          title: Name
+        plan_type:
+          type: string
+          title: Plan Type
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+      type: object
+      required:
+      - id
+      - name
+      - plan_type
+      - created_at
+      - updated_at
+      title: CatalogClientResponse
+    AssetDetailResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        source_id:
+          type: string
+          format: uuid
+          title: Source Id
+        provider_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Provider Id
+        title:
+          type: string
+          title: Title
+        status:
+          type: string
+          title: Status
+        tier:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Tier
+        is_new:
+          type: boolean
+          title: Is New
+        is_premium:
+          type: boolean
+          title: Is Premium
+          default: false
+        publish_date:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Publish Date
+        last_validated_date:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Validated Date
+        metadata:
+          anyOf:
+          - $ref: '#/components/schemas/AssetMetadataResponse'
+          - type: 'null'
+        provider_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Provider Name
+        gated:
+          type: boolean
+          title: Gated
+          default: false
+        cta:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Cta
+        samples:
+          items:
+            type: object
+          type: array
+          title: Samples
+          default: []
+        dictionary:
+          anyOf:
+          - type: object
+          - type: 'null'
+          title: Dictionary
+      type: object
+      required:
+      - id
+      - source_id
+      - title
+      - status
+      - is_new
+      title: AssetDetailResponse
+      description: Full asset detail — extends AssetResponse with samples and data dictionary.
+    ListAssetsResponse:
+      properties:
+        assets:
+          items:
+            $ref: '#/components/schemas/AssetResponse'
+          type: array
+          title: Assets
+        total:
+          type: integer
+          title: Total
+      type: object
+      required:
+      - assets
+      - total
+      title: ListAssetsResponse
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    AccessRequestResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        asset_id:
+          type: string
+          format: uuid
+          title: Asset Id
+        client_id:
+          type: string
+          format: uuid
+          title: Client Id
+        user_id:
+          type: string
+          format: uuid
+          title: User Id
+        request_type:
+          type: string
+          title: Request Type
+        status:
+          type: string
+          title: Status
+        routed_to:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Routed To
+      type: object
+      required:
+      - id
+      - asset_id
+      - client_id
+      - user_id
+      - request_type
+      - status
+      title: AccessRequestResponse
+    AdminListAssetsResponse:
+      properties:
+        assets:
+          items:
+            $ref: '#/components/schemas/AdminAssetResponse'
+          type: array
+          title: Assets
+        total:
+          type: integer
+          title: Total
+      type: object
+      required:
+      - assets
+      - total
+      title: AdminListAssetsResponse
+    CatalogAssetAdminUpdate:
+      properties:
+        status:
+          anyOf:
+          - type: string
+            enum:
+            - draft
+            - published
+            - compliance_requested
+            - archived
+            - sync_archived
+          - type: 'null'
+          title: Status
+        tier:
+          anyOf:
+          - type: integer
+            maximum: 3.0
+            minimum: 1.0
+          - type: 'null'
+          title: Tier
+        is_new:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Is New
+        is_premium:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Is Premium
+        publish_date:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Publish Date
+      additionalProperties: false
+      type: object
+      title: CatalogAssetAdminUpdate
+      description: Partial update for admin-controlled catalog asset fields.
+    AssetResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        source_id:
+          type: string
+          format: uuid
+          title: Source Id
+        provider_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Provider Id
+        title:
+          type: string
+          title: Title
+        status:
+          type: string
+          title: Status
+        tier:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Tier
+        is_new:
+          type: boolean
+          title: Is New
+        is_premium:
+          type: boolean
+          title: Is Premium
+          default: false
+        publish_date:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Publish Date
+        last_validated_date:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Validated Date
+        metadata:
+          anyOf:
+          - $ref: '#/components/schemas/AssetMetadataResponse'
+          - type: 'null'
+        provider_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Provider Name
+        gated:
+          type: boolean
+          title: Gated
+          default: false
+        cta:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Cta
+      type: object
+      required:
+      - id
+      - source_id
+      - title
+      - status
+      - is_new
+      title: AssetResponse
+      description: Core asset fields plus optional metadata. Built from ORM instances via model_validate.
+    CatalogClientAuditLogResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        client_id:
+          type: string
+          format: uuid
+          title: Client Id
+        changed_by_email:
+          type: string
+          title: Changed By Email
+        changed_at:
+          type: string
+          format: date-time
+          title: Changed At
+        field_changed:
+          type: string
+          title: Field Changed
+        old_value:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Old Value
+        new_value:
+          type: string
+          title: New Value
+      type: object
+      required:
+      - id
+      - client_id
+      - changed_by_email
+      - changed_at
+      - field_changed
+      - old_value
+      - new_value
+      title: CatalogClientAuditLogResponse
+    CatalogClientUpdate:
+      properties:
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+        plan_type:
+          anyOf:
+          - type: string
+            enum:
+            - standard
+            - library_only
+            - enterprise
+            - ido_premium
+          - type: 'null'
+          title: Plan Type
+      additionalProperties: false
+      type: object
+      title: CatalogClientUpdate
+    AdminAssetResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        source_id:
+          type: string
+          format: uuid
+          title: Source Id
+        provider_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Provider Id
+        title:
+          type: string
+          title: Title
+        status:
+          type: string
+          title: Status
+        tier:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Tier
+        is_new:
+          type: boolean
+          title: Is New
+        is_premium:
+          type: boolean
+          title: Is Premium
+          default: false
+        publish_date:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Publish Date
+        last_validated_date:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Validated Date
+        metadata:
+          anyOf:
+          - $ref: '#/components/schemas/AssetMetadataResponse'
+          - type: 'null'
+        provider_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Provider Name
+        gated:
+          type: boolean
+          title: Gated
+          default: false
+        cta:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Cta
+        external_id:
+          type: string
+          title: External Id
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+        vote_count:
+          type: integer
+          title: Vote Count
+          default: 0
+      type: object
+      required:
+      - id
+      - source_id
+      - title
+      - status
+      - is_new
+      - external_id
+      - created_at
+      - updated_at
+      title: AdminAssetResponse
+      description: Asset response with additional admin fields (external_id, timestamps, vote_count).
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    CatalogClientCreate:
+      properties:
+        id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Id
+        name:
+          type: string
+          title: Name
+        plan_type:
+          type: string
+          enum:
+          - standard
+          - library_only
+          - enterprise
+          - ido_premium
+          title: Plan Type
+          default: standard
+      additionalProperties: false
+      type: object
+      required:
+      - name
+      title: CatalogClientCreate
+    VoteResponse:
+      properties:
+        asset_id:
+          type: string
+          format: uuid
+          title: Asset Id
+        voted:
+          type: boolean
+          title: Voted
+        vote_count:
+          type: integer
+          title: Vote Count
+      type: object
+      required:
+      - asset_id
+      - voted
+      - vote_count
+      title: VoteResponse
+    AssetMetadataResponse:
+      properties:
+        overview:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Overview
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        data_category:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Data Category
+        data_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Data Type
+        frequency:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Frequency
+        geography:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Geography
+        coverage:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Coverage
+        panel_size:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Panel Size
+        history:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: History
+        lag:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Lag
+        bias:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Bias
+        granularity:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Granularity
+        key_metrics:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Key Metrics
+        example_use_cases:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Example Use Cases
+        other_highlights:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Other Highlights
+        tags:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Tags
+        linkedin_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Linkedin Url
+        x_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X Url
+      type: object
+      title: AssetMetadataResponse
+    AccessRequestCreate:
+      properties:
+        request_type:
+          type: string
+          enum:
+          - access
+          - diligence
+          - compliance
+          title: Request Type
+          default: access
+        notes:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Notes
+      additionalProperties: false
+      type: object
+      title: AccessRequestCreate

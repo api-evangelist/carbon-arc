@@ -1,0 +1,1149 @@
+{
+  "@context": {
+    "@vocab": "https://carbonarc.co/schema#",
+    "schema": "https://schema.org/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "dcterms": "http://purl.org/dc/terms/",
+    "carbon": "https://carbonarc.co/schema#",
+    "AccessRequestCreate": "carbon:AccessRequestCreate",
+    "request_type": {
+      "@id": "carbon:request_type",
+      "@type": "xsd:string"
+    },
+    "notes": {
+      "@id": "carbon:notes"
+    },
+    "AccessRequestResponse": "carbon:AccessRequestResponse",
+    "id": {
+      "@id": "carbon:id",
+      "@type": "xsd:string"
+    },
+    "asset_id": {
+      "@id": "carbon:asset_id",
+      "@type": "xsd:string"
+    },
+    "client_id": {
+      "@id": "carbon:client_id",
+      "@type": "xsd:string"
+    },
+    "user_id": {
+      "@id": "carbon:user_id",
+      "@type": "xsd:string"
+    },
+    "status": {
+      "@id": "carbon:status",
+      "@type": "xsd:string"
+    },
+    "routed_to": {
+      "@id": "carbon:routed_to"
+    },
+    "AdminAssetResponse": "carbon:AdminAssetResponse",
+    "source_id": {
+      "@id": "carbon:source_id",
+      "@type": "xsd:string"
+    },
+    "provider_id": {
+      "@id": "carbon:provider_id"
+    },
+    "title": {
+      "@id": "carbon:title",
+      "@type": "xsd:string"
+    },
+    "tier": {
+      "@id": "carbon:tier"
+    },
+    "is_new": {
+      "@id": "carbon:is_new",
+      "@type": "xsd:boolean"
+    },
+    "is_premium": {
+      "@id": "carbon:is_premium",
+      "@type": "xsd:boolean"
+    },
+    "publish_date": {
+      "@id": "carbon:publish_date"
+    },
+    "last_validated_date": {
+      "@id": "carbon:last_validated_date"
+    },
+    "metadata": {
+      "@id": "carbon:metadata"
+    },
+    "provider_name": {
+      "@id": "carbon:provider_name"
+    },
+    "gated": {
+      "@id": "carbon:gated",
+      "@type": "xsd:boolean"
+    },
+    "cta": {
+      "@id": "carbon:cta"
+    },
+    "external_id": {
+      "@id": "carbon:external_id",
+      "@type": "xsd:string"
+    },
+    "created_at": {
+      "@id": "carbon:created_at",
+      "@type": "xsd:dateTime"
+    },
+    "updated_at": {
+      "@id": "carbon:updated_at",
+      "@type": "xsd:dateTime"
+    },
+    "vote_count": {
+      "@id": "carbon:vote_count",
+      "@type": "xsd:integer"
+    },
+    "AdminListAssetsResponse": "carbon:AdminListAssetsResponse",
+    "assets": {
+      "@id": "carbon:assets",
+      "@container": "@list"
+    },
+    "total": {
+      "@id": "carbon:total",
+      "@type": "xsd:integer"
+    },
+    "AssetDetailResponse": "carbon:AssetDetailResponse",
+    "samples": {
+      "@id": "carbon:samples",
+      "@container": "@list"
+    },
+    "dictionary": {
+      "@id": "carbon:dictionary"
+    },
+    "AssetMetadataResponse": "carbon:AssetMetadataResponse",
+    "overview": {
+      "@id": "carbon:overview"
+    },
+    "description": {
+      "@id": "carbon:description"
+    },
+    "data_category": {
+      "@id": "carbon:data_category"
+    },
+    "data_type": {
+      "@id": "carbon:data_type"
+    },
+    "frequency": {
+      "@id": "carbon:frequency"
+    },
+    "geography": {
+      "@id": "carbon:geography"
+    },
+    "coverage": {
+      "@id": "carbon:coverage"
+    },
+    "panel_size": {
+      "@id": "carbon:panel_size"
+    },
+    "history": {
+      "@id": "carbon:history"
+    },
+    "lag": {
+      "@id": "carbon:lag"
+    },
+    "bias": {
+      "@id": "carbon:bias"
+    },
+    "granularity": {
+      "@id": "carbon:granularity"
+    },
+    "key_metrics": {
+      "@id": "carbon:key_metrics"
+    },
+    "example_use_cases": {
+      "@id": "carbon:example_use_cases"
+    },
+    "other_highlights": {
+      "@id": "carbon:other_highlights"
+    },
+    "tags": {
+      "@id": "carbon:tags"
+    },
+    "linkedin_url": {
+      "@id": "carbon:linkedin_url"
+    },
+    "x_url": {
+      "@id": "carbon:x_url"
+    },
+    "AssetResponse": "carbon:AssetResponse",
+    "BlockAccessType": "carbon:BlockAccessType",
+    "BlockDatasetCut": "carbon:BlockDatasetCut",
+    "cut": {
+      "@id": "carbon:cut"
+    },
+    "lags": {
+      "@id": "carbon:lags",
+      "@container": "@list"
+    },
+    "annual_price": {
+      "@id": "carbon:annual_price"
+    },
+    "bulk_row_status": {
+      "@id": "carbon:bulk_row_status"
+    },
+    "request_statuses": {
+      "@id": "carbon:request_statuses"
+    },
+    "BlockDatasetCutsEntry": "carbon:BlockDatasetCutsEntry",
+    "BlockDatasetCutsResponse": "carbon:BlockDatasetCutsResponse",
+    "dataset_id": {
+      "@id": "carbon:dataset_id",
+      "@type": "xsd:string"
+    },
+    "cuts": {
+      "@id": "carbon:cuts",
+      "@container": "@list"
+    },
+    "BlockDatasetEntry": "carbon:BlockDatasetEntry",
+    "label": {
+      "@id": "carbon:label"
+    },
+    "vendor": {
+      "@id": "carbon:vendor"
+    },
+    "offered_access_type": {
+      "@id": "carbon:offered_access_type"
+    },
+    "use_cases": {
+      "@id": "carbon:use_cases",
+      "@container": "@list"
+    },
+    "ecosystem": {
+      "@id": "carbon:ecosystem"
+    },
+    "terms_of_use_html": {
+      "@id": "carbon:terms_of_use_html"
+    },
+    "terms_of_use_version_id": {
+      "@id": "carbon:terms_of_use_version_id"
+    },
+    "platform_access_blocked": {
+      "@id": "carbon:platform_access_blocked"
+    },
+    "BlockDatasetsResponse": "carbon:BlockDatasetsResponse",
+    "datasets": {
+      "@id": "carbon:datasets",
+      "@container": "@list"
+    },
+    "BlockRequestStatus": "carbon:BlockRequestStatus",
+    "Body_collection_framework_metadata_v2_framework_metadata_post": "carbon:Body_collection_framework_metadata_v2_framework_metadata_post",
+    "frameworks": {
+      "@id": "carbon:frameworks",
+      "@container": "@list"
+    },
+    "config": {
+      "@id": "carbon:config"
+    },
+    "Body_create_framework_order_v2_framework_buy_post": "carbon:Body_create_framework_order_v2_framework_buy_post",
+    "order": {
+      "@id": "carbon:order"
+    },
+    "framework_id": {
+      "@id": "carbon:framework_id"
+    },
+    "source": {
+      "@id": "carbon:source"
+    },
+    "Body_framework_filter_options_v2_framework_filters__filter_key__options_post": "carbon:Body_framework_filter_options_v2_framework_filters__filter_key__options_post",
+    "framework": {
+      "@id": "carbon:framework",
+      "@type": "@id"
+    },
+    "Body_framework_filters_batch_v2_framework_filters_batch_post": "carbon:Body_framework_filters_batch_v2_framework_filters_batch_post",
+    "timeout_seconds": {
+      "@id": "carbon:timeout_seconds"
+    },
+    "Body_framework_filters_v2_framework_filters_post": "carbon:Body_framework_filters_v2_framework_filters_post",
+    "Body_get_insights_list_batch_v2_ontology_insights_batch_post": "carbon:Body_get_insights_list_batch_v2_ontology_insights_batch_post",
+    "payload": {
+      "@id": "carbon:payload",
+      "@type": "@id"
+    },
+    "Body_preview_framework_code_v2_framework_code_preview_post": "carbon:Body_preview_framework_code_v2_framework_code_preview_post",
+    "Body_update_framework_name_v2_framework__framework_id__name_patch": "carbon:Body_update_framework_name_v2_framework__framework_id__name_patch",
+    "name": {
+      "@id": "carbon:name",
+      "@type": "xsd:string"
+    },
+    "Body_update_user_order_display_name_v2_clients_me_orders__order_id__patch": "carbon:Body_update_user_order_display_name_v2_clients_me_orders__order_id__patch",
+    "display_name": {
+      "@id": "carbon:display_name",
+      "@type": "xsd:string"
+    },
+    "BrowseRoleResult": "carbon:BrowseRoleResult",
+    "role": {
+      "@id": "carbon:role",
+      "@type": "xsd:string"
+    },
+    "assigned": {
+      "@id": "carbon:assigned",
+      "@type": "xsd:boolean"
+    },
+    "BuilderResponse": "carbon:BuilderResponse",
+    "sections": {
+      "@id": "carbon:sections"
+    },
+    "BuilderSection": "carbon:BuilderSection",
+    "data": {
+      "@id": "carbon:data"
+    },
+    "error": {
+      "@id": "carbon:error"
+    },
+    "duration_ms": {
+      "@id": "carbon:duration_ms"
+    },
+    "BulkBrowseResponse": "carbon:BulkBrowseResponse",
+    "principal_name": {
+      "@id": "carbon:principal_name",
+      "@type": "xsd:string"
+    },
+    "roles": {
+      "@id": "carbon:roles",
+      "@container": "@list"
+    },
+    "CakeTaskScheduleItem": "carbon:CakeTaskScheduleItem",
+    "next_run_start": {
+      "@id": "carbon:next_run_start"
+    },
+    "next_run_end": {
+      "@id": "carbon:next_run_end"
+    },
+    "last_update": {
+      "@id": "carbon:last_update"
+    },
+    "CakeTaskScheduleResponse": "carbon:CakeTaskScheduleResponse",
+    "schedules": {
+      "@id": "carbon:schedules",
+      "@container": "@list"
+    },
+    "CatalogAssetAdminUpdate": "carbon:CatalogAssetAdminUpdate",
+    "CatalogClientAuditLogResponse": "carbon:CatalogClientAuditLogResponse",
+    "changed_by_email": {
+      "@id": "carbon:changed_by_email",
+      "@type": "xsd:string"
+    },
+    "changed_at": {
+      "@id": "carbon:changed_at",
+      "@type": "xsd:dateTime"
+    },
+    "field_changed": {
+      "@id": "carbon:field_changed",
+      "@type": "xsd:string"
+    },
+    "old_value": {
+      "@id": "carbon:old_value"
+    },
+    "new_value": {
+      "@id": "carbon:new_value",
+      "@type": "xsd:string"
+    },
+    "CatalogClientCreate": "carbon:CatalogClientCreate",
+    "plan_type": {
+      "@id": "carbon:plan_type",
+      "@type": "xsd:string"
+    },
+    "CatalogClientResponse": "carbon:CatalogClientResponse",
+    "CatalogClientUpdate": "carbon:CatalogClientUpdate",
+    "Category": "carbon:Category",
+    "category_id": {
+      "@id": "carbon:category_id",
+      "@type": "xsd:integer"
+    },
+    "category_label": {
+      "@id": "carbon:category_label",
+      "@type": "xsd:string"
+    },
+    "category_count": {
+      "@id": "carbon:category_count",
+      "@type": "xsd:integer"
+    },
+    "CategoryResponse": "carbon:CategoryResponse",
+    "items": {
+      "@id": "carbon:items",
+      "@container": "@list"
+    },
+    "ClientBalanceResponse": "carbon:ClientBalanceResponse",
+    "total_balance": {
+      "@id": "carbon:total_balance",
+      "@type": "xsd:decimal"
+    },
+    "promotional_balance": {
+      "@id": "carbon:promotional_balance",
+      "@type": "xsd:decimal"
+    },
+    "purchased_balance": {
+      "@id": "carbon:purchased_balance",
+      "@type": "xsd:decimal"
+    },
+    "expiry_schedule": {
+      "@id": "carbon:expiry_schedule",
+      "@container": "@list"
+    },
+    "CodeResponse": "carbon:CodeResponse",
+    "code": {
+      "@id": "carbon:code",
+      "@type": "xsd:string"
+    },
+    "DataDictionary": "carbon:DataDictionary",
+    "entity_topic_id": {
+      "@id": "carbon:entity_topic_id"
+    },
+    "columns": {
+      "@id": "carbon:columns"
+    },
+    "DataFrameResponse": "carbon:DataFrameResponse",
+    "type": {
+      "@id": "carbon:type",
+      "@type": "xsd:string"
+    },
+    "page": {
+      "@id": "carbon:page",
+      "@type": "xsd:integer"
+    },
+    "size": {
+      "@id": "carbon:size",
+      "@type": "xsd:integer"
+    },
+    "pages": {
+      "@id": "carbon:pages",
+      "@type": "xsd:integer"
+    },
+    "insight_column": {
+      "@id": "carbon:insight_column"
+    },
+    "message": {
+      "@id": "carbon:message"
+    },
+    "metadata_info": {
+      "@id": "carbon:metadata_info"
+    },
+    "DataLibrarySource": "carbon:DataLibrarySource",
+    "carc_id": {
+      "@id": "carbon:carc_id",
+      "@type": "xsd:integer"
+    },
+    "category": {
+      "@id": "carbon:category",
+      "@type": "xsd:string"
+    },
+    "subcategory": {
+      "@id": "carbon:subcategory",
+      "@type": "xsd:string"
+    },
+    "ecosystem_type": {
+      "@id": "carbon:ecosystem_type",
+      "@type": "xsd:string"
+    },
+    "tearsheet_category": {
+      "@id": "carbon:tearsheet_category"
+    },
+    "dataset_name": {
+      "@id": "carbon:dataset_name",
+      "@type": "xsd:string"
+    },
+    "topic_data_dictionary": {
+      "@id": "carbon:topic_data_dictionary"
+    },
+    "blocked": {
+      "@id": "carbon:blocked",
+      "@type": "xsd:boolean"
+    },
+    "blocked_api": {
+      "@id": "carbon:blocked_api"
+    },
+    "blocked_mcp": {
+      "@id": "carbon:blocked_mcp"
+    },
+    "public": {
+      "@id": "carbon:public",
+      "@type": "xsd:boolean"
+    },
+    "last_updated_timestamp": {
+      "@id": "carbon:last_updated_timestamp"
+    },
+    "is_current": {
+      "@id": "carbon:is_current"
+    },
+    "ontime_status": {
+      "@id": "carbon:ontime_status"
+    },
+    "subject_id": {
+      "@id": "carbon:subject_id"
+    },
+    "subject_label": {
+      "@id": "carbon:subject_label"
+    },
+    "has_confidence_report": {
+      "@id": "carbon:has_confidence_report",
+      "@type": "xsd:boolean"
+    },
+    "DataLibrarySourcesResponse": "carbon:DataLibrarySourcesResponse",
+    "total_pages": {
+      "@id": "carbon:total_pages",
+      "@type": "xsd:integer"
+    },
+    "datasources": {
+      "@id": "carbon:datasources",
+      "@container": "@list"
+    },
+    "DataSource": "carbon:DataSource",
+    "DataSourcesResponse": "carbon:DataSourcesResponse",
+    "DatasetMatch": "carbon:DatasetMatch",
+    "match_score": {
+      "@id": "carbon:match_score",
+      "@type": "xsd:integer"
+    },
+    "EntityCategoryDetail": "carbon:EntityCategoryDetail",
+    "entity_id": {
+      "@id": "carbon:entity_id",
+      "@type": "xsd:integer"
+    },
+    "entity": {
+      "@id": "carbon:entity",
+      "@type": "xsd:string"
+    },
+    "entity_domain": {
+      "@id": "carbon:entity_domain",
+      "@type": "xsd:string"
+    },
+    "entity_representation_name": {
+      "@id": "carbon:entity_representation_name",
+      "@type": "xsd:string"
+    },
+    "entity_representation_label": {
+      "@id": "carbon:entity_representation_label",
+      "@type": "xsd:string"
+    },
+    "EntityCategoryResponse": "carbon:EntityCategoryResponse",
+    "EntityCategoryResponseItem": "carbon:EntityCategoryResponseItem",
+    "representations": {
+      "@id": "carbon:representations",
+      "@container": "@list"
+    },
+    "EntityDetailsResponse": "carbon:EntityDetailsResponse",
+    "carc_name": {
+      "@id": "carbon:carc_name",
+      "@type": "xsd:string"
+    },
+    "entity_label": {
+      "@id": "carbon:entity_label",
+      "@type": "xsd:string"
+    },
+    "EntityInsightsResponse": "carbon:EntityInsightsResponse",
+    "entities": {
+      "@id": "carbon:entities",
+      "@container": "@list"
+    },
+    "EntityMapResponseItem": "carbon:EntityMapResponseItem",
+    "domain": {
+      "@id": "carbon:domain",
+      "@type": "xsd:string"
+    },
+    "representation": {
+      "@id": "carbon:representation",
+      "@type": "xsd:string"
+    },
+    "EntityResponse": "carbon:EntityResponse",
+    "EntityResponseItem": "carbon:EntityResponseItem",
+    "entity_domain_label": {
+      "@id": "carbon:entity_domain_label"
+    },
+    "entity_representation": {
+      "@id": "carbon:entity_representation",
+      "@type": "xsd:string"
+    },
+    "entity_id_key": {
+      "@id": "carbon:entity_id_key"
+    },
+    "figi_code": {
+      "@id": "carbon:figi_code"
+    },
+    "relevance_score": {
+      "@id": "carbon:relevance_score"
+    },
+    "ExampleTableResponse": "carbon:ExampleTableResponse",
+    "namespace": {
+      "@id": "carbon:namespace",
+      "@type": "xsd:string"
+    },
+    "table": {
+      "@id": "carbon:table",
+      "@type": "xsd:string"
+    },
+    "ExpiryScheduleItem": "carbon:ExpiryScheduleItem",
+    "amount": {
+      "@id": "carbon:amount",
+      "@type": "xsd:decimal"
+    },
+    "expires_at": {
+      "@id": "carbon:expires_at",
+      "@type": "xsd:dateTime"
+    },
+    "token_type": {
+      "@id": "carbon:token_type",
+      "@type": "xsd:string"
+    },
+    "FilterOptionValue": "carbon:FilterOptionValue",
+    "key": {
+      "@id": "carbon:key",
+      "@type": "xsd:string"
+    },
+    "FrameworkCollectionResponse": "carbon:FrameworkCollectionResponse",
+    "total_price": {
+      "@id": "carbon:total_price",
+      "@type": "xsd:decimal"
+    },
+    "number_of_frameworks": {
+      "@id": "carbon:number_of_frameworks",
+      "@type": "xsd:integer"
+    },
+    "FrameworkDataStatus": "carbon:FrameworkDataStatus",
+    "refresh_available": {
+      "@id": "carbon:refresh_available",
+      "@type": "xsd:boolean"
+    },
+    "reinstatement_available": {
+      "@id": "carbon:reinstatement_available",
+      "@type": "xsd:boolean"
+    },
+    "framework_refresh_timestamp": {
+      "@id": "carbon:framework_refresh_timestamp",
+      "@type": "xsd:dateTime"
+    },
+    "framework_reinstatement_timestamp": {
+      "@id": "carbon:framework_reinstatement_timestamp",
+      "@type": "xsd:dateTime"
+    },
+    "insight_refresh_timestamp": {
+      "@id": "carbon:insight_refresh_timestamp",
+      "@type": "xsd:dateTime"
+    },
+    "insight_reinstatement_timestamp": {
+      "@id": "carbon:insight_reinstatement_timestamp",
+      "@type": "xsd:dateTime"
+    },
+    "last_reinstatement_reason": {
+      "@id": "carbon:last_reinstatement_reason"
+    },
+    "FrameworkEntityRequest": "carbon:FrameworkEntityRequest",
+    "entity_name": {
+      "@id": "carbon:entity_name"
+    },
+    "FrameworkEventRequest": "carbon:FrameworkEventRequest",
+    "event_id": {
+      "@id": "carbon:event_id"
+    },
+    "event_name": {
+      "@id": "carbon:event_name"
+    },
+    "event_category_id": {
+      "@id": "carbon:event_category_id"
+    },
+    "FrameworkFilter": "carbon:FrameworkFilter",
+    "depends_on": {
+      "@id": "carbon:depends_on"
+    },
+    "select_type": {
+      "@id": "carbon:select_type",
+      "@type": "xsd:string"
+    },
+    "filter_group": {
+      "@id": "carbon:filter_group",
+      "@type": "xsd:string"
+    },
+    "db_column": {
+      "@id": "carbon:db_column"
+    },
+    "default_value": {
+      "@id": "carbon:default_value"
+    },
+    "option_values": {
+      "@id": "carbon:option_values"
+    },
+    "table_earliest_date": {
+      "@id": "carbon:table_earliest_date"
+    },
+    "table_latest_date": {
+      "@id": "carbon:table_latest_date"
+    },
+    "FrameworkFiltersBatchItem": "carbon:FrameworkFiltersBatchItem",
+    "index": {
+      "@id": "carbon:index",
+      "@type": "xsd:integer"
+    },
+    "filters": {
+      "@id": "carbon:filters"
+    },
+    "aggregate_options": {
+      "@id": "carbon:aggregate_options"
+    },
+    "FrameworkFiltersBatchResponse": "carbon:FrameworkFiltersBatchResponse",
+    "results": {
+      "@id": "carbon:results",
+      "@container": "@list"
+    },
+    "FrameworkFiltersResponse": "carbon:FrameworkFiltersResponse",
+    "FrameworkInsightRequest": "carbon:FrameworkInsightRequest",
+    "insight_id": {
+      "@id": "carbon:insight_id",
+      "@type": "xsd:integer"
+    },
+    "insight_name": {
+      "@id": "carbon:insight_name"
+    },
+    "FrameworkMetadataResponse": "carbon:FrameworkMetadataResponse",
+    "refreshed_date": {
+      "@id": "carbon:refreshed_date"
+    },
+    "reinstated_date": {
+      "@id": "carbon:reinstated_date"
+    },
+    "reinstatement_reason": {
+      "@id": "carbon:reinstatement_reason",
+      "@type": "xsd:string"
+    },
+    "ontology_version": {
+      "@id": "carbon:ontology_version",
+      "@type": "xsd:string"
+    },
+    "price": {
+      "@id": "carbon:price",
+      "@type": "xsd:decimal"
+    },
+    "table_max_date": {
+      "@id": "carbon:table_max_date"
+    },
+    "latest_framework_id": {
+      "@id": "carbon:latest_framework_id"
+    },
+    "is_superseded": {
+      "@id": "carbon:is_superseded",
+      "@type": "xsd:boolean"
+    },
+    "FrameworkOrderCreate": "carbon:FrameworkOrderCreate",
+    "FrameworkOrderRead": "carbon:FrameworkOrderRead",
+    "order_id": {
+      "@id": "carbon:order_id"
+    },
+    "user_email": {
+      "@id": "carbon:user_email",
+      "@type": "xsd:string"
+    },
+    "total_records_count": {
+      "@id": "carbon:total_records_count",
+      "@type": "xsd:integer"
+    },
+    "order_type": {
+      "@id": "carbon:order_type",
+      "@type": "xsd:string"
+    },
+    "transcript_id": {
+      "@id": "carbon:transcript_id"
+    },
+    "framework_ids": {
+      "@id": "carbon:framework_ids",
+      "@container": "@list"
+    },
+    "framework_details": {
+      "@id": "carbon:framework_details",
+      "@container": "@list"
+    },
+    "framework_id_remap": {
+      "@id": "carbon:framework_id_remap"
+    },
+    "FrameworkRequest": "carbon:FrameworkRequest",
+    "insight": {
+      "@id": "carbon:insight",
+      "@type": "@id"
+    },
+    "aggregate": {
+      "@id": "carbon:aggregate"
+    },
+    "events": {
+      "@id": "carbon:events"
+    },
+    "GrantBucketAccessRequest": "carbon:GrantBucketAccessRequest",
+    "principal_arn": {
+      "@id": "carbon:principal_arn",
+      "@type": "xsd:string"
+    },
+    "client_name": {
+      "@id": "carbon:client_name",
+      "@type": "xsd:string"
+    },
+    "GrantBucketAccessResponse": "carbon:GrantBucketAccessResponse",
+    "granted": {
+      "@id": "carbon:granted",
+      "@type": "xsd:boolean"
+    },
+    "GrantDatasetRequest": "carbon:GrantDatasetRequest",
+    "catalog": {
+      "@id": "carbon:catalog",
+      "@type": "xsd:string"
+    },
+    "GrantDatasetResponse": "carbon:GrantDatasetResponse",
+    "principal_role": {
+      "@id": "carbon:principal_role",
+      "@type": "xsd:string"
+    },
+    "catalog_role": {
+      "@id": "carbon:catalog_role",
+      "@type": "xsd:string"
+    },
+    "tables_granted": {
+      "@id": "carbon:tables_granted",
+      "@type": "xsd:integer"
+    },
+    "tables_skipped": {
+      "@id": "carbon:tables_skipped",
+      "@type": "xsd:integer"
+    },
+    "skipped_catalogs": {
+      "@id": "carbon:skipped_catalogs",
+      "@container": "@list"
+    },
+    "GraphSource": "carbon:GraphSource",
+    "graph_name": {
+      "@id": "carbon:graph_name",
+      "@type": "xsd:string"
+    },
+    "graph_id": {
+      "@id": "carbon:graph_id",
+      "@type": "xsd:integer"
+    },
+    "exportformat": {
+      "@id": "carbon:exportformat",
+      "@type": "xsd:string"
+    },
+    "path": {
+      "@id": "carbon:path"
+    },
+    "GraphSourcesResponse": "carbon:GraphSourcesResponse",
+    "HTTPValidationError": "carbon:HTTPValidationError",
+    "detail": {
+      "@id": "carbon:detail",
+      "@container": "@list"
+    },
+    "Insight": "carbon:Insight",
+    "topic_id": {
+      "@id": "carbon:topic_id",
+      "@type": "xsd:integer"
+    },
+    "topic_name": {
+      "@id": "carbon:topic_name",
+      "@type": "xsd:string"
+    },
+    "is_event": {
+      "@id": "carbon:is_event"
+    },
+    "InsightDetailsResponse": "carbon:InsightDetailsResponse",
+    "InsightLinkedResponse": "carbon:InsightLinkedResponse",
+    "insight_ids": {
+      "@id": "carbon:insight_ids",
+      "@container": "@list"
+    },
+    "incompatible_entities": {
+      "@id": "carbon:incompatible_entities",
+      "@container": "@list"
+    },
+    "InsightListResponse": "carbon:InsightListResponse",
+    "insights": {
+      "@id": "carbon:insights",
+      "@container": "@list"
+    },
+    "source_count": {
+      "@id": "carbon:source_count"
+    },
+    "subject_count": {
+      "@id": "carbon:subject_count"
+    },
+    "InsightMapResponseItem": "carbon:InsightMapResponseItem",
+    "subject": {
+      "@id": "carbon:subject",
+      "@type": "xsd:string"
+    },
+    "topic": {
+      "@id": "carbon:topic",
+      "@type": "xsd:string"
+    },
+    "InsightResponse": "carbon:InsightResponse",
+    "InsightResponseItem": "carbon:InsightResponseItem",
+    "sources": {
+      "@id": "carbon:sources"
+    },
+    "topic_label": {
+      "@id": "carbon:topic_label"
+    },
+    "topic_key": {
+      "@id": "carbon:topic_key"
+    },
+    "subject_key": {
+      "@id": "carbon:subject_key"
+    },
+    "insight_type_label": {
+      "@id": "carbon:insight_type_label",
+      "@type": "xsd:string"
+    },
+    "insight_type": {
+      "@id": "carbon:insight_type",
+      "@type": "xsd:string"
+    },
+    "historic": {
+      "@id": "carbon:historic"
+    },
+    "has_entity": {
+      "@id": "carbon:has_entity"
+    },
+    "subject_description": {
+      "@id": "carbon:subject_description"
+    },
+    "topic_description": {
+      "@id": "carbon:topic_description"
+    },
+    "delay_status": {
+      "@id": "carbon:delay_status"
+    },
+    "insight_overview": {
+      "@id": "carbon:insight_overview"
+    },
+    "last_reinstated_timestamp": {
+      "@id": "carbon:last_reinstated_timestamp"
+    },
+    "InsightSearchIdsResponse": "carbon:InsightSearchIdsResponse",
+    "truncated": {
+      "@id": "carbon:truncated",
+      "@type": "xsd:boolean"
+    },
+    "InsightStoreItem": "carbon:InsightStoreItem",
+    "InsightStoreResponse": "carbon:InsightStoreResponse",
+    "version": {
+      "@id": "carbon:version",
+      "@type": "xsd:string"
+    },
+    "InsightsBatchEntity": "carbon:InsightsBatchEntity",
+    "InsightsBatchItem": "carbon:InsightsBatchItem",
+    "result": {
+      "@id": "carbon:result"
+    },
+    "InsightsBatchRequest": "carbon:InsightsBatchRequest",
+    "subject_ids": {
+      "@id": "carbon:subject_ids"
+    },
+    "topic_ids": {
+      "@id": "carbon:topic_ids"
+    },
+    "insight_types": {
+      "@id": "carbon:insight_types"
+    },
+    "dataset_ids": {
+      "@id": "carbon:dataset_ids"
+    },
+    "event_representation": {
+      "@id": "carbon:event_representation"
+    },
+    "search": {
+      "@id": "carbon:search"
+    },
+    "include_metadata": {
+      "@id": "carbon:include_metadata",
+      "@type": "xsd:boolean"
+    },
+    "min_score": {
+      "@id": "carbon:min_score"
+    },
+    "sort_by": {
+      "@id": "carbon:sort_by"
+    },
+    "rand_seed": {
+      "@id": "carbon:rand_seed"
+    },
+    "featured_insight_ids": {
+      "@id": "carbon:featured_insight_ids"
+    },
+    "InsightsBatchResponse": "carbon:InsightsBatchResponse",
+    "ListAssetsResponse": "carbon:ListAssetsResponse",
+    "MatchResult": "carbon:MatchResult",
+    "persona": {
+      "@id": "carbon:persona",
+      "@type": "@id"
+    },
+    "matches": {
+      "@id": "carbon:matches",
+      "@container": "@list"
+    },
+    "total_datasets_evaluated": {
+      "@id": "carbon:total_datasets_evaluated",
+      "@type": "xsd:integer"
+    },
+    "MaterializedPrism": "carbon:MaterializedPrism",
+    "prism_id": {
+      "@id": "carbon:prism_id",
+      "@type": "xsd:string"
+    },
+    "question": {
+      "@id": "carbon:question"
+    },
+    "question_share": {
+      "@id": "carbon:question_share"
+    },
+    "note": {
+      "@id": "carbon:note"
+    },
+    "insight_label": {
+      "@id": "carbon:insight_label",
+      "@type": "xsd:string"
+    },
+    "published_at": {
+      "@id": "carbon:published_at"
+    },
+    "data_through": {
+      "@id": "carbon:data_through"
+    },
+    "window": {
+      "@id": "carbon:window"
+    },
+    "MaterializedPrismsResponse": "carbon:MaterializedPrismsResponse",
+    "prisms": {
+      "@id": "carbon:prisms",
+      "@container": "@list"
+    },
+    "OnboardRequest": "carbon:OnboardRequest",
+    "properties": {
+      "@id": "carbon:properties"
+    },
+    "OnboardResponse": "carbon:OnboardResponse",
+    "polaris_client_id": {
+      "@id": "carbon:polaris_client_id",
+      "@type": "xsd:string"
+    },
+    "polaris_client_secret": {
+      "@id": "carbon:polaris_client_secret",
+      "@type": "xsd:string"
+    },
+    "OntologyVersionResponse": "carbon:OntologyVersionResponse",
+    "versions": {
+      "@id": "carbon:versions",
+      "@container": "@list"
+    },
+    "OrderInformationResponse": "carbon:OrderInformationResponse",
+    "OrderPaginatedResponse": "carbon:OrderPaginatedResponse",
+    "OrderUpdateResponse": "carbon:OrderUpdateResponse",
+    "PanelDebiasingInfo": "carbon:PanelDebiasingInfo",
+    "PersonaInput": "carbon:PersonaInput",
+    "industry": {
+      "@id": "carbon:industry",
+      "@type": "xsd:string"
+    },
+    "company_type": {
+      "@id": "carbon:company_type",
+      "@type": "xsd:string"
+    },
+    "PublicPrismsResponse": "carbon:PublicPrismsResponse",
+    "tou": {
+      "@id": "carbon:tou"
+    },
+    "arrays": {
+      "@id": "carbon:arrays",
+      "@container": "@list"
+    },
+    "indexes": {
+      "@id": "carbon:indexes",
+      "@container": "@list"
+    },
+    "QueryJobColumn": "carbon:QueryJobColumn",
+    "QueryJobResponse": "carbon:QueryJobResponse",
+    "job_id": {
+      "@id": "carbon:job_id",
+      "@type": "xsd:string"
+    },
+    "state": {
+      "@id": "carbon:state",
+      "@type": "@id"
+    },
+    "position": {
+      "@id": "carbon:position"
+    },
+    "eta_seconds": {
+      "@id": "carbon:eta_seconds"
+    },
+    "queue_wait_ms": {
+      "@id": "carbon:queue_wait_ms",
+      "@type": "xsd:integer"
+    },
+    "is_heavy_query": {
+      "@id": "carbon:is_heavy_query"
+    },
+    "poll_after_ms": {
+      "@id": "carbon:poll_after_ms"
+    },
+    "result_json": {
+      "@id": "carbon:result_json"
+    },
+    "max_cell_chars": {
+      "@id": "carbon:max_cell_chars"
+    },
+    "QueryJobResult": "carbon:QueryJobResult",
+    "rows": {
+      "@id": "carbon:rows",
+      "@container": "@list"
+    },
+    "row_count": {
+      "@id": "carbon:row_count",
+      "@type": "xsd:integer"
+    },
+    "QueryJobState": "carbon:QueryJobState",
+    "ResetCredentialsRequest": "carbon:ResetCredentialsRequest",
+    "client_secret": {
+      "@id": "carbon:client_secret"
+    },
+    "ResetCredentialsResponse": "carbon:ResetCredentialsResponse",
+    "RevokeBucketAccessRequest": "carbon:RevokeBucketAccessRequest",
+    "RevokeBucketAccessResponse": "carbon:RevokeBucketAccessResponse",
+    "revoked": {
+      "@id": "carbon:revoked",
+      "@type": "xsd:boolean"
+    },
+    "RevokeDatasetRequest": "carbon:RevokeDatasetRequest",
+    "RevokeDatasetResponse": "carbon:RevokeDatasetResponse",
+    "SchemaColumn": "carbon:SchemaColumn",
+    "col_name": {
+      "@id": "carbon:col_name",
+      "@type": "xsd:string"
+    },
+    "Subject": "carbon:Subject",
+    "topics": {
+      "@id": "carbon:topics",
+      "@container": "@list"
+    },
+    "SubjectInsightsResponse": "carbon:SubjectInsightsResponse",
+    "SubjectResponse": "carbon:SubjectResponse",
+    "TimeSeriesEntry": "carbon:TimeSeriesEntry",
+    "series_name": {
+      "@id": "carbon:series_name",
+      "@type": "xsd:string"
+    },
+    "series": {
+      "@id": "carbon:series",
+      "@container": "@list"
+    },
+    "TimeSeriesPoint": "carbon:TimeSeriesPoint",
+    "date": {
+      "@id": "carbon:date",
+      "@type": "xsd:string"
+    },
+    "value": {
+      "@id": "carbon:value"
+    },
+    "TimeSeriesResponse": "carbon:TimeSeriesResponse"
+  },
+  "@type": "schema:Dataset",
+  "schema:name": "Carbon Arc API JSON-LD context",
+  "schema:description": "A JSON-LD @context for the objects Carbon Arc's own API contract declares: one class per component schema, one property per declared field, typed from the contract. Derived by script (derive-json-ld.py, 2026-10-07) from openapi/carbon-arc-openapi.json.",
+  "dcterms:created": "2026-10-07",
+  "dcterms:source": [
+    "openapi/carbon-arc-openapi.json"
+  ]
+}

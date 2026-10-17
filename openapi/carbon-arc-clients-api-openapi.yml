@@ -234,15 +234,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     FrameworkOrderRead:
       properties:
         id:
@@ -335,160 +326,15 @@ components:
       - framework_ids
       - framework_details
       title: FrameworkOrderRead
-    Body_update_user_order_display_name_v2_clients_me_orders__order_id__patch:
+    HTTPValidationError:
       properties:
-        display_name:
-          type: string
-          title: Display Name
-        config:
-          anyOf:
-          - type: object
-          - type: 'null'
-          title: Config
-      type: object
-      required:
-      - display_name
-      title: Body_update_user_order_display_name_v2_clients_me_orders__order_id__patch
-    ExpiryScheduleItem:
-      properties:
-        amount:
-          type: number
-          title: Amount
-        expires_at:
-          type: string
-          format: date-time
-          title: Expires At
-        token_type:
-          type: string
-          title: Token Type
-      type: object
-      required:
-      - amount
-      - expires_at
-      - token_type
-      title: ExpiryScheduleItem
-    OrderUpdateResponse:
-      properties:
-        id:
-          type: string
-          format: uuid
-          title: Id
-        name:
-          type: string
-          title: Name
-        display_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Display Name
-        type:
-          type: string
-          title: Type
-        user_email:
-          type: string
-          title: User Email
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-        updated_at:
-          type: string
-          format: date-time
-          title: Updated At
-        order_type:
-          type: string
-          enum:
-          - new_purchase
-          - refresh_purchase
-          - reinstatement_purchase
-          - repurchase
-          title: Order Type
-      type: object
-      required:
-      - id
-      - name
-      - type
-      - user_email
-      - created_at
-      - updated_at
-      - order_type
-      title: OrderUpdateResponse
-    ValidationError:
-      properties:
-        loc:
+        detail:
           items:
-            anyOf:
-            - type: string
-            - type: integer
+            $ref: '#/components/schemas/ValidationError'
           type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
+          title: Detail
       type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    ClientBalanceResponse:
-      properties:
-        total_balance:
-          type: number
-          title: Total Balance
-        promotional_balance:
-          type: number
-          title: Promotional Balance
-        purchased_balance:
-          type: number
-          title: Purchased Balance
-        expiry_schedule:
-          items:
-            $ref: '#/components/schemas/ExpiryScheduleItem'
-          type: array
-          title: Expiry Schedule
-      type: object
-      required:
-      - total_balance
-      - promotional_balance
-      - purchased_balance
-      - expiry_schedule
-      title: ClientBalanceResponse
-    OrderPaginatedResponse:
-      properties:
-        total:
-          type: integer
-          title: Total
-        page:
-          type: integer
-          title: Page
-        size:
-          type: integer
-          title: Size
-        pages:
-          type: integer
-          title: Pages
-        items:
-          items:
-            $ref: '#/components/schemas/FrameworkOrderRead'
-          type: array
-          title: Items
-      type: object
-      required:
-      - total
-      - page
-      - size
-      - pages
-      - items
-      title: OrderPaginatedResponse
+      title: HTTPValidationError
     OrderInformationResponse:
       properties:
         id:
@@ -567,3 +413,157 @@ components:
       - framework_details
       - order_type
       title: OrderInformationResponse
+    Body_update_user_order_display_name_v2_clients_me_orders__order_id__patch:
+      properties:
+        display_name:
+          type: string
+          title: Display Name
+        config:
+          anyOf:
+          - type: object
+          - type: 'null'
+          title: Config
+      type: object
+      required:
+      - display_name
+      title: Body_update_user_order_display_name_v2_clients_me_orders__order_id__patch
+    OrderUpdateResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        name:
+          type: string
+          title: Name
+        display_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Display Name
+        type:
+          type: string
+          title: Type
+        user_email:
+          type: string
+          title: User Email
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+        order_type:
+          type: string
+          enum:
+          - new_purchase
+          - refresh_purchase
+          - reinstatement_purchase
+          - repurchase
+          title: Order Type
+      type: object
+      required:
+      - id
+      - name
+      - type
+      - user_email
+      - created_at
+      - updated_at
+      - order_type
+      title: OrderUpdateResponse
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    ExpiryScheduleItem:
+      properties:
+        amount:
+          type: number
+          title: Amount
+        expires_at:
+          type: string
+          format: date-time
+          title: Expires At
+        token_type:
+          type: string
+          title: Token Type
+      type: object
+      required:
+      - amount
+      - expires_at
+      - token_type
+      title: ExpiryScheduleItem
+    ClientBalanceResponse:
+      properties:
+        total_balance:
+          type: number
+          title: Total Balance
+        promotional_balance:
+          type: number
+          title: Promotional Balance
+        purchased_balance:
+          type: number
+          title: Purchased Balance
+        expiry_schedule:
+          items:
+            $ref: '#/components/schemas/ExpiryScheduleItem'
+          type: array
+          title: Expiry Schedule
+      type: object
+      required:
+      - total_balance
+      - promotional_balance
+      - purchased_balance
+      - expiry_schedule
+      title: ClientBalanceResponse
+    OrderPaginatedResponse:
+      properties:
+        total:
+          type: integer
+          title: Total
+        page:
+          type: integer
+          title: Page
+        size:
+          type: integer
+          title: Size
+        pages:
+          type: integer
+          title: Pages
+        items:
+          items:
+            $ref: '#/components/schemas/FrameworkOrderRead'
+          type: array
+          title: Items
+      type: object
+      required:
+      - total
+      - page
+      - size
+      - pages
+      - items
+      title: OrderPaginatedResponse

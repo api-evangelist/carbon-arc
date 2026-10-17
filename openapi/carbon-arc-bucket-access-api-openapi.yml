@@ -204,126 +204,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    GrantBucketAccessResponse:
-      properties:
-        dataset_id:
-          type: string
-          title: Dataset Id
-        dataset_name:
-          type: string
-          title: Dataset Name
-        lag:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Lag
-        cut:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Cut
-        principal_arn:
-          type: string
-          title: Principal Arn
-        client_name:
-          type: string
-          title: Client Name
-        granted:
-          type: boolean
-          title: Granted
-      type: object
-      required:
-      - dataset_id
-      - dataset_name
-      - lag
-      - cut
-      - principal_arn
-      - client_name
-      - granted
-      title: GrantBucketAccessResponse
-    RevokeBucketAccessResponse:
-      properties:
-        dataset_id:
-          type: string
-          title: Dataset Id
-        dataset_name:
-          type: string
-          title: Dataset Name
-        lag:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Lag
-        cut:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Cut
-        principal_arn:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Principal Arn
-        client_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Client Name
-        revoked:
-          type: boolean
-          title: Revoked
-      type: object
-      required:
-      - dataset_id
-      - dataset_name
-      - lag
-      - cut
-      - principal_arn
-      - client_name
-      - revoked
-      title: RevokeBucketAccessResponse
-    GrantBucketAccessRequest:
-      properties:
-        principal_arn:
-          type: string
-          maxLength: 2048
-          minLength: 1
-          pattern: ^(arn:aws:iam::\d{12}:[\w+=,.@\-/]+|\d{12})$
-          title: Principal Arn
-          description: IAM principal ARN to grant access to (e.g. 'arn:aws:iam::123456789012:user/alice'), or a 12-digit AWS account id which is converted to '<id>:root'.
-        client_name:
-          type: string
-          maxLength: 128
-          minLength: 1
-          pattern: ^[a-zA-Z0-9_-]+$
-          title: Client Name
-          description: Client name; must exist in admin_config.clients.
-        lag:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Lag
-          description: Lag of the dataset SKU to grant access to. Omit (or null) for the no-lag variant — bulk_bucket_details stores no-lag rows with lag=null.
-        cut:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Cut
-          description: Cut of the dataset SKU to grant access to. Omit (or null) for the no-cut variant — bulk_bucket_details stores no-cut rows with cut=null.
-      type: object
-      required:
-      - principal_arn
-      - client_name
-      title: GrantBucketAccessRequest
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     VerifyBucketAccessResponse:
       properties:
         dataset_id:
@@ -382,55 +262,15 @@ components:
       - missing
       - checked_at
       title: VerifyBucketAccessResponse
-    VerifyBucketAccessRequest:
+    HTTPValidationError:
       properties:
-        lag:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Lag
-          description: Lag of the dataset SKU. Null for the no-lag variant.
-        cut:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Cut
-          description: Cut of the dataset SKU. Null for the no-cut variant.
-        principal_arns:
+        detail:
           items:
-            type: string
+            $ref: '#/components/schemas/ValidationError'
           type: array
-          maxItems: 500
-          title: Principal Arns
-          description: ARNs to check for. Each is reported in `present` or `missing`. Pass an empty list to get only `principal_count`.
+          title: Detail
       type: object
-      title: VerifyBucketAccessRequest
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
+      title: HTTPValidationError
     RevokeBucketAccessRequest:
       properties:
         principal_arn:
@@ -464,3 +304,163 @@ components:
           description: Cut of the dataset SKU. Null for the no-cut variant.
       type: object
       title: RevokeBucketAccessRequest
+    GrantBucketAccessRequest:
+      properties:
+        principal_arn:
+          type: string
+          maxLength: 2048
+          minLength: 1
+          pattern: ^(arn:aws:iam::\d{12}:[\w+=,.@\-/]+|\d{12})$
+          title: Principal Arn
+          description: IAM principal ARN to grant access to (e.g. 'arn:aws:iam::123456789012:user/alice'), or a 12-digit AWS account id which is converted to '<id>:root'.
+        client_name:
+          type: string
+          maxLength: 128
+          minLength: 1
+          pattern: ^[a-zA-Z0-9_-]+$
+          title: Client Name
+          description: Client name; must exist in admin_config.clients.
+        lag:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Lag
+          description: Lag of the dataset SKU to grant access to. Omit (or null) for the no-lag variant — bulk_bucket_details stores no-lag rows with lag=null.
+        cut:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Cut
+          description: Cut of the dataset SKU to grant access to. Omit (or null) for the no-cut variant — bulk_bucket_details stores no-cut rows with cut=null.
+      type: object
+      required:
+      - principal_arn
+      - client_name
+      title: GrantBucketAccessRequest
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    RevokeBucketAccessResponse:
+      properties:
+        dataset_id:
+          type: string
+          title: Dataset Id
+        dataset_name:
+          type: string
+          title: Dataset Name
+        lag:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Lag
+        cut:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Cut
+        principal_arn:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Principal Arn
+        client_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Client Name
+        revoked:
+          type: boolean
+          title: Revoked
+      type: object
+      required:
+      - dataset_id
+      - dataset_name
+      - lag
+      - cut
+      - principal_arn
+      - client_name
+      - revoked
+      title: RevokeBucketAccessResponse
+    VerifyBucketAccessRequest:
+      properties:
+        lag:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Lag
+          description: Lag of the dataset SKU. Null for the no-lag variant.
+        cut:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Cut
+          description: Cut of the dataset SKU. Null for the no-cut variant.
+        principal_arns:
+          items:
+            type: string
+          type: array
+          maxItems: 500
+          title: Principal Arns
+          description: ARNs to check for. Each is reported in `present` or `missing`. Pass an empty list to get only `principal_count`.
+      type: object
+      title: VerifyBucketAccessRequest
+    GrantBucketAccessResponse:
+      properties:
+        dataset_id:
+          type: string
+          title: Dataset Id
+        dataset_name:
+          type: string
+          title: Dataset Name
+        lag:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Lag
+        cut:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Cut
+        principal_arn:
+          type: string
+          title: Principal Arn
+        client_name:
+          type: string
+          title: Client Name
+        granted:
+          type: boolean
+          title: Granted
+      type: object
+      required:
+      - dataset_id
+      - dataset_name
+      - lag
+      - cut
+      - principal_arn
+      - client_name
+      - granted
+      title: GrantBucketAccessResponse

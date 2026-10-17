@@ -53,6 +53,92 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    PersonaInput:
+      properties:
+        industry:
+          type: string
+          title: Industry
+          description: User's industry (e.g., 'Financial Services')
+        company_type:
+          type: string
+          title: Company Type
+          description: Type of company (e.g., 'Hedge Fund', 'Retailer')
+        use_cases:
+          items:
+            type: string
+          type: array
+          title: Use Cases
+          description: Selected use cases of interest
+          default: []
+        description:
+          type: string
+          title: Description
+          description: Free-text description of data needs
+      additionalProperties: false
+      type: object
+      required:
+      - industry
+      - company_type
+      - description
+      title: PersonaInput
+      description: Input describing the user's persona and data needs.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    MatchResult:
+      properties:
+        persona:
+          $ref: '#/components/schemas/PersonaInput'
+          description: The input persona
+        matches:
+          items:
+            $ref: '#/components/schemas/DatasetMatch'
+          type: array
+          title: Matches
+          description: Ranked list of matching data assets
+        total_datasets_evaluated:
+          type: integer
+          title: Total Datasets Evaluated
+          description: Total number of data assets considered
+      type: object
+      required:
+      - persona
+      - matches
+      - total_datasets_evaluated
+      title: MatchResult
+      description: Result of the AI-powered data asset matching.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
     DatasetMatch:
       properties:
         dataset_id:
@@ -101,89 +187,3 @@ components:
       - match_score
       title: DatasetMatch
       description: A matched data asset with relevance score.
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    MatchResult:
-      properties:
-        persona:
-          $ref: '#/components/schemas/PersonaInput'
-          description: The input persona
-        matches:
-          items:
-            $ref: '#/components/schemas/DatasetMatch'
-          type: array
-          title: Matches
-          description: Ranked list of matching data assets
-        total_datasets_evaluated:
-          type: integer
-          title: Total Datasets Evaluated
-          description: Total number of data assets considered
-      type: object
-      required:
-      - persona
-      - matches
-      - total_datasets_evaluated
-      title: MatchResult
-      description: Result of the AI-powered data asset matching.
-    PersonaInput:
-      properties:
-        industry:
-          type: string
-          title: Industry
-          description: User's industry (e.g., 'Financial Services')
-        company_type:
-          type: string
-          title: Company Type
-          description: Type of company (e.g., 'Hedge Fund', 'Retailer')
-        use_cases:
-          items:
-            type: string
-          type: array
-          title: Use Cases
-          description: Selected use cases of interest
-          default: []
-        description:
-          type: string
-          title: Description
-          description: Free-text description of data needs
-      additionalProperties: false
-      type: object
-      required:
-      - industry
-      - company_type
-      - description
-      title: PersonaInput
-      description: Input describing the user's persona and data needs.

@@ -59,51 +59,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    BlockDatasetsResponse:
-      properties:
-        datasets:
-          items:
-            $ref: '#/components/schemas/BlockDatasetEntry'
-          type: array
-          title: Datasets
-      type: object
-      required:
-      - datasets
-      title: BlockDatasetsResponse
-    BlockDatasetCutsResponse:
-      properties:
-        dataset_id:
-          type: string
-          title: Dataset Id
-        cuts:
-          items:
-            $ref: '#/components/schemas/BlockDatasetCutsEntry'
-          type: array
-          title: Cuts
-      type: object
-      required:
-      - dataset_id
-      - cuts
-      title: BlockDatasetCutsResponse
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    BlockRequestStatus:
-      type: string
-      enum:
-      - NONE
-      - PENDING
-      - APPROVED
-      - TRIAL_ACTIVE
-      - CONTRACTED
-      - DENIED
-      title: BlockRequestStatus
     BlockDatasetEntry:
       properties:
         dataset_id:
@@ -184,6 +139,36 @@ components:
       required:
       - dataset_id
       title: BlockDatasetEntry
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    BlockRequestStatus:
+      type: string
+      enum:
+      - NONE
+      - PENDING
+      - APPROVED
+      - TRIAL_ACTIVE
+      - CONTRACTED
+      - DENIED
+      title: BlockRequestStatus
+    BlockDatasetsResponse:
+      properties:
+        datasets:
+          items:
+            $ref: '#/components/schemas/BlockDatasetEntry'
+          type: array
+          title: Datasets
+      type: object
+      required:
+      - datasets
+      title: BlockDatasetsResponse
     BlockAccessType:
       type: string
       enum:
@@ -216,26 +201,6 @@ components:
       - msg
       - type
       title: ValidationError
-    BlockDatasetCutsEntry:
-      properties:
-        cut:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Cut
-        lags:
-          items:
-            type: string
-          type: array
-          title: Lags
-          default: []
-      type: object
-      required:
-      - cut
-      title: BlockDatasetCutsEntry
-      description: 'Lag chips shown in the CAMS pricing card under the cut selector
-
-        and in the power-ui request modal''s lag dropdown.'
     BlockDatasetCut:
       properties:
         cut:
@@ -269,3 +234,38 @@ components:
       required:
       - cut
       title: BlockDatasetCut
+    BlockDatasetCutsResponse:
+      properties:
+        dataset_id:
+          type: string
+          title: Dataset Id
+        cuts:
+          items:
+            $ref: '#/components/schemas/BlockDatasetCutsEntry'
+          type: array
+          title: Cuts
+      type: object
+      required:
+      - dataset_id
+      - cuts
+      title: BlockDatasetCutsResponse
+    BlockDatasetCutsEntry:
+      properties:
+        cut:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Cut
+        lags:
+          items:
+            type: string
+          type: array
+          title: Lags
+          default: []
+      type: object
+      required:
+      - cut
+      title: BlockDatasetCutsEntry
+      description: 'Lag chips shown in the CAMS pricing card under the cut selector
+
+        and in the power-ui request modal''s lag dropdown.'

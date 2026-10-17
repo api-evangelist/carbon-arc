@@ -158,6 +158,15 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     MaterializedPrism:
       properties:
         prism_id:
@@ -279,12 +288,3 @@ components:
       - prisms
       title: MaterializedPrismsResponse
       description: Prisms matching a filter, each at its current published snapshot.
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError

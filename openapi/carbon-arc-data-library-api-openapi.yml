@@ -389,65 +389,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    DataDictionary:
-      properties:
-        entity_topic_id:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Entity Topic Id
-        label:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Label
-        notes:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Notes
-        columns:
-          anyOf:
-          - type: object
-          - items: {}
-            type: array
-          - type: 'null'
-          title: Columns
-          default: {}
-      type: object
-      title: DataDictionary
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    GraphSourcesResponse:
-      properties:
-        page:
-          type: integer
-          title: Page
-        size:
-          type: integer
-          title: Size
-        total_pages:
-          type: integer
-          title: Total Pages
-        datasources:
-          items:
-            $ref: '#/components/schemas/GraphSource'
-          type: array
-          title: Datasources
-      type: object
-      required:
-      - page
-      - size
-      - total_pages
-      - datasources
-      title: GraphSourcesResponse
     DataSourcesResponse:
       properties:
         page:
@@ -475,6 +416,83 @@ components:
       - total_pages
       - datasources
       title: DataSourcesResponse
+    GraphSourcesResponse:
+      properties:
+        page:
+          type: integer
+          title: Page
+        size:
+          type: integer
+          title: Size
+        total_pages:
+          type: integer
+          title: Total Pages
+        datasources:
+          items:
+            $ref: '#/components/schemas/GraphSource'
+          type: array
+          title: Datasources
+      type: object
+      required:
+      - page
+      - size
+      - total_pages
+      - datasources
+      title: GraphSourcesResponse
+    DataDictionary:
+      properties:
+        entity_topic_id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Entity Topic Id
+        label:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Label
+        notes:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Notes
+        columns:
+          anyOf:
+          - type: object
+          - items: {}
+            type: array
+          - type: 'null'
+          title: Columns
+          default: {}
+      type: object
+      title: DataDictionary
+    InsightResponse:
+      properties:
+        total:
+          type: integer
+          title: Total
+        page:
+          type: integer
+          title: Page
+        size:
+          type: integer
+          title: Size
+        pages:
+          type: integer
+          title: Pages
+        items:
+          items:
+            $ref: '#/components/schemas/InsightResponseItem'
+          type: array
+          title: Items
+      type: object
+      required:
+      - total
+      - page
+      - size
+      - pages
+      - items
+      title: InsightResponse
     GraphSource:
       properties:
         provider_name:
@@ -575,6 +593,124 @@ components:
       - blocked
       - exportformat
       title: GraphSource
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    DataSource:
+      properties:
+        provider_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Provider Name
+        dataset_name:
+          type: string
+          title: Dataset Name
+        dataset_id:
+          items:
+            type: string
+          type: array
+          title: Dataset Id
+        description:
+          type: string
+          title: Description
+        blocked:
+          type: boolean
+          title: Blocked
+        last_updated_timestamp:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Updated Timestamp
+        data:
+          anyOf:
+          - type: object
+          - type: 'null'
+          title: Data
+        is_current:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Is Current
+        label:
+          type: string
+          title: Label
+          description: 'Mirror of ``dataset_name`` so the data-library response uses the
+
+            same ``label`` key Block surfaces. Derived at serialize time —
+
+            nothing to populate on the source dict.'
+          readOnly: true
+      type: object
+      required:
+      - dataset_name
+      - dataset_id
+      - description
+      - blocked
+      - label
+      title: DataSource
+    CakeTaskScheduleItem:
+      properties:
+        next_run_start:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Next Run Start
+        next_run_end:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Next Run End
+        last_update:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Update
+      type: object
+      title: CakeTaskScheduleItem
+    CakeTaskScheduleResponse:
+      properties:
+        schedules:
+          items:
+            $ref: '#/components/schemas/CakeTaskScheduleItem'
+          type: array
+          title: Schedules
+      type: object
+      required:
+      - schedules
+      title: CakeTaskScheduleResponse
     InsightResponseItem:
       properties:
         insight_id:
@@ -721,139 +857,3 @@ components:
       - insight_type_label
       - insight_type
       title: InsightResponseItem
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    CakeTaskScheduleResponse:
-      properties:
-        schedules:
-          items:
-            $ref: '#/components/schemas/CakeTaskScheduleItem'
-          type: array
-          title: Schedules
-      type: object
-      required:
-      - schedules
-      title: CakeTaskScheduleResponse
-    InsightResponse:
-      properties:
-        total:
-          type: integer
-          title: Total
-        page:
-          type: integer
-          title: Page
-        size:
-          type: integer
-          title: Size
-        pages:
-          type: integer
-          title: Pages
-        items:
-          items:
-            $ref: '#/components/schemas/InsightResponseItem'
-          type: array
-          title: Items
-      type: object
-      required:
-      - total
-      - page
-      - size
-      - pages
-      - items
-      title: InsightResponse
-    DataSource:
-      properties:
-        provider_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Provider Name
-        dataset_name:
-          type: string
-          title: Dataset Name
-        dataset_id:
-          items:
-            type: string
-          type: array
-          title: Dataset Id
-        description:
-          type: string
-          title: Description
-        blocked:
-          type: boolean
-          title: Blocked
-        last_updated_timestamp:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Last Updated Timestamp
-        data:
-          anyOf:
-          - type: object
-          - type: 'null'
-          title: Data
-        is_current:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Is Current
-        label:
-          type: string
-          title: Label
-          description: 'Mirror of ``dataset_name`` so the data-library response uses the
-
-            same ``label`` key Block surfaces. Derived at serialize time —
-
-            nothing to populate on the source dict.'
-          readOnly: true
-      type: object
-      required:
-      - dataset_name
-      - dataset_id
-      - description
-      - blocked
-      - label
-      title: DataSource
-    CakeTaskScheduleItem:
-      properties:
-        next_run_start:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Next Run Start
-        next_run_end:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Next Run End
-        last_update:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Last Update
-      type: object
-      title: CakeTaskScheduleItem

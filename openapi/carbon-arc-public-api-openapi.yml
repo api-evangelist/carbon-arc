@@ -91,30 +91,6 @@ paths:
           detail: Not found
 components:
   schemas:
-    ListAssetsResponse:
-      properties:
-        assets:
-          items:
-            $ref: '#/components/schemas/AssetResponse'
-          type: array
-          title: Assets
-        total:
-          type: integer
-          title: Total
-      type: object
-      required:
-      - assets
-      - total
-      title: ListAssetsResponse
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     DataLibrarySource:
       properties:
         carc_id:
@@ -218,92 +194,88 @@ components:
       - public
       - has_confidence_report
       title: DataLibrarySource
-    PublicPrismsResponse:
+    AssetResponse:
       properties:
-        tou:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        source_id:
+          type: string
+          format: uuid
+          title: Source Id
+        provider_id:
           anyOf:
-          - type: object
+          - type: string
+            format: uuid
           - type: 'null'
-          title: Tou
-        prisms:
-          items:
-            type: object
-          type: array
-          title: Prisms
-        arrays:
-          items:
-            type: object
-          type: array
-          title: Arrays
-          default: []
-        indexes:
-          items:
-            type: object
-          type: array
-          title: Indexes
-          default: []
-      type: object
-      required:
-      - prisms
-      title: PublicPrismsResponse
-      description: 'The precomputed snapshot the public marketing page renders. Only
-
-        relative values (YoY index levels, share-of-group percentages) — never
-
-        absolute dollars/visits/downloads.'
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
+          title: Provider Id
+        title:
           type: string
-          title: Message
-        type:
+          title: Title
+        status:
           type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
+          title: Status
+        tier:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Tier
+        is_new:
+          type: boolean
+          title: Is New
+        is_premium:
+          type: boolean
+          title: Is Premium
+          default: false
+        publish_date:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Publish Date
+        last_validated_date:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Validated Date
+        metadata:
+          anyOf:
+          - $ref: '#/components/schemas/AssetMetadataResponse'
+          - type: 'null'
+        provider_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Provider Name
+        gated:
+          type: boolean
+          title: Gated
+          default: false
+        cta:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Cta
       type: object
       required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    DataLibrarySourcesResponse:
+      - id
+      - source_id
+      - title
+      - status
+      - is_new
+      title: AssetResponse
+      description: Core asset fields plus optional metadata. Built from ORM instances via model_validate.
+    HTTPValidationError:
       properties:
-        page:
-          type: integer
-          title: Page
-        size:
-          type: integer
-          title: Size
-        total:
-          type: integer
-          title: Total
-        total_pages:
-          type: integer
-          title: Total Pages
-        datasources:
+        detail:
           items:
-            $ref: '#/components/schemas/DataLibrarySource'
+            $ref: '#/components/schemas/ValidationError'
           type: array
-          title: Datasources
+          title: Detail
       type: object
-      required:
-      - page
-      - size
-      - total
-      - total_pages
-      - datasources
-      title: DataLibrarySourcesResponse
+      title: HTTPValidationError
     AssetMetadataResponse:
       properties:
         overview:
@@ -410,76 +382,104 @@ components:
           title: X Url
       type: object
       title: AssetMetadataResponse
-    AssetResponse:
+    ValidationError:
       properties:
-        id:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
           type: string
-          format: uuid
-          title: Id
-        source_id:
+          title: Message
+        type:
           type: string
-          format: uuid
-          title: Source Id
-        provider_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Provider Id
-        title:
-          type: string
-          title: Title
-        status:
-          type: string
-          title: Status
-        tier:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Tier
-        is_new:
-          type: boolean
-          title: Is New
-        is_premium:
-          type: boolean
-          title: Is Premium
-          default: false
-        publish_date:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Publish Date
-        last_validated_date:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Last Validated Date
-        metadata:
-          anyOf:
-          - $ref: '#/components/schemas/AssetMetadataResponse'
-          - type: 'null'
-        provider_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Provider Name
-        gated:
-          type: boolean
-          title: Gated
-          default: false
-        cta:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Cta
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
       type: object
       required:
-      - id
-      - source_id
-      - title
-      - status
-      - is_new
-      title: AssetResponse
-      description: Core asset fields plus optional metadata. Built from ORM instances via model_validate.
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    ListAssetsResponse:
+      properties:
+        assets:
+          items:
+            $ref: '#/components/schemas/AssetResponse'
+          type: array
+          title: Assets
+        total:
+          type: integer
+          title: Total
+      type: object
+      required:
+      - assets
+      - total
+      title: ListAssetsResponse
+    PublicPrismsResponse:
+      properties:
+        tou:
+          anyOf:
+          - type: object
+          - type: 'null'
+          title: Tou
+        prisms:
+          items:
+            type: object
+          type: array
+          title: Prisms
+        arrays:
+          items:
+            type: object
+          type: array
+          title: Arrays
+          default: []
+        indexes:
+          items:
+            type: object
+          type: array
+          title: Indexes
+          default: []
+      type: object
+      required:
+      - prisms
+      title: PublicPrismsResponse
+      description: 'The precomputed snapshot the public marketing page renders. Only
+
+        relative values (YoY index levels, share-of-group percentages) — never
+
+        absolute dollars/visits/downloads.'
+    DataLibrarySourcesResponse:
+      properties:
+        page:
+          type: integer
+          title: Page
+        size:
+          type: integer
+          title: Size
+        total:
+          type: integer
+          title: Total
+        total_pages:
+          type: integer
+          title: Total Pages
+        datasources:
+          items:
+            $ref: '#/components/schemas/DataLibrarySource'
+          type: array
+          title: Datasources
+      type: object
+      required:
+      - page
+      - size
+      - total
+      - total_pages
+      - datasources
+      title: DataLibrarySourcesResponse

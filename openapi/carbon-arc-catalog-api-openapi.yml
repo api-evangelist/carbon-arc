@@ -619,235 +619,31 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    CatalogClientResponse:
+    CatalogClientCreate:
       properties:
         id:
-          type: string
-          format: uuid
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
           title: Id
         name:
           type: string
           title: Name
         plan_type:
           type: string
+          enum:
+          - standard
+          - library_only
+          - enterprise
+          - ido_premium
           title: Plan Type
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-        updated_at:
-          type: string
-          format: date-time
-          title: Updated At
-      type: object
-      required:
-      - id
-      - name
-      - plan_type
-      - created_at
-      - updated_at
-      title: CatalogClientResponse
-    AssetDetailResponse:
-      properties:
-        id:
-          type: string
-          format: uuid
-          title: Id
-        source_id:
-          type: string
-          format: uuid
-          title: Source Id
-        provider_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Provider Id
-        title:
-          type: string
-          title: Title
-        status:
-          type: string
-          title: Status
-        tier:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Tier
-        is_new:
-          type: boolean
-          title: Is New
-        is_premium:
-          type: boolean
-          title: Is Premium
-          default: false
-        publish_date:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Publish Date
-        last_validated_date:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Last Validated Date
-        metadata:
-          anyOf:
-          - $ref: '#/components/schemas/AssetMetadataResponse'
-          - type: 'null'
-        provider_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Provider Name
-        gated:
-          type: boolean
-          title: Gated
-          default: false
-        cta:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Cta
-        samples:
-          items:
-            type: object
-          type: array
-          title: Samples
-          default: []
-        dictionary:
-          anyOf:
-          - type: object
-          - type: 'null'
-          title: Dictionary
-      type: object
-      required:
-      - id
-      - source_id
-      - title
-      - status
-      - is_new
-      title: AssetDetailResponse
-      description: Full asset detail — extends AssetResponse with samples and data dictionary.
-    ListAssetsResponse:
-      properties:
-        assets:
-          items:
-            $ref: '#/components/schemas/AssetResponse'
-          type: array
-          title: Assets
-        total:
-          type: integer
-          title: Total
-      type: object
-      required:
-      - assets
-      - total
-      title: ListAssetsResponse
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    AccessRequestResponse:
-      properties:
-        id:
-          type: string
-          format: uuid
-          title: Id
-        asset_id:
-          type: string
-          format: uuid
-          title: Asset Id
-        client_id:
-          type: string
-          format: uuid
-          title: Client Id
-        user_id:
-          type: string
-          format: uuid
-          title: User Id
-        request_type:
-          type: string
-          title: Request Type
-        status:
-          type: string
-          title: Status
-        routed_to:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Routed To
-      type: object
-      required:
-      - id
-      - asset_id
-      - client_id
-      - user_id
-      - request_type
-      - status
-      title: AccessRequestResponse
-    AdminListAssetsResponse:
-      properties:
-        assets:
-          items:
-            $ref: '#/components/schemas/AdminAssetResponse'
-          type: array
-          title: Assets
-        total:
-          type: integer
-          title: Total
-      type: object
-      required:
-      - assets
-      - total
-      title: AdminListAssetsResponse
-    CatalogAssetAdminUpdate:
-      properties:
-        status:
-          anyOf:
-          - type: string
-            enum:
-            - draft
-            - published
-            - compliance_requested
-            - archived
-            - sync_archived
-          - type: 'null'
-          title: Status
-        tier:
-          anyOf:
-          - type: integer
-            maximum: 3.0
-            minimum: 1.0
-          - type: 'null'
-          title: Tier
-        is_new:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Is New
-        is_premium:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Is Premium
-        publish_date:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Publish Date
+          default: standard
       additionalProperties: false
       type: object
-      title: CatalogAssetAdminUpdate
-      description: Partial update for admin-controlled catalog asset fields.
+      required:
+      - name
+      title: CatalogClientCreate
     AssetResponse:
       properties:
         id:
@@ -921,44 +717,6 @@ components:
       - is_new
       title: AssetResponse
       description: Core asset fields plus optional metadata. Built from ORM instances via model_validate.
-    CatalogClientAuditLogResponse:
-      properties:
-        id:
-          type: string
-          format: uuid
-          title: Id
-        client_id:
-          type: string
-          format: uuid
-          title: Client Id
-        changed_by_email:
-          type: string
-          title: Changed By Email
-        changed_at:
-          type: string
-          format: date-time
-          title: Changed At
-        field_changed:
-          type: string
-          title: Field Changed
-        old_value:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Old Value
-        new_value:
-          type: string
-          title: New Value
-      type: object
-      required:
-      - id
-      - client_id
-      - changed_by_email
-      - changed_at
-      - field_changed
-      - old_value
-      - new_value
-      title: CatalogClientAuditLogResponse
     CatalogClientUpdate:
       properties:
         name:
@@ -979,6 +737,77 @@ components:
       additionalProperties: false
       type: object
       title: CatalogClientUpdate
+    AccessRequestCreate:
+      properties:
+        request_type:
+          type: string
+          enum:
+          - access
+          - diligence
+          - compliance
+          title: Request Type
+          default: access
+        notes:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Notes
+      additionalProperties: false
+      type: object
+      title: AccessRequestCreate
+    AccessRequestResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        asset_id:
+          type: string
+          format: uuid
+          title: Asset Id
+        client_id:
+          type: string
+          format: uuid
+          title: Client Id
+        user_id:
+          type: string
+          format: uuid
+          title: User Id
+        request_type:
+          type: string
+          title: Request Type
+        status:
+          type: string
+          title: Status
+        routed_to:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Routed To
+      type: object
+      required:
+      - id
+      - asset_id
+      - client_id
+      - user_id
+      - request_type
+      - status
+      title: AccessRequestResponse
+    AdminListAssetsResponse:
+      properties:
+        assets:
+          items:
+            $ref: '#/components/schemas/AdminAssetResponse'
+          type: array
+          title: Assets
+        total:
+          type: integer
+          title: Total
+      type: object
+      required:
+      - assets
+      - total
+      title: AdminListAssetsResponse
     AdminAssetResponse:
       properties:
         id:
@@ -1070,75 +899,99 @@ components:
       - updated_at
       title: AdminAssetResponse
       description: Asset response with additional admin fields (external_id, timestamps, vote_count).
-    ValidationError:
+    HTTPValidationError:
       properties:
-        loc:
+        detail:
           items:
-            anyOf:
-            - type: string
-            - type: integer
+            $ref: '#/components/schemas/ValidationError'
           type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
+          title: Detail
       type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    CatalogClientCreate:
+      title: HTTPValidationError
+    AssetDetailResponse:
       properties:
         id:
+          type: string
+          format: uuid
+          title: Id
+        source_id:
+          type: string
+          format: uuid
+          title: Source Id
+        provider_id:
           anyOf:
           - type: string
             format: uuid
           - type: 'null'
-          title: Id
-        name:
+          title: Provider Id
+        title:
           type: string
-          title: Name
-        plan_type:
+          title: Title
+        status:
           type: string
-          enum:
-          - standard
-          - library_only
-          - enterprise
-          - ido_premium
-          title: Plan Type
-          default: standard
-      additionalProperties: false
-      type: object
-      required:
-      - name
-      title: CatalogClientCreate
-    VoteResponse:
-      properties:
-        asset_id:
-          type: string
-          format: uuid
-          title: Asset Id
-        voted:
+          title: Status
+        tier:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Tier
+        is_new:
           type: boolean
-          title: Voted
-        vote_count:
-          type: integer
-          title: Vote Count
+          title: Is New
+        is_premium:
+          type: boolean
+          title: Is Premium
+          default: false
+        publish_date:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Publish Date
+        last_validated_date:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Validated Date
+        metadata:
+          anyOf:
+          - $ref: '#/components/schemas/AssetMetadataResponse'
+          - type: 'null'
+        provider_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Provider Name
+        gated:
+          type: boolean
+          title: Gated
+          default: false
+        cta:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Cta
+        samples:
+          items:
+            type: object
+          type: array
+          title: Samples
+          default: []
+        dictionary:
+          anyOf:
+          - type: object
+          - type: 'null'
+          title: Dictionary
       type: object
       required:
-      - asset_id
-      - voted
-      - vote_count
-      title: VoteResponse
+      - id
+      - source_id
+      - title
+      - status
+      - is_new
+      title: AssetDetailResponse
+      description: Full asset detail — extends AssetResponse with samples and data dictionary.
     AssetMetadataResponse:
       properties:
         overview:
@@ -1245,21 +1098,168 @@ components:
           title: X Url
       type: object
       title: AssetMetadataResponse
-    AccessRequestCreate:
+    CatalogClientResponse:
       properties:
-        request_type:
+        id:
           type: string
-          enum:
-          - access
-          - diligence
-          - compliance
-          title: Request Type
-          default: access
-        notes:
+          format: uuid
+          title: Id
+        name:
+          type: string
+          title: Name
+        plan_type:
+          type: string
+          title: Plan Type
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+      type: object
+      required:
+      - id
+      - name
+      - plan_type
+      - created_at
+      - updated_at
+      title: CatalogClientResponse
+    VoteResponse:
+      properties:
+        asset_id:
+          type: string
+          format: uuid
+          title: Asset Id
+        voted:
+          type: boolean
+          title: Voted
+        vote_count:
+          type: integer
+          title: Vote Count
+      type: object
+      required:
+      - asset_id
+      - voted
+      - vote_count
+      title: VoteResponse
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    CatalogAssetAdminUpdate:
+      properties:
+        status:
+          anyOf:
+          - type: string
+            enum:
+            - draft
+            - published
+            - compliance_requested
+            - archived
+            - sync_archived
+          - type: 'null'
+          title: Status
+        tier:
+          anyOf:
+          - type: integer
+            maximum: 3.0
+            minimum: 1.0
+          - type: 'null'
+          title: Tier
+        is_new:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Is New
+        is_premium:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Is Premium
+        publish_date:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Publish Date
+      additionalProperties: false
+      type: object
+      title: CatalogAssetAdminUpdate
+      description: Partial update for admin-controlled catalog asset fields.
+    ListAssetsResponse:
+      properties:
+        assets:
+          items:
+            $ref: '#/components/schemas/AssetResponse'
+          type: array
+          title: Assets
+        total:
+          type: integer
+          title: Total
+      type: object
+      required:
+      - assets
+      - total
+      title: ListAssetsResponse
+    CatalogClientAuditLogResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        client_id:
+          type: string
+          format: uuid
+          title: Client Id
+        changed_by_email:
+          type: string
+          title: Changed By Email
+        changed_at:
+          type: string
+          format: date-time
+          title: Changed At
+        field_changed:
+          type: string
+          title: Field Changed
+        old_value:
           anyOf:
           - type: string
           - type: 'null'
-          title: Notes
-      additionalProperties: false
+          title: Old Value
+        new_value:
+          type: string
+          title: New Value
       type: object
-      title: AccessRequestCreate
+      required:
+      - id
+      - client_id
+      - changed_by_email
+      - changed_at
+      - field_changed
+      - old_value
+      - new_value
+      title: CatalogClientAuditLogResponse

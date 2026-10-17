@@ -1367,144 +1367,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    EntityCategoryDetail:
-      properties:
-        entity_id:
-          type: integer
-          title: Entity Id
-        label:
-          type: string
-          title: Label
-        entity:
-          type: string
-          title: Entity
-        entity_domain:
-          type: string
-          title: Entity Domain
-        entity_representation_name:
-          type: string
-          title: Entity Representation Name
-        entity_representation_label:
-          type: string
-          title: Entity Representation Label
-      type: object
-      required:
-      - entity_id
-      - label
-      - entity
-      - entity_domain
-      - entity_representation_name
-      - entity_representation_label
-      title: EntityCategoryDetail
-    TopicInsightsResponse:
-      properties:
-        insights:
-          items:
-            type: object
-          type: array
-          title: Insights
-      type: object
-      required:
-      - insights
-      title: TopicInsightsResponse
-    InsightsBatchItem:
-      properties:
-        entity_id:
-          type: integer
-          title: Entity Id
-        entity_representation:
-          type: string
-          title: Entity Representation
-        result:
-          anyOf:
-          - $ref: '#/components/schemas/InsightResponse'
-          - type: 'null'
-        error:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Error
-      type: object
-      required:
-      - entity_id
-      - entity_representation
-      title: InsightsBatchItem
-      description: One entity's listing, keyed so the caller does not rely on order.
-    InsightListResponse:
-      properties:
-        insights:
-          items:
-            $ref: '#/components/schemas/Insight'
-          type: array
-          title: Insights
-        source_count:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Source Count
-        subject_count:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Subject Count
-      type: object
-      required:
-      - insights
-      title: InsightListResponse
-    EntityMapResponse:
-      items:
-        $ref: '#/components/schemas/EntityMapResponseItem'
-      type: array
-      title: EntityMapResponse
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    InsightResponse:
-      properties:
-        total:
-          type: integer
-          title: Total
-        page:
-          type: integer
-          title: Page
-        size:
-          type: integer
-          title: Size
-        pages:
-          type: integer
-          title: Pages
-        items:
-          items:
-            $ref: '#/components/schemas/InsightResponseItem'
-          type: array
-          title: Items
-      type: object
-      required:
-      - total
-      - page
-      - size
-      - pages
-      - items
-      title: InsightResponse
-    Body_get_insights_list_batch_v2_ontology_insights_batch_post:
-      properties:
-        payload:
-          $ref: '#/components/schemas/InsightsBatchRequest'
-        config:
-          anyOf:
-          - type: object
-          - type: 'null'
-          title: Config
-      type: object
-      required:
-      - payload
-      title: Body_get_insights_list_batch_v2_ontology_insights_batch_post
     InsightsBatchEntity:
       properties:
         entity_id:
@@ -1519,126 +1381,50 @@ components:
       - entity_representation
       title: InsightsBatchEntity
       description: One (entity, representation) the caller wants a listing for.
-    InsightStoreItem:
+    EntityCategoryResponse:
       properties:
-        insight_id:
-          type: integer
-          title: Insight Id
-        label:
-          type: string
-          title: Label
-        insight_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Insight Name
-        sources:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Sources
-        topic_id:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Topic Id
-        topic_key:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Topic Key
-        topic_label:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Topic Label
-        topic_description:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Topic Description
-        subject_id:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Subject Id
-        subject_key:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Subject Key
-        subject_label:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Subject Label
-        dataset_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Dataset Id
-        insight_type:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Insight Type
-        insight_type_label:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Insight Type Label
-        is_event:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Is Event
-        historic:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Historic
-        has_entity:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Has Entity
-        blocked:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Blocked
-        insight_overview:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Insight Overview
-        last_updated_timestamp:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Last Updated Timestamp
+        items:
+          items:
+            $ref: '#/components/schemas/EntityCategoryResponseItem'
+          type: array
+          title: Items
       type: object
       required:
-      - insight_id
-      - label
-      title: InsightStoreItem
-      description: 'Slim insight row for the whole-corpus store.
-
-
-        Only what the prism and builder pickers render. The per-insight
-
-        ``description``, ``subject_description``, and the ``delay_status`` dict are
-
-        omitted deliberately — they are the bulk of the payload and neither picker
-
-        reads them. ``topic_description`` and ``last_updated_timestamp`` are kept
-
-        because the browse panel renders the topic summary line and each dataset''s
-
-        "last updated" stamp.'
+      - items
+      title: EntityCategoryResponse
+    Body_get_insights_list_batch_v2_ontology_insights_batch_post:
+      properties:
+        payload:
+          $ref: '#/components/schemas/InsightsBatchRequest'
+        config:
+          anyOf:
+          - type: object
+          - type: 'null'
+          title: Config
+      type: object
+      required:
+      - payload
+      title: Body_get_insights_list_batch_v2_ontology_insights_batch_post
+    InsightsBatchResponse:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/InsightsBatchItem'
+          type: array
+          title: Items
+      type: object
+      required:
+      - items
+      title: InsightsBatchResponse
+    InsightDetailsResponse:
+      properties:
+        ontology_version:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ontology Version
+      type: object
+      title: InsightDetailsResponse
     InsightsBatchRequest:
       properties:
         entities:
@@ -1760,6 +1546,75 @@ components:
         fans them out concurrently. Uncapped, one request is a way to hold as many
 
         connections of those shared pools as the caller cares to ask for.'
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    InsightSearchIdsResponse:
+      properties:
+        insight_ids:
+          items:
+            type: integer
+          type: array
+          title: Insight Ids
+        total:
+          type: integer
+          title: Total
+        truncated:
+          type: boolean
+          title: Truncated
+          default: false
+      type: object
+      required:
+      - insight_ids
+      - total
+      title: InsightSearchIdsResponse
+      description: 'Semantically-matched insight ids, **in relevance order**.
+
+
+        Same bargain as :class:`InsightLinkedResponse` — the client holds the
+
+        catalog, so a search costs an id list rather than a hydrated listing, and
+
+        no graph materialization happens on the search path.
+
+
+        One difference, and it is load-bearing: these ids are ordered by the vector
+
+        search''s fused ranking, so a client must map over them in order rather than
+
+        filter its own corpus by membership. An adjacency filter can keep catalog
+
+        order because nothing ranks it; a search result that loses its order looks
+
+        broken even when the ids are right.
+
+
+        ``truncated`` reports that the search returned as many hits as it was
+
+        allowed, so lower-ranked matches were cut.'
     EntityMapResponseItem:
       properties:
         entity:
@@ -1777,217 +1632,187 @@ components:
       - domain
       - representation
       title: EntityMapResponseItem
-    Subject:
+    EntityCategoryDetail:
       properties:
+        entity_id:
+          type: integer
+          title: Entity Id
         label:
           type: string
           title: Label
-        key:
+        entity:
           type: string
-          title: Key
-        subject_id:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Subject Id
-        description:
+          title: Entity
+        entity_domain:
           type: string
-          title: Description
-        category:
-          type: string
-          title: Category
-        sources:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - items:
-              items:
-                type: string
-              type: array
-            type: array
-          title: Sources
-        topics:
-          items:
-            type: string
-          type: array
-          title: Topics
-        last_updated_timestamp:
-          type: string
-          format: date-time
-          title: Last Updated Timestamp
-      type: object
-      required:
-      - label
-      - key
-      - description
-      - category
-      - sources
-      - topics
-      - last_updated_timestamp
-      title: Subject
-    OntologyVersionResponse:
-      properties:
-        versions:
-          items:
-            type: string
-          type: array
-          title: Versions
-      type: object
-      required:
-      - versions
-      title: OntologyVersionResponse
-    InsightMapResponse:
-      items:
-        $ref: '#/components/schemas/InsightMapResponseItem'
-      type: array
-      title: InsightMapResponse
-    EntityCategoryResponse:
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/EntityCategoryResponseItem'
-          type: array
-          title: Items
-      type: object
-      required:
-      - items
-      title: EntityCategoryResponse
-    EntityDetailsResponse:
-      properties:
-        carc_id:
-          type: integer
-          title: Carc Id
-        carc_name:
-          type: string
-          title: Carc Name
-        entity_label:
-          type: string
-          title: Entity Label
+          title: Entity Domain
         entity_representation_name:
           type: string
           title: Entity Representation Name
         entity_representation_label:
           type: string
           title: Entity Representation Label
-        entity_domain:
-          type: string
-          title: Entity Domain
-        entity:
-          type: string
-          title: Entity
       type: object
       required:
-      - carc_id
-      - carc_name
-      - entity_label
+      - entity_id
+      - label
+      - entity
+      - entity_domain
       - entity_representation_name
       - entity_representation_label
-      - entity_domain
-      - entity
-      title: EntityDetailsResponse
-    Category:
+      title: EntityCategoryDetail
+    SubjectResponse:
       properties:
-        category_id:
-          type: integer
-          title: Category Id
-        category_label:
-          type: string
-          title: Category Label
-        category_count:
-          type: integer
-          title: Category Count
+        items:
+          items:
+            $ref: '#/components/schemas/Subject'
+          type: array
+          title: Items
       type: object
       required:
-      - category_id
-      - category_label
-      - category_count
-      title: Category
-    InsightDetailsResponse:
+      - items
+      title: SubjectResponse
+    InsightListResponse:
       properties:
-        ontology_version:
+        insights:
+          items:
+            $ref: '#/components/schemas/Insight'
+          type: array
+          title: Insights
+        source_count:
           anyOf:
-          - type: string
+          - type: integer
           - type: 'null'
-          title: Ontology Version
-      type: object
-      title: InsightDetailsResponse
-    InsightLinkedResponse:
-      properties:
-        insight_ids:
-          items:
-            type: integer
-          type: array
-          title: Insight Ids
-        incompatible_entities:
-          items:
-            prefixItems:
-            - type: integer
-            - type: string
-            type: array
-            maxItems: 2
-            minItems: 2
-          type: array
-          title: Incompatible Entities
-          default: []
+          title: Source Count
+        subject_count:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Subject Count
       type: object
       required:
-      - insight_ids
-      title: InsightLinkedResponse
-      description: 'Insight ids linked to the requested entity / event scope.
-
-
-        Adjacency only — the client already holds the store and intersects
-
-        locally, so scoping a browse costs an id list, not a listing.
-
-
-        ``incompatible_entities`` answers the picker''s other question in the same
-
-        round trip: of the candidate entities on screen, which ones share nothing
-
-        with the scope, so their cards must be disabled rather than allowed into a
-
-        group that has nothing left to query. Only the incompatible pairs are
-
-        listed, because on a browse page they are the rare case and absence is the
-
-        answer the client acts on by doing nothing.
-
-
-        Absence is deliberately not a positive answer. A candidate the precompute
-
-        cannot resolve is omitted for the same reason the adjacency lookup declines
-
-        rather than returning an empty list, so a client must read "not listed" as
-
-        selectable, never as verified-compatible.'
-    Insight:
+      - insights
+      title: InsightListResponse
+    InsightStoreItem:
       properties:
         insight_id:
           type: integer
           title: Insight Id
+        label:
+          type: string
+          title: Label
         insight_name:
-          type: string
+          anyOf:
+          - type: string
+          - type: 'null'
           title: Insight Name
+        sources:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Sources
         topic_id:
-          type: integer
+          anyOf:
+          - type: integer
+          - type: 'null'
           title: Topic Id
-        topic_name:
-          type: string
-          title: Topic Name
+        topic_key:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Topic Key
+        topic_label:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Topic Label
+        topic_description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Topic Description
+        subject_id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Subject Id
+        subject_key:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Subject Key
+        subject_label:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Subject Label
+        dataset_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Dataset Id
+        insight_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Insight Type
+        insight_type_label:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Insight Type Label
         is_event:
           anyOf:
           - type: boolean
           - type: 'null'
           title: Is Event
+        historic:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Historic
+        has_entity:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Has Entity
+        blocked:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Blocked
+        insight_overview:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Insight Overview
+        last_updated_timestamp:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Updated Timestamp
       type: object
       required:
       - insight_id
-      - insight_name
-      - topic_id
-      - topic_name
-      title: Insight
+      - label
+      title: InsightStoreItem
+      description: 'Slim insight row for the whole-corpus store.
+
+
+        Only what the prism and builder pickers render. The per-insight
+
+        ``description``, ``subject_description``, and the ``delay_status`` dict are
+
+        omitted deliberately — they are the bulk of the payload and neither picker
+
+        reads them. ``topic_description`` and ``last_updated_timestamp`` are kept
+
+        because the browse panel renders the topic summary line and each dataset''s
+
+        "last updated" stamp.'
     InsightResponseItem:
       properties:
         insight_id:
@@ -2134,64 +1959,17 @@ components:
       - insight_type_label
       - insight_type
       title: InsightResponseItem
-    EntityCategoryResponseItem:
+    BuilderResponse:
       properties:
-        category_label:
-          type: string
-          title: Category Label
-        representations:
-          items:
-            $ref: '#/components/schemas/EntityCategoryDetail'
-          type: array
-          title: Representations
+        sections:
+          additionalProperties:
+            $ref: '#/components/schemas/BuilderSection'
+          type: object
+          title: Sections
       type: object
       required:
-      - category_label
-      - representations
-      title: EntityCategoryResponseItem
-    InsightSearchIdsResponse:
-      properties:
-        insight_ids:
-          items:
-            type: integer
-          type: array
-          title: Insight Ids
-        total:
-          type: integer
-          title: Total
-        truncated:
-          type: boolean
-          title: Truncated
-          default: false
-      type: object
-      required:
-      - insight_ids
-      - total
-      title: InsightSearchIdsResponse
-      description: 'Semantically-matched insight ids, **in relevance order**.
-
-
-        Same bargain as :class:`InsightLinkedResponse` — the client holds the
-
-        catalog, so a search costs an id list rather than a hydrated listing, and
-
-        no graph materialization happens on the search path.
-
-
-        One difference, and it is load-bearing: these ids are ordered by the vector
-
-        search''s fused ranking, so a client must map over them in order rather than
-
-        filter its own corpus by membership. An adjacency filter can keep catalog
-
-        order because nothing ranks it; a search result that loses its order looks
-
-        broken even when the ids are right.
-
-
-        ``truncated`` reports that the search returned as many hits as it was
-
-        allowed, so lower-ranked matches were cut.'
+      - sections
+      title: BuilderResponse
     BuilderSection:
       properties:
         data:
@@ -2219,17 +1997,60 @@ components:
         exception''s type name and leaves ``data`` null, so one bad section costs
 
         the caller that panel rather than the page.'
-    EntityInsightsResponse:
+    InsightResponse:
       properties:
-        entities:
+        total:
+          type: integer
+          title: Total
+        page:
+          type: integer
+          title: Page
+        size:
+          type: integer
+          title: Size
+        pages:
+          type: integer
+          title: Pages
+        items:
+          items:
+            $ref: '#/components/schemas/InsightResponseItem'
+          type: array
+          title: Items
+      type: object
+      required:
+      - total
+      - page
+      - size
+      - pages
+      - items
+      title: InsightResponse
+    EntityMapResponse:
+      items:
+        $ref: '#/components/schemas/EntityMapResponseItem'
+      type: array
+      title: EntityMapResponse
+    TopicInsightsResponse:
+      properties:
+        insights:
           items:
             type: object
           type: array
-          title: Entities
+          title: Insights
       type: object
       required:
-      - entities
-      title: EntityInsightsResponse
+      - insights
+      title: TopicInsightsResponse
+    CategoryResponse:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/Category'
+          type: array
+          title: Items
+      type: object
+      required:
+      - items
+      title: CategoryResponse
     InsightMapResponseItem:
       properties:
         subject_id:
@@ -2251,39 +2072,226 @@ components:
       - topic_id
       - topic
       title: InsightMapResponseItem
-    CategoryResponse:
+    Subject:
       properties:
-        items:
+        label:
+          type: string
+          title: Label
+        key:
+          type: string
+          title: Key
+        subject_id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Subject Id
+        description:
+          type: string
+          title: Description
+        category:
+          type: string
+          title: Category
+        sources:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - items:
+              items:
+                type: string
+              type: array
+            type: array
+          title: Sources
+        topics:
           items:
-            $ref: '#/components/schemas/Category'
+            type: string
           type: array
-          title: Items
+          title: Topics
+        last_updated_timestamp:
+          type: string
+          format: date-time
+          title: Last Updated Timestamp
       type: object
       required:
-      - items
-      title: CategoryResponse
-    InsightsBatchResponse:
+      - label
+      - key
+      - description
+      - category
+      - sources
+      - topics
+      - last_updated_timestamp
+      title: Subject
+    SubjectInsightsResponse:
       properties:
-        items:
+        insights:
           items:
-            $ref: '#/components/schemas/InsightsBatchItem'
+            type: object
           type: array
-          title: Items
+          title: Insights
       type: object
       required:
-      - items
-      title: InsightsBatchResponse
-    BuilderResponse:
+      - insights
+      title: SubjectInsightsResponse
+    InsightMapResponse:
+      items:
+        $ref: '#/components/schemas/InsightMapResponseItem'
+      type: array
+      title: InsightMapResponse
+    OntologyVersionResponse:
       properties:
-        sections:
-          additionalProperties:
-            $ref: '#/components/schemas/BuilderSection'
-          type: object
-          title: Sections
+        versions:
+          items:
+            type: string
+          type: array
+          title: Versions
       type: object
       required:
-      - sections
-      title: BuilderResponse
+      - versions
+      title: OntologyVersionResponse
+    Insight:
+      properties:
+        insight_id:
+          type: integer
+          title: Insight Id
+        insight_name:
+          type: string
+          title: Insight Name
+        topic_id:
+          type: integer
+          title: Topic Id
+        topic_name:
+          type: string
+          title: Topic Name
+        is_event:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Is Event
+      type: object
+      required:
+      - insight_id
+      - insight_name
+      - topic_id
+      - topic_name
+      title: Insight
+    InsightLinkedResponse:
+      properties:
+        insight_ids:
+          items:
+            type: integer
+          type: array
+          title: Insight Ids
+        incompatible_entities:
+          items:
+            prefixItems:
+            - type: integer
+            - type: string
+            type: array
+            maxItems: 2
+            minItems: 2
+          type: array
+          title: Incompatible Entities
+          default: []
+      type: object
+      required:
+      - insight_ids
+      title: InsightLinkedResponse
+      description: 'Insight ids linked to the requested entity / event scope.
+
+
+        Adjacency only — the client already holds the store and intersects
+
+        locally, so scoping a browse costs an id list, not a listing.
+
+
+        ``incompatible_entities`` answers the picker''s other question in the same
+
+        round trip: of the candidate entities on screen, which ones share nothing
+
+        with the scope, so their cards must be disabled rather than allowed into a
+
+        group that has nothing left to query. Only the incompatible pairs are
+
+        listed, because on a browse page they are the rare case and absence is the
+
+        answer the client acts on by doing nothing.
+
+
+        Absence is deliberately not a positive answer. A candidate the precompute
+
+        cannot resolve is omitted for the same reason the adjacency lookup declines
+
+        rather than returning an empty list, so a client must read "not listed" as
+
+        selectable, never as verified-compatible.'
+    EntityDetailsResponse:
+      properties:
+        carc_id:
+          type: integer
+          title: Carc Id
+        carc_name:
+          type: string
+          title: Carc Name
+        entity_label:
+          type: string
+          title: Entity Label
+        entity_representation_name:
+          type: string
+          title: Entity Representation Name
+        entity_representation_label:
+          type: string
+          title: Entity Representation Label
+        entity_domain:
+          type: string
+          title: Entity Domain
+        entity:
+          type: string
+          title: Entity
+      type: object
+      required:
+      - carc_id
+      - carc_name
+      - entity_label
+      - entity_representation_name
+      - entity_representation_label
+      - entity_domain
+      - entity
+      title: EntityDetailsResponse
+    EntityCategoryResponseItem:
+      properties:
+        category_label:
+          type: string
+          title: Category Label
+        representations:
+          items:
+            $ref: '#/components/schemas/EntityCategoryDetail'
+          type: array
+          title: Representations
+      type: object
+      required:
+      - category_label
+      - representations
+      title: EntityCategoryResponseItem
+    EntityInsightsResponse:
+      properties:
+        entities:
+          items:
+            type: object
+          type: array
+          title: Entities
+      type: object
+      required:
+      - entities
+      title: EntityInsightsResponse
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     InsightStoreResponse:
       properties:
         version:
@@ -2311,51 +2319,43 @@ components:
         it in memory. ``version`` is the graph version stamp and doubles as the
 
         ETag, so a client holding it revalidates into a 304.'
-    SubjectResponse:
+    InsightsBatchItem:
       properties:
-        items:
-          items:
-            $ref: '#/components/schemas/Subject'
-          type: array
-          title: Items
-      type: object
-      required:
-      - items
-      title: SubjectResponse
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
+        entity_id:
+          type: integer
+          title: Entity Id
+        entity_representation:
           type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
+          title: Entity Representation
+        result:
+          anyOf:
+          - $ref: '#/components/schemas/InsightResponse'
+          - type: 'null'
+        error:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error
       type: object
       required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    SubjectInsightsResponse:
+      - entity_id
+      - entity_representation
+      title: InsightsBatchItem
+      description: One entity's listing, keyed so the caller does not rely on order.
+    Category:
       properties:
-        insights:
-          items:
-            type: object
-          type: array
-          title: Insights
+        category_id:
+          type: integer
+          title: Category Id
+        category_label:
+          type: string
+          title: Category Label
+        category_count:
+          type: integer
+          title: Category Count
       type: object
       required:
-      - insights
-      title: SubjectInsightsResponse
+      - category_id
+      - category_label
+      - category_count
+      title: Category

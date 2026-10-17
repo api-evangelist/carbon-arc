@@ -315,179 +315,6 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    TranscriptPurchaseResponse:
-      properties:
-        id:
-          type: string
-          format: uuid
-          title: Id
-        transcript_id:
-          type: string
-          format: uuid
-          title: Transcript Id
-        price:
-          type: number
-          title: Price
-        status:
-          type: string
-          title: Status
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-      type: object
-      required:
-      - id
-      - transcript_id
-      - price
-      - status
-      - created_at
-      title: TranscriptPurchaseResponse
-    TranscriptListResponse:
-      properties:
-        transcripts:
-          items:
-            $ref: '#/components/schemas/TranscriptListItem'
-          type: array
-          title: Transcripts
-        total:
-          type: integer
-          title: Total
-        page:
-          type: integer
-          title: Page
-        size:
-          type: integer
-          title: Size
-      type: object
-      required:
-      - transcripts
-      - total
-      - page
-      - size
-      title: TranscriptListResponse
-    TranscriptEntity:
-      properties:
-        id:
-          type: string
-          title: Id
-        label:
-          type: string
-          title: Label
-        entity_representation:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Entity Representation
-        entity_representation_label:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Entity Representation Label
-      type: object
-      required:
-      - id
-      - label
-      title: TranscriptEntity
-      description: 'Ontology entity tag from the upload UI — identifier + display label.
-
-
-        ``entity_representation``/``entity_representation_label`` (naming matches
-
-        ``EntityResponseItem`` in ``schemas/ontology.py``) are populated from the
-
-        stored entity when present, otherwise read from the resident ``entity_store``
-
-        snapshot — no per-request Neo4j call. Null when neither source provides the
-
-        representation (store unavailable, id not found) (PRO-3002).'
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    TranscriptListItem:
-      properties:
-        id:
-          type: string
-          format: uuid
-          title: Id
-        title:
-          type: string
-          title: Title
-        interview_date:
-          type: string
-          format: date
-          title: Interview Date
-        duration_minutes:
-          type: integer
-          title: Duration Minutes
-        transcript_type:
-          type: string
-          title: Transcript Type
-        region:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Region
-        description:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Description
-        published_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Published At
-        entities:
-          items:
-            $ref: '#/components/schemas/TranscriptEntity'
-          type: array
-          title: Entities
-        is_purchased:
-          type: boolean
-          title: Is Purchased
-        price:
-          type: number
-          title: Price
-        expert_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Expert Id
-      type: object
-      required:
-      - id
-      - title
-      - interview_date
-      - duration_minutes
-      - transcript_type
-      - is_purchased
-      - price
-      title: TranscriptListItem
     TranscriptDetailItem:
       properties:
         id:
@@ -553,6 +380,29 @@ components:
       - is_purchased
       - price
       title: TranscriptDetailItem
+    TranscriptListResponse:
+      properties:
+        transcripts:
+          items:
+            $ref: '#/components/schemas/TranscriptListItem'
+          type: array
+          title: Transcripts
+        total:
+          type: integer
+          title: Total
+        page:
+          type: integer
+          title: Page
+        size:
+          type: integer
+          title: Size
+      type: object
+      required:
+      - transcripts
+      - total
+      - page
+      - size
+      title: TranscriptListResponse
     TranscriptRegionCount:
       properties:
         region:
@@ -566,6 +416,156 @@ components:
       - region
       - count
       title: TranscriptRegionCount
+    TranscriptListItem:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        title:
+          type: string
+          title: Title
+        interview_date:
+          type: string
+          format: date
+          title: Interview Date
+        duration_minutes:
+          type: integer
+          title: Duration Minutes
+        transcript_type:
+          type: string
+          title: Transcript Type
+        region:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Region
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        published_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Published At
+        entities:
+          items:
+            $ref: '#/components/schemas/TranscriptEntity'
+          type: array
+          title: Entities
+        is_purchased:
+          type: boolean
+          title: Is Purchased
+        price:
+          type: number
+          title: Price
+        expert_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Expert Id
+      type: object
+      required:
+      - id
+      - title
+      - interview_date
+      - duration_minutes
+      - transcript_type
+      - is_purchased
+      - price
+      title: TranscriptListItem
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    TranscriptPurchaseResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        transcript_id:
+          type: string
+          format: uuid
+          title: Transcript Id
+        price:
+          type: number
+          title: Price
+        status:
+          type: string
+          title: Status
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+      type: object
+      required:
+      - id
+      - transcript_id
+      - price
+      - status
+      - created_at
+      title: TranscriptPurchaseResponse
+    TranscriptEntity:
+      properties:
+        id:
+          type: string
+          title: Id
+        label:
+          type: string
+          title: Label
+        entity_representation:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Entity Representation
+        entity_representation_label:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Entity Representation Label
+      type: object
+      required:
+      - id
+      - label
+      title: TranscriptEntity
+      description: 'Ontology entity tag from the upload UI — identifier + display label.
+
+
+        ``entity_representation``/``entity_representation_label`` (naming matches
+
+        ``EntityResponseItem`` in ``schemas/ontology.py``) are populated from the
+
+        stored entity when present, otherwise read from the resident ``entity_store``
+
+        snapshot — no per-request Neo4j call. Null when neither source provides the
+
+        representation (store unavailable, id not found) (PRO-3002).'
     TranscriptEntityCount:
       properties:
         id:

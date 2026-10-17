@@ -1,7 +1,7 @@
 {
   "provider": "carbon-arc",
   "sources": [
-    "carbon-arc-openapi.json"
+    "_original/carbon-arc-openapi.json"
   ],
   "outputs": [
     "carbon-arc-block-api-openapi.yml",
@@ -20,12 +20,11 @@
     "carbon-arc-tracking-api-openapi.yml",
     "carbon-arc-transcripts-api-openapi.yml"
   ],
-  "archived": [
-    "archived openapi/carbon-arc-openapi.json"
-  ],
+  "archived": [],
   "errors": [],
   "warnings": [],
   "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
     "carbon-arc-openapi.json: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
     "carbon-arc-openapi.json: declared missing tag: Block",
     "carbon-arc-openapi.json: declared missing tag: Bucket Access",
@@ -42,7 +41,23 @@
     "carbon-arc-openapi.json: declared missing tag: Research",
     "carbon-arc-openapi.json: declared missing tag: Tracking",
     "carbon-arc-openapi.json: declared missing tag: Transcripts",
-    "apis.yml register: written (+15 apis, 15 total)"
+    "apis.yml register: already-registered"
   ],
-  "skipped": []
+  "skipped": [
+    "carbon-arc-block-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "carbon-arc-bucket-access-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "carbon-arc-catalog-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "carbon-arc-clients-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "carbon-arc-data-library-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "carbon-arc-explore-use-cases-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "carbon-arc-framework-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "carbon-arc-ontology-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "carbon-arc-ontology-internal-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "carbon-arc-polaris-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "carbon-arc-prisms-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "carbon-arc-public-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "carbon-arc-research-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "carbon-arc-tracking-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "carbon-arc-transcripts-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }

@@ -769,713 +769,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    FrameworkEventRequest:
-      properties:
-        event_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Event Id
-        representation:
-          type: string
-          title: Representation
-        event_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Event Name
-        event_category_id:
-          anyOf:
-          - type: integer
-          - type: string
-          - type: 'null'
-          title: Event Category Id
-      type: object
-      required:
-      - representation
-      title: FrameworkEventRequest
-      description: "Minimal event primitive for framework compositions.\n\nWire-layer validator: rejects bad combinations before the request ever\nreaches the framework service, so failures surface as a clean 422 instead\nof bubbling up as a ``PipelineError`` from inside gateau. The canonical\nrule sources live in :mod:`gateau.framework.constants`:\n\n- ``EVENT_REPRESENTATION_TYPES`` — the full set of allowed event reps.\n- ``PARENT_EVENT_REPRESENTATION_TYPES`` — the subset valid when an\n  ``event_id`` is supplied (since ``event_id`` is the parent event id,\n  mapped to fact-table ``parent_event_id``)."
-    Body_collection_framework_metadata_v2_framework_metadata_post:
-      properties:
-        frameworks:
-          items:
-            $ref: '#/components/schemas/FrameworkRequest'
-          type: array
-          title: Frameworks
-        config:
-          anyOf:
-          - type: object
-          - type: 'null'
-          title: Config
-      type: object
-      required:
-      - frameworks
-      title: Body_collection_framework_metadata_v2_framework_metadata_post
-    DataFrameResponse:
-      properties:
-        type:
-          type: string
-          const: dataframe
-          title: Type
-        total:
-          type: integer
-          title: Total
-        page:
-          type: integer
-          title: Page
-        size:
-          type: integer
-          title: Size
-        pages:
-          type: integer
-          title: Pages
-        insight_column:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Insight Column
-        data:
-          items:
-            type: object
-          type: array
-          title: Data
-        message:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Message
-        metadata_info:
-          anyOf:
-          - type: object
-          - type: 'null'
-          title: Metadata Info
-      type: object
-      required:
-      - type
-      - total
-      - page
-      - size
-      - pages
-      - data
-      title: DataFrameResponse
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    FrameworkInsightRequest:
-      properties:
-        insight_id:
-          type: integer
-          title: Insight Id
-        insight_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Insight Name
-      type: object
-      required:
-      - insight_id
-      title: FrameworkInsightRequest
-    QueryJobResult:
-      properties:
-        columns:
-          items:
-            $ref: '#/components/schemas/QueryJobColumn'
-          type: array
-          title: Columns
-        rows:
-          items:
-            items: {}
-            type: array
-          type: array
-          title: Rows
-        row_count:
-          type: integer
-          title: Row Count
-      type: object
-      required:
-      - columns
-      - rows
-      - row_count
-      title: QueryJobResult
-      description: 'A finished job''s rows, in the same column/row *structure* as
-
-        ``SQLQueryResponse`` — columns plus a row matrix — so PRO-3283''s SQL editor
-
-        migration is a rename rather than a reshape. Note the ``type`` caveat above:
-
-        the structure translates, the type vocabulary does not.
-
-
-        No ``applied_limit``/``limit_injected`` here: those describe a caller''s
-
-        own SQL rewrite, which happens before submission, not anything the job
-
-        knows about. ``truncated`` also isn''t here -- see
-
-        ``QueryJobResponse.truncated`` instead: a done job''s *cached* result can
-
-        now be a worker-applied byte-payload trim (not just a caller''s own
-
-        rewrite), so that flag belongs on the envelope wrapping this, not on the
-
-        row/column structure itself.'
-    FrameworkEntityRequest:
-      properties:
-        carc_id:
-          type: integer
-          title: Carc Id
-        representation:
-          type: string
-          title: Representation
-        entity_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Entity Name
-      type: object
-      required:
-      - carc_id
-      - representation
-      title: FrameworkEntityRequest
-    Body_framework_filters_v2_framework_filters_post:
-      properties:
-        framework:
-          $ref: '#/components/schemas/FrameworkRequest'
-        config:
-          anyOf:
-          - type: object
-          - type: 'null'
-          title: Config
-      type: object
-      required:
-      - framework
-      title: Body_framework_filters_v2_framework_filters_post
-    FrameworkOrderCreate:
-      properties:
-        frameworks:
-          items:
-            $ref: '#/components/schemas/FrameworkRequest'
-          type: array
-          title: Frameworks
-      additionalProperties: false
-      type: object
-      required:
-      - frameworks
-      title: FrameworkOrderCreate
-    FrameworkCollectionResponse:
-      properties:
-        total_price:
-          type: number
-          title: Total Price
-        number_of_frameworks:
-          type: integer
-          title: Number Of Frameworks
-        frameworks:
-          items:
-            $ref: '#/components/schemas/FrameworkMetadataResponse'
-          type: array
-          title: Frameworks
-      type: object
-      required:
-      - total_price
-      - number_of_frameworks
-      - frameworks
-      title: FrameworkCollectionResponse
-    CodeResponse:
-      properties:
-        code:
-          type: string
-          title: Code
-      type: object
-      required:
-      - code
-      title: CodeResponse
-    WildCardEntityRequest:
-      properties:
-        carc_name:
-          type: string
-          title: Carc Name
-          default: '*'
-        representation:
-          type: string
-          title: Representation
-      type: object
-      required:
-      - representation
-      title: WildCardEntityRequest
-    FrameworkFiltersBatchResponse:
-      properties:
-        results:
-          items:
-            $ref: '#/components/schemas/FrameworkFiltersBatchItem'
-          type: array
-          title: Results
-      type: object
-      required:
-      - results
-      title: FrameworkFiltersBatchResponse
-    FilterOptionValue:
-      properties:
-        key:
-          type: string
-          title: Key
-        label:
-          type: string
-          title: Label
-      type: object
-      required:
-      - key
-      - label
-      title: FilterOptionValue
-    Body_preview_framework_code_v2_framework_code_preview_post:
-      properties:
-        framework:
-          $ref: '#/components/schemas/FrameworkRequest'
-        config:
-          anyOf:
-          - type: object
-          - type: 'null'
-          title: Config
-      type: object
-      required:
-      - framework
-      title: Body_preview_framework_code_v2_framework_code_preview_post
-    FrameworkRequest:
-      properties:
-        entities:
-          anyOf:
-          - items:
-              $ref: '#/components/schemas/FrameworkEntityRequest'
-            type: array
-          - $ref: '#/components/schemas/WildCardEntityRequest'
-          title: Entities
-        insight:
-          $ref: '#/components/schemas/FrameworkInsightRequest'
-        filters:
-          type: object
-          title: Filters
-        aggregate:
-          anyOf:
-          - type: string
-            enum:
-            - sum
-            - mean
-            - count_distinct
-            - max
-            - latest
-          - type: 'null'
-          title: Aggregate
-        events:
-          anyOf:
-          - items:
-              $ref: '#/components/schemas/FrameworkEventRequest'
-            type: array
-          - type: 'null'
-          title: Events
-      type: object
-      required:
-      - entities
-      - insight
-      - filters
-      title: FrameworkRequest
-    FrameworkDataStatus:
-      properties:
-        framework_id:
-          type: string
-          format: uuid
-          title: Framework Id
-        refresh_available:
-          type: boolean
-          title: Refresh Available
-        reinstatement_available:
-          type: boolean
-          title: Reinstatement Available
-        framework_refresh_timestamp:
-          type: string
-          format: date-time
-          title: Framework Refresh Timestamp
-        framework_reinstatement_timestamp:
-          type: string
-          format: date-time
-          title: Framework Reinstatement Timestamp
-        insight_refresh_timestamp:
-          type: string
-          format: date-time
-          title: Insight Refresh Timestamp
-        insight_reinstatement_timestamp:
-          type: string
-          format: date-time
-          title: Insight Reinstatement Timestamp
-        last_reinstatement_reason:
-          anyOf:
-          - type: string
-            enum:
-            - Ontology Change
-            - Full Refresh
-            - Vendor Reinstatement
-            - Vendor Backfill
-            - Logic Enhancement
-          - type: 'null'
-          title: Last Reinstatement Reason
-        message:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Message
-      type: object
-      required:
-      - framework_id
-      - refresh_available
-      - reinstatement_available
-      - framework_refresh_timestamp
-      - framework_reinstatement_timestamp
-      - insight_refresh_timestamp
-      - insight_reinstatement_timestamp
-      title: FrameworkDataStatus
-    FrameworkFiltersResponse:
-      properties:
-        filters:
-          items:
-            $ref: '#/components/schemas/FrameworkFilter'
-          type: array
-          title: Filters
-        aggregate_options:
-          anyOf:
-          - items:
-              type: string
-              enum:
-              - sum
-              - mean
-              - count_distinct
-              - max
-              - latest
-            type: array
-          - type: 'null'
-          title: Aggregate Options
-      type: object
-      required:
-      - filters
-      - aggregate_options
-      title: FrameworkFiltersResponse
-    Body_framework_filter_options_v2_framework_filters__filter_key__options_post:
-      properties:
-        framework:
-          $ref: '#/components/schemas/FrameworkRequest'
-        config:
-          anyOf:
-          - type: object
-          - type: 'null'
-          title: Config
-      type: object
-      required:
-      - framework
-      title: Body_framework_filter_options_v2_framework_filters__filter_key__options_post
-    SchemaColumn:
-      properties:
-        col_name:
-          type: string
-          title: Col Name
-        data_type:
-          type: string
-          title: Data Type
-      type: object
-      required:
-      - col_name
-      - data_type
-      title: SchemaColumn
-    Body_create_framework_order_v2_framework_buy_post:
-      properties:
-        order:
-          anyOf:
-          - $ref: '#/components/schemas/FrameworkOrderCreate'
-          - type: 'null'
-        framework_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - items:
-              type: string
-              format: uuid
-            type: array
-          - type: 'null'
-          title: Framework Id
-        source:
-          anyOf:
-          - type: string
-            enum:
-            - tribes
-            - riastrad
-            - prisms
-          - type: 'null'
-          title: Source
-        config:
-          anyOf:
-          - type: object
-          - type: 'null'
-          title: Config
-      type: object
-      title: Body_create_framework_order_v2_framework_buy_post
-    TimeSeriesEntry:
-      properties:
-        entity_representation:
-          type: string
-          title: Entity Representation
-        entity_id:
-          type: integer
-          title: Entity Id
-        entity_name:
-          type: string
-          title: Entity Name
-        filters:
-          type: object
-          title: Filters
-        insight:
-          type: string
-          title: Insight
-        series_name:
-          type: string
-          title: Series Name
-        series:
-          items:
-            $ref: '#/components/schemas/TimeSeriesPoint'
-          type: array
-          title: Series
-      type: object
-      required:
-      - entity_representation
-      - entity_id
-      - entity_name
-      - filters
-      - insight
-      - series_name
-      - series
-      title: TimeSeriesEntry
-    Body_framework_filters_batch_v2_framework_filters_batch_post:
-      properties:
-        frameworks:
-          items:
-            $ref: '#/components/schemas/FrameworkRequest'
-          type: array
-          minItems: 1
-          title: Frameworks
-        timeout_seconds:
-          anyOf:
-          - type: number
-            exclusiveMinimum: 0.0
-          - type: 'null'
-          title: Timeout Seconds
-          description: Per-framework wall-clock ceiling. Clamped to the server's own batch ceiling. A caller warming a cache wants a bound far below the single-framework route's, because an item it cannot get cheaply is one it should skip rather than wait for.
-        config:
-          anyOf:
-          - type: object
-          - type: 'null'
-          title: Config
-      type: object
-      required:
-      - frameworks
-      title: Body_framework_filters_batch_v2_framework_filters_batch_post
-    Body_update_framework_name_v2_framework__framework_id__name_patch:
-      properties:
-        name:
-          type: string
-          title: Name
-        config:
-          anyOf:
-          - type: object
-          - type: 'null'
-          title: Config
-      type: object
-      required:
-      - name
-      title: Body_update_framework_name_v2_framework__framework_id__name_patch
-    FrameworkFilter:
-      properties:
-        key:
-          type: string
-          title: Key
-          description: location
-        label:
-          type: string
-          title: Label
-          description: State Name
-        depends_on:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Depends On
-          description: location_resolution
-        select_type:
-          type: string
-          title: Select Type
-          description: multi-selection
-        filter_group:
-          type: string
-          title: Filter Group
-          description: categorical
-        db_column:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Db Column
-        default_value:
-          anyOf:
-          - type: string
-          - items: {}
-            type: array
-          - type: object
-          - type: 'null'
-          title: Default Value
-        option_values:
-          anyOf:
-          - items:
-              $ref: '#/components/schemas/FilterOptionValue'
-            type: array
-          - type: 'null'
-          title: Option Values
-        table_earliest_date:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Table Earliest Date
-        table_latest_date:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Table Latest Date
-      type: object
-      required:
-      - key
-      - label
-      - select_type
-      - filter_group
-      title: FrameworkFilter
-    TimeSeriesPoint:
-      properties:
-        date:
-          type: string
-          title: Date
-        value:
-          anyOf:
-          - type: number
-          - type: 'null'
-          title: Value
-      type: object
-      required:
-      - date
-      - value
-      title: TimeSeriesPoint
-    TimeSeriesResponse:
-      properties:
-        type:
-          type: string
-          const: timeseries
-          title: Type
-        total:
-          type: integer
-          title: Total
-        page:
-          type: integer
-          title: Page
-        size:
-          type: integer
-          title: Size
-        pages:
-          type: integer
-          title: Pages
-        insight_column:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Insight Column
-        data:
-          items:
-            $ref: '#/components/schemas/TimeSeriesEntry'
-          type: array
-          title: Data
-        message:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Message
-        metadata_info:
-          anyOf:
-          - type: object
-          - type: 'null'
-          title: Metadata Info
-      type: object
-      required:
-      - type
-      - total
-      - page
-      - size
-      - pages
-      - data
-      title: TimeSeriesResponse
-    QueryJobColumn:
-      properties:
-        name:
-          type: string
-          title: Name
-        type:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Type
-      type: object
-      required:
-      - name
-      title: QueryJobColumn
-    QueryJobState:
-      type: string
-      enum:
-      - queued
-      - running
-      - done
-      - failed
-      - cancelled
-      title: QueryJobState
-      description: 'Job lifecycle, mirroring pyca''s ``QueryStatusTracker`` states.
-
-
-        One collapsed ``queued``, with no separate "waiting for a worker" vs
-
-        "waiting for the ConcurrencyGate" state (PRO-3278 decision): the two are
-
-        indistinguishable to the person waiting.
-
-
-        Be aware of where the worker actually draws that line today. It calls
-
-        ``mark_running`` *before* ``async_read_query``, and the gate is acquired
-
-        inside that call, so a job parked on the gate reports ``running`` — with no
-
-        position, no ETA, and a ``queue_wait_ms`` frozen at pickup — rather than
-
-        ``queued``. Under a saturated gate, which is the condition this whole system
-
-        exists to make visible, that understates the wait by exactly the gate wait.
-
-        Moving ``mark_running`` past gate admission is a change to the worker
-
-        (PRO-3281), tracked separately.
-
-
-        An enum rather than a bare ``str`` so a state pyca adds later surfaces as
-
-        a loud, explicit failure in ``QueryJobService`` instead of flowing through
-
-        to clients that have no branch for it.'
     QueryJobResponse:
       properties:
         job_id:
@@ -1543,6 +836,177 @@ components:
       - job_id
       - state
       title: QueryJobResponse
+    FrameworkInsightRequest:
+      properties:
+        insight_id:
+          type: integer
+          title: Insight Id
+        insight_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Insight Name
+      type: object
+      required:
+      - insight_id
+      title: FrameworkInsightRequest
+    FrameworkRequest:
+      properties:
+        entities:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/FrameworkEntityRequest'
+            type: array
+          - $ref: '#/components/schemas/WildCardEntityRequest'
+          title: Entities
+        insight:
+          $ref: '#/components/schemas/FrameworkInsightRequest'
+        filters:
+          type: object
+          title: Filters
+        aggregate:
+          anyOf:
+          - type: string
+            enum:
+            - sum
+            - mean
+            - count_distinct
+            - max
+            - latest
+          - type: 'null'
+          title: Aggregate
+        events:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/FrameworkEventRequest'
+            type: array
+          - type: 'null'
+          title: Events
+      type: object
+      required:
+      - entities
+      - insight
+      - filters
+      title: FrameworkRequest
+    QueryJobState:
+      type: string
+      enum:
+      - queued
+      - running
+      - done
+      - failed
+      - cancelled
+      title: QueryJobState
+      description: 'Job lifecycle, mirroring pyca''s ``QueryStatusTracker`` states.
+
+
+        One collapsed ``queued``, with no separate "waiting for a worker" vs
+
+        "waiting for the ConcurrencyGate" state (PRO-3278 decision): the two are
+
+        indistinguishable to the person waiting.
+
+
+        Be aware of where the worker actually draws that line today. It calls
+
+        ``mark_running`` *before* ``async_read_query``, and the gate is acquired
+
+        inside that call, so a job parked on the gate reports ``running`` — with no
+
+        position, no ETA, and a ``queue_wait_ms`` frozen at pickup — rather than
+
+        ``queued``. Under a saturated gate, which is the condition this whole system
+
+        exists to make visible, that understates the wait by exactly the gate wait.
+
+        Moving ``mark_running`` past gate admission is a change to the worker
+
+        (PRO-3281), tracked separately.
+
+
+        An enum rather than a bare ``str`` so a state pyca adds later surfaces as
+
+        a loud, explicit failure in ``QueryJobService`` instead of flowing through
+
+        to clients that have no branch for it.'
+    Body_framework_filters_v2_framework_filters_post:
+      properties:
+        framework:
+          $ref: '#/components/schemas/FrameworkRequest'
+        config:
+          anyOf:
+          - type: object
+          - type: 'null'
+          title: Config
+      type: object
+      required:
+      - framework
+      title: Body_framework_filters_v2_framework_filters_post
+    FrameworkFilter:
+      properties:
+        key:
+          type: string
+          title: Key
+          description: location
+        label:
+          type: string
+          title: Label
+          description: State Name
+        depends_on:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Depends On
+          description: location_resolution
+        select_type:
+          type: string
+          title: Select Type
+          description: multi-selection
+        filter_group:
+          type: string
+          title: Filter Group
+          description: categorical
+        db_column:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Db Column
+        default_value:
+          anyOf:
+          - type: string
+          - items: {}
+            type: array
+          - type: object
+          - type: 'null'
+          title: Default Value
+        option_values:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/FilterOptionValue'
+            type: array
+          - type: 'null'
+          title: Option Values
+        table_earliest_date:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Table Earliest Date
+        table_latest_date:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Table Latest Date
+      type: object
+      required:
+      - key
+      - label
+      - select_type
+      - filter_group
+      title: FrameworkFilter
     ValidationError:
       properties:
         loc:
@@ -1569,6 +1033,509 @@ components:
       - msg
       - type
       title: ValidationError
+    FrameworkDataStatus:
+      properties:
+        framework_id:
+          type: string
+          format: uuid
+          title: Framework Id
+        refresh_available:
+          type: boolean
+          title: Refresh Available
+        reinstatement_available:
+          type: boolean
+          title: Reinstatement Available
+        framework_refresh_timestamp:
+          type: string
+          format: date-time
+          title: Framework Refresh Timestamp
+        framework_reinstatement_timestamp:
+          type: string
+          format: date-time
+          title: Framework Reinstatement Timestamp
+        insight_refresh_timestamp:
+          type: string
+          format: date-time
+          title: Insight Refresh Timestamp
+        insight_reinstatement_timestamp:
+          type: string
+          format: date-time
+          title: Insight Reinstatement Timestamp
+        last_reinstatement_reason:
+          anyOf:
+          - type: string
+            enum:
+            - Ontology Change
+            - Full Refresh
+            - Vendor Reinstatement
+            - Vendor Backfill
+            - Logic Enhancement
+          - type: 'null'
+          title: Last Reinstatement Reason
+        message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Message
+      type: object
+      required:
+      - framework_id
+      - refresh_available
+      - reinstatement_available
+      - framework_refresh_timestamp
+      - framework_reinstatement_timestamp
+      - insight_refresh_timestamp
+      - insight_reinstatement_timestamp
+      title: FrameworkDataStatus
+    Body_framework_filters_batch_v2_framework_filters_batch_post:
+      properties:
+        frameworks:
+          items:
+            $ref: '#/components/schemas/FrameworkRequest'
+          type: array
+          minItems: 1
+          title: Frameworks
+        timeout_seconds:
+          anyOf:
+          - type: number
+            exclusiveMinimum: 0.0
+          - type: 'null'
+          title: Timeout Seconds
+          description: Per-framework wall-clock ceiling. Clamped to the server's own batch ceiling. A caller warming a cache wants a bound far below the single-framework route's, because an item it cannot get cheaply is one it should skip rather than wait for.
+        config:
+          anyOf:
+          - type: object
+          - type: 'null'
+          title: Config
+      type: object
+      required:
+      - frameworks
+      title: Body_framework_filters_batch_v2_framework_filters_batch_post
+    SchemaColumn:
+      properties:
+        col_name:
+          type: string
+          title: Col Name
+        data_type:
+          type: string
+          title: Data Type
+      type: object
+      required:
+      - col_name
+      - data_type
+      title: SchemaColumn
+    TimeSeriesResponse:
+      properties:
+        type:
+          type: string
+          const: timeseries
+          title: Type
+        total:
+          type: integer
+          title: Total
+        page:
+          type: integer
+          title: Page
+        size:
+          type: integer
+          title: Size
+        pages:
+          type: integer
+          title: Pages
+        insight_column:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Insight Column
+        data:
+          items:
+            $ref: '#/components/schemas/TimeSeriesEntry'
+          type: array
+          title: Data
+        message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Message
+        metadata_info:
+          anyOf:
+          - type: object
+          - type: 'null'
+          title: Metadata Info
+      type: object
+      required:
+      - type
+      - total
+      - page
+      - size
+      - pages
+      - data
+      title: TimeSeriesResponse
+    FrameworkFiltersBatchItem:
+      properties:
+        index:
+          type: integer
+          title: Index
+        filters:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/FrameworkFilter'
+            type: array
+          - type: 'null'
+          title: Filters
+        aggregate_options:
+          anyOf:
+          - items:
+              type: string
+              enum:
+              - sum
+              - mean
+              - count_distinct
+              - max
+              - latest
+            type: array
+          - type: 'null'
+          title: Aggregate Options
+        error:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error
+      type: object
+      required:
+      - index
+      title: FrameworkFiltersBatchItem
+      description: 'One framework''s outcome, positional so the caller can rejoin its input.
+
+
+        ``filters`` and ``error`` are mutually exclusive: an item that could not be
+
+        answered inside the batch deadline carries a reason instead of a result,
+
+        and the caller falls back to the single-framework route for that pair.'
+    WildCardEntityRequest:
+      properties:
+        carc_name:
+          type: string
+          title: Carc Name
+          default: '*'
+        representation:
+          type: string
+          title: Representation
+      type: object
+      required:
+      - representation
+      title: WildCardEntityRequest
+    FrameworkFiltersBatchResponse:
+      properties:
+        results:
+          items:
+            $ref: '#/components/schemas/FrameworkFiltersBatchItem'
+          type: array
+          title: Results
+      type: object
+      required:
+      - results
+      title: FrameworkFiltersBatchResponse
+    TimeSeriesPoint:
+      properties:
+        date:
+          type: string
+          title: Date
+        value:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Value
+      type: object
+      required:
+      - date
+      - value
+      title: TimeSeriesPoint
+    FrameworkEntityRequest:
+      properties:
+        carc_id:
+          type: integer
+          title: Carc Id
+        representation:
+          type: string
+          title: Representation
+        entity_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Entity Name
+      type: object
+      required:
+      - carc_id
+      - representation
+      title: FrameworkEntityRequest
+    FilterOptionValue:
+      properties:
+        key:
+          type: string
+          title: Key
+        label:
+          type: string
+          title: Label
+      type: object
+      required:
+      - key
+      - label
+      title: FilterOptionValue
+    Body_preview_framework_code_v2_framework_code_preview_post:
+      properties:
+        framework:
+          $ref: '#/components/schemas/FrameworkRequest'
+        config:
+          anyOf:
+          - type: object
+          - type: 'null'
+          title: Config
+      type: object
+      required:
+      - framework
+      title: Body_preview_framework_code_v2_framework_code_preview_post
+    FrameworkOrderCreate:
+      properties:
+        frameworks:
+          items:
+            $ref: '#/components/schemas/FrameworkRequest'
+          type: array
+          title: Frameworks
+      additionalProperties: false
+      type: object
+      required:
+      - frameworks
+      title: FrameworkOrderCreate
+    CodeResponse:
+      properties:
+        code:
+          type: string
+          title: Code
+      type: object
+      required:
+      - code
+      title: CodeResponse
+    TimeSeriesEntry:
+      properties:
+        entity_representation:
+          type: string
+          title: Entity Representation
+        entity_id:
+          type: integer
+          title: Entity Id
+        entity_name:
+          type: string
+          title: Entity Name
+        filters:
+          type: object
+          title: Filters
+        insight:
+          type: string
+          title: Insight
+        series_name:
+          type: string
+          title: Series Name
+        series:
+          items:
+            $ref: '#/components/schemas/TimeSeriesPoint'
+          type: array
+          title: Series
+      type: object
+      required:
+      - entity_representation
+      - entity_id
+      - entity_name
+      - filters
+      - insight
+      - series_name
+      - series
+      title: TimeSeriesEntry
+    PanelDebiasingInfo:
+      properties:
+        insight_id:
+          type: integer
+          title: Insight Id
+        insight_label:
+          type: string
+          title: Insight Label
+        insight_type:
+          type: string
+          title: Insight Type
+      type: object
+      required:
+      - insight_id
+      - insight_label
+      - insight_type
+      title: PanelDebiasingInfo
+    FrameworkFiltersResponse:
+      properties:
+        filters:
+          items:
+            $ref: '#/components/schemas/FrameworkFilter'
+          type: array
+          title: Filters
+        aggregate_options:
+          anyOf:
+          - items:
+              type: string
+              enum:
+              - sum
+              - mean
+              - count_distinct
+              - max
+              - latest
+            type: array
+          - type: 'null'
+          title: Aggregate Options
+      type: object
+      required:
+      - filters
+      - aggregate_options
+      title: FrameworkFiltersResponse
+    QueryJobColumn:
+      properties:
+        name:
+          type: string
+          title: Name
+        type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Type
+      type: object
+      required:
+      - name
+      title: QueryJobColumn
+    Body_create_framework_order_v2_framework_buy_post:
+      properties:
+        order:
+          anyOf:
+          - $ref: '#/components/schemas/FrameworkOrderCreate'
+          - type: 'null'
+        framework_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - items:
+              type: string
+              format: uuid
+            type: array
+          - type: 'null'
+          title: Framework Id
+        source:
+          anyOf:
+          - type: string
+            enum:
+            - tribes
+            - riastrad
+            - prisms
+          - type: 'null'
+          title: Source
+        config:
+          anyOf:
+          - type: object
+          - type: 'null'
+          title: Config
+      type: object
+      title: Body_create_framework_order_v2_framework_buy_post
+    Body_update_framework_name_v2_framework__framework_id__name_patch:
+      properties:
+        name:
+          type: string
+          title: Name
+        config:
+          anyOf:
+          - type: object
+          - type: 'null'
+          title: Config
+      type: object
+      required:
+      - name
+      title: Body_update_framework_name_v2_framework__framework_id__name_patch
+    Body_collection_framework_metadata_v2_framework_metadata_post:
+      properties:
+        frameworks:
+          items:
+            $ref: '#/components/schemas/FrameworkRequest'
+          type: array
+          title: Frameworks
+        config:
+          anyOf:
+          - type: object
+          - type: 'null'
+          title: Config
+      type: object
+      required:
+      - frameworks
+      title: Body_collection_framework_metadata_v2_framework_metadata_post
+    Body_framework_filter_options_v2_framework_filters__filter_key__options_post:
+      properties:
+        framework:
+          $ref: '#/components/schemas/FrameworkRequest'
+        config:
+          anyOf:
+          - type: object
+          - type: 'null'
+          title: Config
+      type: object
+      required:
+      - framework
+      title: Body_framework_filter_options_v2_framework_filters__filter_key__options_post
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    QueryJobResult:
+      properties:
+        columns:
+          items:
+            $ref: '#/components/schemas/QueryJobColumn'
+          type: array
+          title: Columns
+        rows:
+          items:
+            items: {}
+            type: array
+          type: array
+          title: Rows
+        row_count:
+          type: integer
+          title: Row Count
+      type: object
+      required:
+      - columns
+      - rows
+      - row_count
+      title: QueryJobResult
+      description: 'A finished job''s rows, in the same column/row *structure* as
+
+        ``SQLQueryResponse`` — columns plus a row matrix — so PRO-3283''s SQL editor
+
+        migration is a rename rather than a reshape. Note the ``type`` caveat above:
+
+        the structure translates, the type vocabulary does not.
+
+
+        No ``applied_limit``/``limit_injected`` here: those describe a caller''s
+
+        own SQL rewrite, which happens before submission, not anything the job
+
+        knows about. ``truncated`` also isn''t here -- see
+
+        ``QueryJobResponse.truncated`` instead: a done job''s *cached* result can
+
+        now be a worker-applied byte-payload trim (not just a caller''s own
+
+        rewrite), so that flag belongs on the envelope wrapping this, not on the
+
+        row/column structure itself.'
     FrameworkMetadataResponse:
       properties:
         id:
@@ -1653,62 +1620,95 @@ components:
       - price
       - table_max_date
       title: FrameworkMetadataResponse
-    PanelDebiasingInfo:
+    FrameworkEventRequest:
       properties:
-        insight_id:
-          type: integer
-          title: Insight Id
-        insight_label:
-          type: string
-          title: Insight Label
-        insight_type:
-          type: string
-          title: Insight Type
-      type: object
-      required:
-      - insight_id
-      - insight_label
-      - insight_type
-      title: PanelDebiasingInfo
-    FrameworkFiltersBatchItem:
-      properties:
-        index:
-          type: integer
-          title: Index
-        filters:
-          anyOf:
-          - items:
-              $ref: '#/components/schemas/FrameworkFilter'
-            type: array
-          - type: 'null'
-          title: Filters
-        aggregate_options:
-          anyOf:
-          - items:
-              type: string
-              enum:
-              - sum
-              - mean
-              - count_distinct
-              - max
-              - latest
-            type: array
-          - type: 'null'
-          title: Aggregate Options
-        error:
+        event_id:
           anyOf:
           - type: string
           - type: 'null'
-          title: Error
+          title: Event Id
+        representation:
+          type: string
+          title: Representation
+        event_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Event Name
+        event_category_id:
+          anyOf:
+          - type: integer
+          - type: string
+          - type: 'null'
+          title: Event Category Id
       type: object
       required:
-      - index
-      title: FrameworkFiltersBatchItem
-      description: 'One framework''s outcome, positional so the caller can rejoin its input.
-
-
-        ``filters`` and ``error`` are mutually exclusive: an item that could not be
-
-        answered inside the batch deadline carries a reason instead of a result,
-
-        and the caller falls back to the single-framework route for that pair.'
+      - representation
+      title: FrameworkEventRequest
+      description: "Minimal event primitive for framework compositions.\n\nWire-layer validator: rejects bad combinations before the request ever\nreaches the framework service, so failures surface as a clean 422 instead\nof bubbling up as a ``PipelineError`` from inside gateau. The canonical\nrule sources live in :mod:`gateau.framework.constants`:\n\n- ``EVENT_REPRESENTATION_TYPES`` — the full set of allowed event reps.\n- ``PARENT_EVENT_REPRESENTATION_TYPES`` — the subset valid when an\n  ``event_id`` is supplied (since ``event_id`` is the parent event id,\n  mapped to fact-table ``parent_event_id``)."
+    FrameworkCollectionResponse:
+      properties:
+        total_price:
+          type: number
+          title: Total Price
+        number_of_frameworks:
+          type: integer
+          title: Number Of Frameworks
+        frameworks:
+          items:
+            $ref: '#/components/schemas/FrameworkMetadataResponse'
+          type: array
+          title: Frameworks
+      type: object
+      required:
+      - total_price
+      - number_of_frameworks
+      - frameworks
+      title: FrameworkCollectionResponse
+    DataFrameResponse:
+      properties:
+        type:
+          type: string
+          const: dataframe
+          title: Type
+        total:
+          type: integer
+          title: Total
+        page:
+          type: integer
+          title: Page
+        size:
+          type: integer
+          title: Size
+        pages:
+          type: integer
+          title: Pages
+        insight_column:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Insight Column
+        data:
+          items:
+            type: object
+          type: array
+          title: Data
+        message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Message
+        metadata_info:
+          anyOf:
+          - type: object
+          - type: 'null'
+          title: Metadata Info
+      type: object
+      required:
+      - type
+      - total
+      - page
+      - size
+      - pages
+      - data
+      title: DataFrameResponse

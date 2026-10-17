@@ -188,87 +188,6 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    InsightStoreResponse:
-      properties:
-        version:
-          type: string
-          title: Version
-        total:
-          type: integer
-          title: Total
-        items:
-          items:
-            $ref: '#/components/schemas/InsightStoreItem'
-          type: array
-          title: Items
-      type: object
-      required:
-      - version
-      - total
-      - items
-      title: InsightStoreResponse
-      description: 'Whole insight corpus, served in one shot for client-side search.
-
-
-        Unpaginated by design — the corpus is ~1.2k rows and the builder filters
-
-        it in memory. ``version`` is the graph version stamp and doubles as the
-
-        ETag, so a client holding it revalidates into a 304.'
-    EntityResponse:
-      properties:
-        total:
-          type: integer
-          title: Total
-        page:
-          type: integer
-          title: Page
-        size:
-          type: integer
-          title: Size
-        pages:
-          type: integer
-          title: Pages
-        entities:
-          anyOf:
-          - items:
-              $ref: '#/components/schemas/EntityResponseItem'
-            type: array
-          - type: 'null'
-          title: Entities
-      type: object
-      required:
-      - total
-      - page
-      - size
-      - pages
-      title: EntityResponse
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
     InsightStoreItem:
       properties:
         insight_id:
@@ -389,3 +308,84 @@ components:
         because the browse panel renders the topic summary line and each dataset''s
 
         "last updated" stamp.'
+    InsightStoreResponse:
+      properties:
+        version:
+          type: string
+          title: Version
+        total:
+          type: integer
+          title: Total
+        items:
+          items:
+            $ref: '#/components/schemas/InsightStoreItem'
+          type: array
+          title: Items
+      type: object
+      required:
+      - version
+      - total
+      - items
+      title: InsightStoreResponse
+      description: 'Whole insight corpus, served in one shot for client-side search.
+
+
+        Unpaginated by design — the corpus is ~1.2k rows and the builder filters
+
+        it in memory. ``version`` is the graph version stamp and doubles as the
+
+        ETag, so a client holding it revalidates into a 304.'
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    EntityResponse:
+      properties:
+        total:
+          type: integer
+          title: Total
+        page:
+          type: integer
+          title: Page
+        size:
+          type: integer
+          title: Size
+        pages:
+          type: integer
+          title: Pages
+        entities:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/EntityResponseItem'
+            type: array
+          - type: 'null'
+          title: Entities
+      type: object
+      required:
+      - total
+      - page
+      - size
+      - pages
+      title: EntityResponse

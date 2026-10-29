@@ -64,5 +64,126 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Carbon Arc is a company surfaced via the API Evangelist harvest backlog (source: secondary-market) and added to the network as a stub for full-pipeline profiling.
-- https://www.nasdaqprivatemarket.com/
+Carbon Arc provides infrastructure for the AI economy, offering tools and services that enable developers to build, deploy, and scale AI applications. The platform includes APIs for model management, data pipelines, and monitoring, targeting enterprises and AI startups seeking robust, production‑grade solutions.
+
+**Areas:** Artificial Intelligence · Infrastructure · Platform · MLOps · Enterprise
+
+## Carbon Arc on APIs.io
+
+Everything profiled for Carbon Arc is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/carbon-arc/](https://apis.io/providers/carbon-arc/)** — or go straight to one of the APIs or properties below.
+
+### APIs (15)
+
+- [Carbon Arc Block API](https://apis.io/apis/carbon-arc/carbon-arc-block-api/) — The Block API from Carbon Arc — 2 operation(s) for block.
+- [Carbon Arc Bucket Access API](https://apis.io/apis/carbon-arc/carbon-arc-bucket-access-api/) — The Bucket Access API from Carbon Arc — 3 operation(s) for bucket access.
+- [Carbon Arc Catalog API](https://apis.io/apis/carbon-arc/carbon-arc-catalog-api/) — The Catalog API from Carbon Arc — 11 operation(s) for catalog.
+- [Carbon Arc Clients API](https://apis.io/apis/carbon-arc/carbon-arc-clients-api/) — The Clients API from Carbon Arc — 3 operation(s) for clients.
+- [Carbon Arc Data Library API](https://apis.io/apis/carbon-arc/carbon-arc-data-library-api/) — The Data Library API from Carbon Arc — 9 operation(s) for data library.
+- [Carbon Arc Explore Use Cases API](https://apis.io/apis/carbon-arc/carbon-arc-explore-use-cases-api/) — The Explore Use Cases API from Carbon Arc — 1 operation(s) for explore use cases.
+- [Carbon Arc Framework API](https://apis.io/apis/carbon-arc/carbon-arc-framework-api/) — The Framework API from Carbon Arc — 14 operation(s) for framework.
+- [Carbon Arc Ontology API](https://apis.io/apis/carbon-arc/carbon-arc-ontology-api/) — The Ontology API from Carbon Arc — 19 operation(s) for ontology.
+- [Carbon Arc Ontology Internal API](https://apis.io/apis/carbon-arc/carbon-arc-ontology-internal-api/) — The Ontology Internal API from Carbon Arc — 2 operation(s) for ontology internal.
+- [Carbon Arc Polaris API](https://apis.io/apis/carbon-arc/carbon-arc-polaris-api/) — The Polaris API from Carbon Arc — 8 operation(s) for polaris.
+- [Carbon Arc Prisms API](https://apis.io/apis/carbon-arc/carbon-arc-prisms-api/) — The Prisms API from Carbon Arc — 2 operation(s) for prisms.
+- [Carbon Arc Public API](https://apis.io/apis/carbon-arc/carbon-arc-public-api/) — The Public API from Carbon Arc — 3 operation(s) for public.
+- [Carbon Arc Research API](https://apis.io/apis/carbon-arc/carbon-arc-research-api/) — The Research API from Carbon Arc — 1 operation(s) for research.
+- [Carbon Arc Tracking API](https://apis.io/apis/carbon-arc/carbon-arc-tracking-api/) — The Tracking API from Carbon Arc — 1 operation(s) for tracking.
+- [Carbon Arc Transcripts API](https://apis.io/apis/carbon-arc/carbon-arc-transcripts-api/) — The Transcripts API from Carbon Arc — 7 operation(s) for transcripts.
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### Agentic access (1)
+
+Which operations an agent can call, which act, and which need a human in the loop.
+
+- [Carbon Arc Agentic Access](https://apis.io/agentic-access/carbon-arc/carbon-arc-agentic-access/)
+
+#### JSON Schema (6)
+
+The data models the API reads and writes.
+
+- [AdminAssetResponse](https://apis.io/schemas/carbon-arc/carbon-arc-admin-asset-response/)
+- [AssetDetailResponse](https://apis.io/schemas/carbon-arc/carbon-arc-asset-detail-response/)
+- [FrameworkMetadataResponse](https://apis.io/schemas/carbon-arc/carbon-arc-framework-metadata-response/)
+- [FrameworkOrderRead](https://apis.io/schemas/carbon-arc/carbon-arc-framework-order-read/)
+- [MaterializedPrism](https://apis.io/schemas/carbon-arc/carbon-arc-materialized-prism/)
+- [QueryJobResponse](https://apis.io/schemas/carbon-arc/carbon-arc-query-job-response/)
+
+#### JSON-LD (1)
+
+Linked-data contexts for the provider's vocabulary.
+
+- [Carbon Arc Context](https://apis.io/jsonld/carbon-arc/carbon-arc-context/)
+
+#### Governance rules (1)
+
+Spectral rulesets for the provider's contracts.
+
+- [Carbon Arc API Rules](https://apis.io/rules/carbon-arc/carbon-arc-rules/)
+
+#### Security (1)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Carbon Arc Domain Security](https://apis.io/security/carbon-arc/carbon-arc-domain-security/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://www.carbonarc.co)
+
+## API Evangelist rating
+
+**Kin Score 26.2** — thin · rubric 0.24.0 · scored 2026-10-17
+
+| Facet | Score |
+|---|---|
+| Discoverability | 62.5 |
+| Contract quality | 53.8 |
+| Contract governance | 22.0 |
+| Operational transparency | 0.0 |
+| Developer ergonomics | 7.1 |
+| Access clarity | 0.0 |
+
+**Agent readiness 20.5** — agent-aware
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | — |
+| Idempotency | — |
+| Error Semantics | verified |
+| OpenAPI Examples | — |
+| Rate Limit Signal | — |
+| Event Surface Described | — |
+| Agent Skills | — |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+
+**Regulatory alignment 10.0** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/carbon-arc/](https://apis.io/providers/carbon-arc/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Carbon Arc: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/carbon-arc/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
